@@ -14,8 +14,8 @@ Severe maternal morbidity(SMM) includes health outcomes during labor and deliver
 
 
 ## Data
-The primary dataset we used is the NYC Neighborhood Health Atlas[https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page] 
+The primary dataset we will use is the [NYC Neighborhood Health Atlas](https://hub.arcgis.com/datasets/1172591604c948dc9f8f049bdeb01fe6) 
 This dataset contains data on 100 health measures and social factors for 188 neighborhoods in New York City. 
-We will also be using the Neighborhood Tabulation Areas(NTAs) shapefile. 
+We will also be using the [Neighborhood Tabulation Areas(NTAs) shapefile](https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page)
 
 ## Findings
