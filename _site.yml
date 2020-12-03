@@ -1,0 +1,14 @@
+name: "Maternal & Reproductive Health"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "NYC Map"
+      href: nyc_map.html
+    - text: "Model Building"
+      href: model.html
+    - text: "Project Report"
+      href: project_report.html
+output:
+  html_document:
+    theme: sandstone
