@@ -4,9 +4,9 @@ navbar:
   title: "Home"
   right:
     - text: "NYC Map"
-      href: nyc_map.html
+      href: 
     - text: "Model Building"
-      href: model.html
+      href: 
     - text: "Project Report"
       href: project_report.html
 output:

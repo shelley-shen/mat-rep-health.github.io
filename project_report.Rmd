@@ -24,5 +24,7 @@ The following are our directed acyclic graphs (DAGs) to visually represent the c
 [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
 
 *Variables of interest*
+Outcomes:
 
+Predictors: 
 
