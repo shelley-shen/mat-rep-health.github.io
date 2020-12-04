@@ -4,9 +4,8 @@ navbar:
   title: "Home"
   right:
     - text: "NYC Map"
-      href: 
     - text: "Model Building"
-      href: 
+    - text: "Regression Analysis"
     - text: "Project Report"
       href: project_report.html
 output:
