@@ -198,11 +198,11 @@ We'll stop this analysis here since it's clear the model doesn't follow linear a
 
 ## Building Poisson regression model
 
-Cleaning the data into appropriate format
-  * Create new variable combining clinics & community health centers to reduce correlation between predictors
-  * Transform rates of SMM & gonorrhea back into counts
-  
+Since the underlying distribution is clearly non-linear, we will try a Poisson distribution. 
 
+To do this, we will:
+
+  * Convert the SMM variable, which is a rate per 10,000 back into a count using the number of live births
 ```{r}
 Poisson_regression_df = project_df 
          
@@ -286,8 +286,47 @@ We'll stop this analysis here since it's clear the model doesn't follow linear a
 
 A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell's Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research [add link here?] suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men. 
 
+
+Poisson Regression
+```{r}
+offset_total_pop = log(predictors_df$total_pop)
+
+gonorrhea_poisson_df = predictors_df %>%
+  mutate(gonorrhea_count = round(project_df$gonorrhea*(total_pop/100000))) %>%
+  dplyr::select(-total_pop)
+
+full_gonorrhea_poisson.model <- glm(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df, family=poisson(link = "log"))
+
+step_gonorrhea_poisson.model <- stepAIC(full_gonorrhea_poisson.model, direction = "both", 
+                      trace = FALSE)
+
+summary(step_gonorrhea_poisson.model)
+```
+
+```{r}
+#Display converged model
+step_gonorrhea_poisson.model %>% 
+  broom::tidy() %>%
+  knitr::kable()
+```
+
+Severe overdispersion (deviance/df >> 1): try negative binomial
+
+```{r}
+
+full_gonorrhea_neg_bin.model <- glm.nb(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df)
+
+step_gonorrhea_neg_bin.model <- stepAIC(full_gonorrhea_neg_bin.model, direction = "both", 
+                      trace = FALSE)
+
+summary(step_gonorrhea_neg_bin.model)
+```
+This is much better! We will keep this model.
+
 ### Appendix
 
+
 #### Stepwise model selection criticism
+Naive, greedy algorithm prone to being stuck in local optima. 
 link to Harrel (2001)
 Future model selection using Lasso & LAR
