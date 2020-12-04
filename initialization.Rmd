@@ -31,7 +31,21 @@ The following steps were taken to clean the NYC NTA data:
 ```{r}
 project_df = read_excel("./data/nta-metadata.xlsx", sheet = "NTA Data") %>%
   janitor::clean_names() %>%
-  select(nta_name:female, hispanic:limited_eng,edu_less_than_hs:poverty,unemployment,preterm_births:smm_reliability, gonorrhea, health_ins, medicaid_enroll, late_no_prenatal_care, clinics, community_health_centers, non_pcmd, -contains("95cl"), -contains("reliability")) %>%
+  dplyr::select(
+    nta_name:female, 
+    hispanic:limited_eng,
+    edu_less_than_hs:poverty,
+    unemployment,
+    preterm_births:smm_reliability,
+    gonorrhea,
+    health_ins,
+    medicaid_enroll,
+    late_no_prenatal_care,
+    clinics,
+    community_health_centers,
+    non_pcmd,
+    -contains("95cl"),
+    -contains("reliability")) %>%
   mutate(clinics_and_chc_count = clinics + community_health_centers,
          clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
          non_pcmd_density = (non_pcmd/total_pop)*10000) %>%

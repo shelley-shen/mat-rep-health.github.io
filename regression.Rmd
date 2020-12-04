@@ -16,6 +16,8 @@ library(RColorBrewer)
 library(Hmisc)
 library(patchwork)
 library(rstatix)
+library(glmnet)
+library(MASS)
 
 knitr::opts_chunk$set(
 	fig.width = 9, 
@@ -37,10 +39,11 @@ scale_fill_discrete = scale_fill_viridis_d
 We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea. 
 
 We start by testing normality assumptions of dependent variables using histograms, Q-Q plots and Shapiro tests for normality.
+
 ```{r}
 #separate outcomes into separate dataframe
 outcome_df = project_df %>%
-  select(preterm_births, smm, gonorrhea)
+  dplyr::select(preterm_births, smm, gonorrhea)
 
 #histograms
 preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
@@ -75,8 +78,7 @@ Let's start with some exploratory linear regressions with the outcome of several
 ```{r}
 project_df = project_df %>%
   mutate(clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000) %>%
-  select(-clinics, -community_health_centers)
+         non_pcmd_density = (non_pcmd/total_pop)*10000) 
   
 
 fit = lm(smm ~ clinics_and_chc_density, data = project_df)
@@ -117,45 +119,29 @@ The normality assumption remains violated, and the fit is better but still nowhe
 
 ### Analysis Plan
 
-Moving forward, we will try two methods of regression: a multiple linear regression using our rate data, and a Poisson model using count data to account for a possible non-normal response distribution. Models will be selected with stepwise 
+Moving forward, we will try two methods of regression: a multiple linear regression using our rate data, and a Poisson model using count data to account for a possible non-normal response distribution. 
+
+Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges. Please note that there is some debate regarding the statistical validity of stepwise model selection using AIC as a metric, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm's pitfalls.
 
 Models will be judged on:
   * Satisfaction of assumptions for their respective method
   * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to both linear and Poisson models.
-  
 
+### Multicollinearity Considerations
 
-```{r}
+Let's check for potential multicollinearity among predictors first, since stepwise model selection will exacerbate any existing multicollinearity in our model. 
 
-```
-
-```{r}
-fit3 = lm(smm ~ clinics_and_chc_density, poverty, data = project_df)
-
-fit3 %>% 
-  broom::tidy() %>%
-  knitr::kable()
-
-project_df %>% 
-  modelr::add_residuals(fit3) %>% 
-  ggplot(aes(x = clinics_and_chc_density, y = resid)) + geom_point()
-
-project_df %>% 
-  modelr::add_residuals(fit3) %>% 
-  ggplot(aes(x = poverty, y = resid)) + geom_point()
-
-```
-
-Let's check for potential multicollinearity among predictors next:
+The following steps were taken
 
 * Remove identifiers like neighborhood names/NTA codes
-* Remove outcome variables & known correlated values (i.e. clinics & clinic density)
+* Remove outcome variables & pre-transformed variables (i.e. clinic count)
+* Construct a Pearson correlation matrix of predictors, using pair-wise (instead of case) deletion of datapoints with missing values
+
 ```{r}
 #create dataset of predictors ONLY
 predictors_df = project_df %>% 
-  select(-nta_name, -nta_code, -preterm_births, -gonorrhea, -smm, -clinis)
+  dplyr::select(-c("nta_name","nta_code", "preterm_births", "gonorrhea", "smm", "clinics", "community_health_centers", "non_pcmd", "clinics_and_chc_count"))
 
-M = cor(predictors_df, use = "complete.obs") #case-wise deletion
 N <- rcorr(as.matrix(predictors_df), type = c("pearson")) #pair-wise deletion
   
 corrplot::corrplot(N$r,
@@ -168,28 +154,47 @@ corrplot::corrplot(N$r,
                      tl.cex = .9,
                      tl.srt = 45)
 ```
+There appears to several highly correlated potential predictors in our dataset, with strong positive and negative relationships present. There is a strong possibility of multicollinearity in our final models, so results will have to be viewed carefully. 
 
+Most starkly, race remains highly correlated with health and SES-related outcomes at a neighborhood level. For example, there is a strong negative correlation between percent population that identifies as white and levels of poverty, unemployment, and late or no prenatal care. This relationship becomes positive when considering percent population that identifies as Hispanic. Surprisingly, proportion of population that identifies as black have weak to no relationship with SES-related outcomes like low educational attainment or poverty, but the strongest relationship with late or no prenatal care (R = 0.54)
+
+### Outcome: Severe Maternal Morbidity 
+
+#### Linear Regression Moel
+
+Let's start by fitting a linear model to the severe maternal morbidity 
 ```{r}
-remove_corrs_df = predictors_df %>%
-  mutate(clinic_and_community_health_centers = clinics + community_health_centers) %>%
-  select(-c('pcmd', 'non_pcmd', 'adult_care_facilities', 'nursing_homes', 'clinics', 'community_health_centers', 'diagnostic_treatment_centers', 'hospitals', 'school_based_health_facilities', 'total_pop', 'premature_mortality', 'tb', 'hep_b', 'hep_c', 'no_health_ins_u18', 'medicaid_pc_visit'))
+#Combined predictors with SMM outcome
+smm_linear_df = predictors_df %>% 
+  mutate(smm = outcome_df$smm)
 
-write.csv(remove_corrs_df,'data/regression_predictors.csv', row.names = FALSE)
-
-corr_check <- rcorr(as.matrix(remove_corrs_df), type = c("pearson")) #pair-wise deletion
-  
-corrplot::corrplot(corr_check$r,
-                   type = "lower",
-                   method = "square", 
-                     addCoef.col = "black", 
-                     diag = FALSE, 
-                     number.cex = .6,
-                     tl.col = "black",
-                     tl.cex = .9,
-                     tl.srt = 45)
-
-
+#Fit the full model 
+full_smm_linear.model <- lm(smm~., data = smm_linear_df)
+#Stepwise regression model
+step_smm_linear.model <- stepAIC(full_smm_linear.model, direction = "both", 
+                      trace = FALSE)
 ```
+
+Next, we'll take a look at the chosen predictors, effect measures, and run regression diagnostics
+```{r}
+#Display converged model
+step_smm_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable()
+```
+The variables female, hispanic, white_non_hisp, black_non_hisp, foreign_born, limited_eng, edu_less_than_hs, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `summary(step_smm_linear.model)$r.squared`, representing a reasonably good fit. 
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_smm_linear.model)
+
+#Shapiro test
+smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))
+```
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `smm_linear_shapiro$p.value`. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
+
+We'll stop this analysis here since it's clear the model doesn't follow linear assumptions.
 
 ## Building Poisson regression model
 
@@ -199,9 +204,90 @@ Cleaning the data into appropriate format
   
 
 ```{r}
-Poisson_regression_df = project_df %>%
-  mutate(clinics_and_chc = clinics + community_health_centers,
+Poisson_regression_df = project_df 
          
   
   
 ```
+
+#### Outcome: Preterm Births
+
+Let's start by fitting a linear model to the preterm births outcome
+```{r}
+#Combined predictors with preterm births outcome
+preterm_linear_df = predictors_df %>% 
+  mutate(preterm_births = outcome_df$preterm_births)
+
+#Fit the full model 
+full_preterm_linear.model <- lm(preterm_births~., data = preterm_linear_df)
+#Stepwise regression model
+step_preterm_linear.model <- stepAIC(full_preterm_linear.model, direction = "both", 
+                      trace = FALSE)
+```
+
+Next, we'll take a look at the chosen predictors, effect measures, and run regression diagnostics
+```{r}
+#Display converged model
+step_preterm_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable()
+
+summary(step_preterm_linear.model)$r.squared
+```
+The 7 variables hispanic, black_non_hisp, other_race, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of `summary(step_preterm_linear.model)$r.squared`, representing a less-than-ideal fit with our predictor set
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_preterm_linear.model)
+
+#Shapiro test
+preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))
+```
+The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with no outliers outside 3 standard deviations or influential points. Though one point has high leverage, it is not higher than our rule-of-thumb threshold of 0.085. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
+
+#### Outcome: Gonorrhea
+
+Let's start by fitting a linear model to the gonorrhea outcome variable
+```{r}
+#Combined predictors with SMM outcome
+gonorrhea_linear_df = predictors_df %>% 
+  mutate(gonorrhea = outcome_df$gonorrhea)
+
+#Fit the full model 
+full_gonorrhea_linear.model <- lm(gonorrhea~., data = gonorrhea_linear_df)
+#Stepwise regression model
+step_gonorrhea_linear.model <- stepAIC(full_gonorrhea_linear.model, direction = "both", 
+                      trace = FALSE)
+```
+
+Next, we'll take a look at the chosen predictors, effect measures, and run regression diagnostics
+```{r}
+#Display converged model
+step_gonorrhea_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable()
+
+summary(step_gonorrhea_linear.model)$r.squared
+```
+The variables female, hispanic, white_non_hisp, black_non_hisp, foreign_born, limited_eng, edu_less_than_hs, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `summary(step_smm_linear.model)$r.squared`, representing a reasonably good fit. 
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_gonorrhea_linear.model)
+
+#Shapiro test
+gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))
+```
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `gonorrhea_linear_shapiro$p.value`. The plot of residuals vs fitted values has non-random variance, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
+
+We'll stop this analysis here since it's clear the model doesn't follow linear assumptions, but it's important to note that further analysis would also have to investigate the potential outliers & high leverage points found in the residuals vs. leverage plot. 
+
+A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell's Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men 
+
+### Appendix
+
+#### Stepwise model selection criticism
+link to Harrel (2001)
+Future model selection using Lasso & LAR
