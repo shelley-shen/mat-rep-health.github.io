@@ -284,7 +284,7 @@ The Normal Q-Q plot has fat tails, suggesting violation of the normality assumpt
 
 We'll stop this analysis here since it's clear the model doesn't follow linear assumptions, but it's important to note that further analysis would also have to investigate the potential outliers & high leverage points found in the residuals vs. leverage plot. 
 
-A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell's Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men 
+A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell's Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research [add link here?] suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men. 
 
 ### Appendix
 
