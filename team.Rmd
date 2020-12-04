@@ -9,4 +9,4 @@ We are a team of MPH candidates studying epidemiology at Columbia University Mai
 
 <br>
 
-# <image source=""><img class="cat_circle" src="images/ayeshra.jpg" style="width:30%" class="left"> Ayeshra Acharya
+# <img src="images/ayeshra.jpg" style="width:50%" class="left"> Ayeshra Acharya

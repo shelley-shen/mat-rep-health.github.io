@@ -14,38 +14,45 @@ library(readr)
 ## Motivation 
 Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services & resources for women across the country.
 
-We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal mortality in New York City, and how these health outcomes vary by socioeconomic factors like income and race.
+We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race.
 
+<br>
 
 ## Questions
-- How does access to reproductive services impact maternal mortality rates and levels of STIs? 
-- Insurance
+- How does access to reproductive services impact maternal morbidity rates and levels of STIs? 
+- How does insurance coverage affect the levels of preterm births and gonorrhea? 
 - How do socioeconomic factors of health like income and race affect the relationship between access to services and health outcomes? 
 
+<br>
 
 ## Epidemiology 
 The following are our directed acyclic graphs (DAGs) to visually represent the causal assumptions of our project and help identify the presence of confounding for our questions.
 
+<br>
 
 ## Data
 *Source:* 
 [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
 
 *Variables of interest*
+<br>
 Outcomes:
 
-- `preterm births`: percent preterm births (less than 37 weeks gestation) among all live births
-- `SMM`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries
+- `preterm_births`: percent preterm births (less than 37 weeks gestation) among all live births
+- `smm`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries
 - `gonorrhea`: crude rate of gonorrhea cases diagnosed in 2014-2015 per 100,000 population, all ages
 
 
 Predictors:
 
-- `health insurance coverage`: 
-- `access to health services `: 
-- `race`: 
-- `poverty`: 
-- `education `: 
+- `health insurance coverage`: percent of civilian noninstitutionalized population with health insurance
+- `late_no_prenatal_care`: percent of live births receiving late prenatal care (i.e. after the first and second trimesters) or no prenatal care at all, 2010-2014
+- `race`: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other
+- `poverty`: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels: <10
+%, 10-20%, 20-30%, 30-40%, and >40% during our exploratory analyses
+- `edu_less_than_hs `: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
+
+<br>
 
 ## Data Tidying
 
@@ -61,7 +68,7 @@ The following steps were taken to clean the NYC NTA data:
       + clinics_and_chc_density: clinic & community health centers per 10,000 people
       + non_pcmd_density:  on-primary care providers (specialists like ob-gyns) per 10,000 people
   * Saved cleaned dataset to CSV to improve portability across users & programs
-  
+
 ```{r}
 project_df = read_excel("./data/nta-metadata.xlsx", sheet = "NTA Data") %>%
   janitor::clean_names() %>%
@@ -89,4 +96,8 @@ project_df = read_excel("./data/nta-metadata.xlsx", sheet = "NTA Data") %>%
 write.csv(project_df, 'data/clean_dataset.csv', row.names = FALSE)
 ```
 
+
+<br>
+
+## Exploratory Analysis
 

@@ -290,8 +290,26 @@ $(document).ready(function () {
   </ul>
 </li>
 <li class="dropdown-header">NYC Map</li>
-<li>
-  <a href="regression.html">Regression Analysis</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="initialization.html">Initial Diagnostics</a>
+    </li>
+    <li>
+      <a href="smm_reg.html">Severe Maternal Morbidity</a>
+    </li>
+    <li>
+      <a href="premature_reg.html">Premature Birth</a>
+    </li>
+    <li>
+      <a href="gonorrhea_reg.html">Gonorrhea</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -316,6 +334,12 @@ $(document).ready(function () {
       <a href="team.html">The Team</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="https://github.com/shelley-shen/nycmaternalhealth">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -342,37 +366,41 @@ $(document).ready(function () {
 <div id="motivation" class="section level2">
 <h2>Motivation</h2>
 <p>Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services &amp; resources for women across the country.</p>
-<p>We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal mortality in New York City, and how these health outcomes vary by socioeconomic factors like income and race.</p>
+<p>We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race.</p>
+<p><br></p>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
 <ul>
-<li>How does access to reproductive services impact maternal mortality rates and levels of STIs?</li>
-<li>Insurance</li>
+<li>How does access to reproductive services impact maternal morbidity rates and levels of STIs?</li>
+<li>How does insurance coverage affect the levels of preterm births and gonorrhea?</li>
 <li>How do socioeconomic factors of health like income and race affect the relationship between access to services and health outcomes?</li>
 </ul>
+<p><br></p>
 </div>
 <div id="epidemiology" class="section level2">
 <h2>Epidemiology</h2>
 <p>The following are our directed acyclic graphs (DAGs) to visually represent the causal assumptions of our project and help identify the presence of confounding for our questions.</p>
+<p><br></p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
 <p><em>Source:</em> <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></p>
-<p><em>Variables of interest</em> Outcomes:</p>
+<p><em>Variables of interest</em> <br> Outcomes:</p>
 <ul>
-<li><code>preterm births</code>: percent preterm births (less than 37 weeks gestation) among all live births</li>
-<li><code>SMM</code>: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries</li>
+<li><code>preterm_births</code>: percent preterm births (less than 37 weeks gestation) among all live births</li>
+<li><code>smm</code>: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries</li>
 <li><code>gonorrhea</code>: crude rate of gonorrhea cases diagnosed in 2014-2015 per 100,000 population, all ages</li>
 </ul>
 <p>Predictors:</p>
 <ul>
-<li><code>health insurance coverage</code>:</li>
-<li><code>access to health services</code>:</li>
-<li><code>race</code>:</li>
-<li><code>poverty</code>:</li>
-<li><code>education</code>:</li>
+<li><code>health insurance coverage</code>: percent of civilian noninstitutionalized population with health insurance</li>
+<li><code>late_no_prenatal_care</code>: percent of live births receiving late prenatal care (i.e. after the first and second trimesters) or no prenatal care at all, 2010-2014</li>
+<li><code>race</code>: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other</li>
+<li><code>poverty</code>: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels: &lt;10 %, 10-20%, 20-30%, 30-40%, and &gt;40% during our exploratory analyses</li>
+<li><code>edu_less_than_hs</code>: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED</li>
 </ul>
+<p><br></p>
 </div>
 <div id="data-tidying" class="section level2">
 <h2>Data Tidying</h2>
@@ -415,6 +443,10 @@ $(document).ready(function () {
   filter(nta_code != &#39;NYC&#39;)
 
 write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code></pre>
+<p><br></p>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory Analysis</h2>
 </div>
 
 
