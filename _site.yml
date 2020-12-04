@@ -38,3 +38,5 @@ navbar:
 output:
   html_document:
     theme: sandstone
+    includes:
+      after_body: footer.html

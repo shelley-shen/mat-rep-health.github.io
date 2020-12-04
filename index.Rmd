@@ -16,21 +16,25 @@ h1.title {text-align: center;}
 ## Introduction
 Severe maternal morbidity (SMM) includes health outcomes during labor and delivery that may result in both short-term and/or long term health consequences for women. New York City’s rate of SMM increased 28.2 % from 2008 to 2012. Some of the factors contributing to high rates of SMM in New York City may include access to reproductive health services, rates of sexually transmitted infections (STIs), neighborhood poverty level and race. We will examine the factors that may contribute to the high SMM rates in New York City. 
 
-&nbsp;
+<br>
 
 ## Data
 The primary dataset we will use is the [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page). This dataset contains data on 100 health measures and social factors for 188 neighborhoods in New York City. 
-We will also be using the [Neighborhood Tabulation Areas(NTAs) shapefile](https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page)
+We will also be using the [Neighborhood Tabulation Areas(NTAs) shapefile](https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page) to create NYC maps depicting our variables of interest.  
 
-&nbsp;
+<br>
 
-## Findings
+## Findings 
+In the exploratory analysis section, you can see how access to reproductive services, health insurance coverage, and socioeconomic factors affect our outcomes of interest: 
 
+- severe maternal morbidity
+- preterm births
+- gonorrhea
 
-&nbsp;
+In the regression analysis section, we built a biostatistical model analyzing the 
+
+<br>
 
 You can find our final project report [here](project_report.html) and watch a screencast of our project here.
 
-&nbsp;
-------------------------------------------
-Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
+<br>
