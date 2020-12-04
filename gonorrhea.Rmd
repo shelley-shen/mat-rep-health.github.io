@@ -3,7 +3,6 @@ title: "Exploratory Analysis of Gonorrhea Outcome"
 output: html_document
 ---
 
-
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(dplyr)
@@ -58,7 +57,7 @@ The following plots are an exploration of the relationship between various predi
 ```{r}
 gonorrhea1_ggplot = 
   plots_df %>% 
-  ggplot(aes(x = health_ins, y = gonorrhea), group = nta_name) + 
+  ggplot(aes(x = health_ins, y = gonorrhea, group = nta_name)) + 
   geom_point(color = "green") + 
   labs(
     title = "Exploration of Health Insurance and  Gonorrhea in NYC Neighborhoods",
@@ -69,6 +68,7 @@ ggplotly(gonorrhea1_ggplot)
 
 ```
 
+With the exception of a few outliers, the trend seems to be that neighborhoods with a lower percentage of population enrolled in health insurance have higher rates of gonorrhea cases. The association is not super strong but it is worth exploring further. 
 
 
 #### Plot 2: Medicaid and Gonorrhea 
@@ -76,17 +76,18 @@ ggplotly(gonorrhea1_ggplot)
 ```{r}
 gonorrhea2_ggplot = 
   plots_df %>% 
-  ggplot(aes(x = medicaid_enroll, y = gonorrhea), group = nta_name) +
+  ggplot(aes(x = medicaid_enroll, y = gonorrhea, group = nta_name)) +
   geom_point(color = "green") + 
   labs(
-    title = "Exploration of Medicaid Enrollment and  Gonorrhea in NYC Neighborhoods",
+    title = "Exploration of Medicaid Enrollment and Gonorrhea in NYC Neighborhoods (2014-2015)",
     x = "Percent Population Enrolled in Medicaid",
-    y = "Rate of gonorrhea cases per 100,000 (2014-2015)")
+    y = "Rate of gonorrhea cases per 100,000 People")
 
 ggplotly(gonorrhea2_ggplot)
 
 ```
 
+There is no strong relationship between percentage of population enrolled in Medicaid and rates of gonorrhea in the neighborhood population. However, there is a slight positive trend where neighborhoods with a higher Medicaid enrollment have higher rates of gonorrhea cases. There are a few outliers that do not follow this trend and indicate really high rates of gonorrhea despite having low medicaid enrollment. 
 
 
 #### Plot 3: Education and Gonorrhea
@@ -94,16 +95,19 @@ ggplotly(gonorrhea2_ggplot)
 ```{r}
 gonorrhea3_ggplot = 
   plots_df %>% 
-  ggplot(aes(x = edu_less_than_hs, y = gonorrhea), group = nta_name) +
+  ggplot(aes(x = edu_less_than_hs, y = gonorrhea, group = nta_name)) +
   geom_point(color = "green") + 
   labs(
-    title = "Exploration of Education Level and  Gonorrhea in NYC Neighborhoods",
+    title = "Exploration of Education Level and Gonorrhea in NYC Neighborhoods (2014-2015)",
     x = "Percent Population with Less than High School Education",
-    y = "rate of gonorrhea cases per 100,000 (2014-2015)")
+    y = "Rate of gonorrhea cases per 100,000 people")
 
 
 ggplotly(gonorrhea3_ggplot)
 ```
+
+Similar to the association with Medicaid, the association between education level and rates of gonorrhea is not very strong, although, there is a slight positive trend where neighborhoods with higher percentages of the population that have less education also experience higher rates of gonorrhea.    
+
 
 Comparing by race:
 ```{r}
