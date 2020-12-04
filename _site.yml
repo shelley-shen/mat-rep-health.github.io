@@ -2,12 +2,30 @@ name: "Maternal & Reproductive Health"
 output_dir: "."
 navbar:
   title: "Home"
-  right:
+  left:
+    - text: "Exploratory Analysis"
+      menu:
+        - text: "Severe Maternal Morbidity"
+          href: 
+        - text: "Premature Birth"
+          href:
+        - text: "Gonorrhea"
+          href: 
     - text: "NYC Map"
-    - text: "Model Building"
     - text: "Regression Analysis"
+      href: regression.html
+  right:
     - text: "Project Report"
       href: project_report.html
+    - icon: fa-youtube fa-lg
+      href: 
+    - text: "About"
+      menu:
+        - text: "The Project"
+          href: 
+        - text: "The Team"
+          href:
+
 output:
   html_document:
     theme: sandstone

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Cynthia Liu (cl3938)" />
+
+<meta name="date" content="2020-11-23" />
+
+<title>regression</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploratory Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Severe Maternal Morbidity</li>
+    <li class="dropdown-header">Premature Birth</li>
+    <li class="dropdown-header">Gonorrhea</li>
+  </ul>
+</li>
+<li class="dropdown-header">NYC Map</li>
+<li>
+  <a href="regression.html">Regression Analysis</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="project_report.html">Project Report</a>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    About
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">The Project</li>
+    <li class="dropdown-header">The Team</li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">regression</h1>
+<h4 class="author">Cynthia Liu (cl3938)</h4>
+<h4 class="date">11/23/2020</h4>
+
+</div>
+
+
+<div id="preliminary-regression-diagnostics" class="section level3">
+<h3>Preliminary regression diagnostics:</h3>
+<div id="normality-of-outcome-variables" class="section level4">
+<h4>Normality of outcome variables</h4>
+<p>We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea.</p>
+<p>We start by testing normality assumptions of dependent variables using histograms, Q-Q plots and Shapiro tests for normality.</p>
+<pre class="r"><code>#separate outcomes into separate dataframe
+outcome_df = project_df %&gt;%
+  dplyr::select(preterm_births, smm, gonorrhea)
+
+#histograms
+preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
+smm_hist = ggplot(outcome_df, aes(x = smm)) + geom_histogram()
+gonorrhea_hist = ggplot(outcome_df, aes(x = gonorrhea)) + geom_histogram()
+
+#q-q plots
+preterm_qq = ggqqplot(outcome_df$preterm_births)
+smm_qq = ggqqplot(outcome_df$smm)
+gonorrhea_qq = ggqqplot(project_df$gonorrhea)
+
+#create patchwork plots
+preterm_hist + preterm_qq</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-1-1.png" width="90%" /></p>
+<pre class="r"><code>smm_hist + smm_qq</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 5 rows containing non-finite values (stat_bin).</code></pre>
+<pre><code>## Warning: Removed 5 rows containing non-finite values (stat_qq).</code></pre>
+<pre><code>## Warning: Removed 5 rows containing non-finite values (stat_qq_line).
+
+## Warning: Removed 5 rows containing non-finite values (stat_qq_line).</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-1-2.png" width="90%" /></p>
+<pre class="r"><code>gonorrhea_hist + gonorrhea_qq</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 7 rows containing non-finite values (stat_bin).</code></pre>
+<pre><code>## Warning: Removed 7 rows containing non-finite values (stat_qq).</code></pre>
+<pre><code>## Warning: Removed 7 rows containing non-finite values (stat_qq_line).
+
+## Warning: Removed 7 rows containing non-finite values (stat_qq_line).</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-1-3.png" width="90%" /></p>
+<pre class="r"><code>#run shapiro-wilk tests
+outcome_df %&gt;% shapiro_test(preterm_births, smm, gonorrhea) %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="right">statistic</th>
+<th align="right">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gonorrhea</td>
+<td align="right">0.808</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">preterm_births</td>
+<td align="right">0.982</td>
+<td align="right">0.016</td>
+</tr>
+<tr class="odd">
+<td align="left">smm</td>
+<td align="right">0.933</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>Outcome variables are likely sampled from a non-normal distribution, as indicated by significant p-values for the Shapiro test and fat tails in the Q-Q plots: not a deal-breaker, since residuals are what are important, but certainly presents the possibility that linear regression may not be the best model for our data.</p>
+</div>
+<div id="exploratory-linear-regressions" class="section level4">
+<h4>Exploratory linear regressions</h4>
+<p>(maybe should delete this part)</p>
+<p>Let’s start with some exploratory linear regressions with the outcome of several maternal morbidity:</p>
+<pre class="r"><code>project_df = project_df %&gt;%
+  mutate(clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
+         non_pcmd_density = (non_pcmd/total_pop)*10000) 
+  
+
+fit = lm(smm ~ clinics_and_chc_density, data = project_df)
+
+fit %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">226.650732</td>
+<td align="right">8.700562</td>
+<td align="right">26.0501256</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">5.236386</td>
+<td align="right">14.419961</td>
+<td align="right">0.3631345</td>
+<td align="right">0.7169281</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>project_df %&gt;% 
+  modelr::add_residuals(fit) %&gt;% 
+  ggplot(aes(x = clinics_and_chc_density, y = resid)) + geom_point()</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_point).</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<pre class="r"><code>summary(fit)$r.squared</code></pre>
+<pre><code>## [1] 0.0007280148</code></pre>
+<p>These residuals are clearly skewed, with higher positive residuals and negative residuals. Linear regression is likely not appropriate here. Also this is a very bad fit, judging by the R-squared value.</p>
+<p>Let’s try adding poverty as a confounder:</p>
+<p>Linear regression with health centers and poverty</p>
+<pre class="r"><code>fit2 = lm(smm ~ clinics_and_chc_density + poverty, data = project_df)
+
+fit2 %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">158.798305</td>
+<td align="right">13.8442401</td>
+<td align="right">11.4703518</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">-7.005778</td>
+<td align="right">13.3599014</td>
+<td align="right">-0.5243884</td>
+<td align="right">0.6006536</td>
+</tr>
+<tr class="odd">
+<td align="left">poverty</td>
+<td align="right">3.559096</td>
+<td align="right">0.5939145</td>
+<td align="right">5.9926063</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>project_df %&gt;% 
+  modelr::add_residuals(fit2) %&gt;% 
+  ggplot(aes(x = clinics_and_chc_density, y = resid)) + geom_point()</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_point).</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<pre class="r"><code>project_df %&gt;% 
+  modelr::add_residuals(fit2) %&gt;% 
+  ggplot(aes(x = poverty, y = resid)) + geom_point()</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_point).</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-2.png" width="90%" /></p>
+<pre class="r"><code>summary(fit2)$r.squared</code></pre>
+<pre><code>## [1] 0.1669314</code></pre>
+<p>The normality assumption remains violated, and the fit is better but still nowhere near where we’d like. It’s possible things will improve with more predictors added to the model, but doing it by hand may take a while, so we’re going to try automatic model selection and should maybe consider some other regression models.</p>
+</div>
+</div>
+<div id="analysis-plan" class="section level3">
+<h3>Analysis Plan</h3>
+<p>Moving forward, we will try two methods of regression: a multiple linear regression using our rate data, and a Poisson model using count data to account for a possible non-normal response distribution.</p>
+<p>Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges. Please note that there is some debate regarding the statistical validity of stepwise model selection using AIC as a metric, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm’s pitfalls.</p>
+<p>Models will be judged on: * Satisfaction of assumptions for their respective method * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to both linear and Poisson models.</p>
+</div>
+<div id="multicollinearity-considerations" class="section level3">
+<h3>Multicollinearity Considerations</h3>
+<p>Let’s check for potential multicollinearity among predictors first, since stepwise model selection will exacerbate any existing multicollinearity in our model.</p>
+<p>The following steps were taken</p>
+<ul>
+<li>Remove identifiers like neighborhood names/NTA codes</li>
+<li>Remove outcome variables &amp; pre-transformed variables (i.e. clinic count)</li>
+<li>Construct a Pearson correlation matrix of predictors, using pair-wise (instead of case) deletion of datapoints with missing values</li>
+</ul>
+<pre class="r"><code>#create dataset of predictors ONLY
+predictors_df = project_df %&gt;% 
+  dplyr::select(-c(&quot;nta_name&quot;,&quot;nta_code&quot;, &quot;preterm_births&quot;, &quot;gonorrhea&quot;, &quot;smm&quot;, &quot;clinics&quot;, &quot;community_health_centers&quot;, &quot;non_pcmd&quot;, &quot;clinics_and_chc_count&quot;))
+
+N &lt;- rcorr(as.matrix(predictors_df), type = c(&quot;pearson&quot;)) #pair-wise deletion
+  
+corrplot::corrplot(N$r,
+                   type = &quot;lower&quot;,
+                   method = &quot;square&quot;, 
+                     addCoef.col = &quot;black&quot;, 
+                     diag = FALSE, 
+                     number.cex = .6,
+                     tl.col = &quot;black&quot;,
+                     tl.cex = .9,
+                     tl.srt = 45)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-4-1.png" width="90%" /> There appears to several highly correlated potential predictors in our dataset, with strong positive and negative relationships present. There is a strong possibility of multicollinearity in our final models, so results will have to be viewed carefully.</p>
+<p>Most starkly, race remains highly correlated with health and SES-related outcomes at a neighborhood level. For example, there is a strong negative correlation between percent population that identifies as white and levels of poverty, unemployment, and late or no prenatal care. This relationship becomes positive when considering percent population that identifies as Hispanic. Surprisingly, proportion of population that identifies as black have weak to no relationship with SES-related outcomes like low educational attainment or poverty, but the strongest relationship with late or no prenatal care (R = 0.54)</p>
+</div>
+<div id="outcome-severe-maternal-morbidity" class="section level3">
+<h3>Outcome: Severe Maternal Morbidity</h3>
+<div id="linear-regression-moel" class="section level4">
+<h4>Linear Regression Moel</h4>
+<p>Let’s start by fitting a linear model to the severe maternal morbidity</p>
+<pre class="r"><code>#Combined predictors with SMM outcome
+smm_linear_df = predictors_df %&gt;% 
+  mutate(smm = outcome_df$smm)
+
+#Fit the full model 
+full_smm_linear.model &lt;- lm(smm~., data = smm_linear_df)
+#Stepwise regression model
+step_smm_linear.model &lt;- stepAIC(full_smm_linear.model, direction = &quot;both&quot;, 
+                      trace = FALSE)</code></pre>
+<p>Next, we’ll take a look at the chosen predictors, effect measures, and run regression diagnostics</p>
+<pre class="r"><code>#Display converged model
+step_smm_linear.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-163.9993036</td>
+<td align="right">113.1106064</td>
+<td align="right">-1.449902</td>
+<td align="right">0.1489068</td>
+</tr>
+<tr class="even">
+<td align="left">female</td>
+<td align="right">2.9376195</td>
+<td align="right">1.9561898</td>
+<td align="right">1.501705</td>
+<td align="right">0.1350070</td>
+</tr>
+<tr class="odd">
+<td align="left">hispanic</td>
+<td align="right">0.9820437</td>
+<td align="right">0.4073069</td>
+<td align="right">2.411066</td>
+<td align="right">0.0169590</td>
+</tr>
+<tr class="even">
+<td align="left">white_non_hisp</td>
+<td align="right">0.8721465</td>
+<td align="right">0.4302774</td>
+<td align="right">2.026940</td>
+<td align="right">0.0442127</td>
+</tr>
+<tr class="odd">
+<td align="left">black_non_hisp</td>
+<td align="right">2.4258881</td>
+<td align="right">0.4202314</td>
+<td align="right">5.772743</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">foreign_born</td>
+<td align="right">1.7293970</td>
+<td align="right">0.6554211</td>
+<td align="right">2.638604</td>
+<td align="right">0.0090889</td>
+</tr>
+<tr class="odd">
+<td align="left">limited_eng</td>
+<td align="right">-1.7226345</td>
+<td align="right">0.7935614</td>
+<td align="right">-2.170764</td>
+<td align="right">0.0313196</td>
+</tr>
+<tr class="even">
+<td align="left">edu_less_than_hs</td>
+<td align="right">1.8529155</td>
+<td align="right">0.9221389</td>
+<td align="right">2.009367</td>
+<td align="right">0.0460618</td>
+</tr>
+<tr class="odd">
+<td align="left">unemployment</td>
+<td align="right">3.1239565</td>
+<td align="right">1.5675372</td>
+<td align="right">1.992907</td>
+<td align="right">0.0478530</td>
+</tr>
+<tr class="even">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">3.9060537</td>
+<td align="right">1.9313507</td>
+<td align="right">2.022447</td>
+<td align="right">0.0446794</td>
+</tr>
+<tr class="odd">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">12.6217292</td>
+<td align="right">7.4769317</td>
+<td align="right">1.688089</td>
+<td align="right">0.0932064</td>
+</tr>
+</tbody>
+</table>
+<p>The variables female, hispanic, white_non_hisp, black_non_hisp, foreign_born, limited_eng, edu_less_than_hs, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of <code>summary(step_smm_linear.model)$r.squared</code>, representing a reasonably good fit.</p>
+<p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
+<pre class="r"><code>#Regression diagnostics
+plot(step_smm_linear.model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-7-1.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-7-2.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-7-3.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-7-4.png" width="90%" /></p>
+<pre class="r"><code>#Shapiro test
+smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
+<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of <code>smm_linear_shapiro$p.value</code>. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
+<p>We’ll stop this analysis here since it’s clear the model doesn’t follow linear assumptions.</p>
+</div>
+</div>
+<div id="building-poisson-regression-model" class="section level2">
+<h2>Building Poisson regression model</h2>
+<p>Since the underlying distribution is clearly non-linear, we will try a Poisson distribution.</p>
+<p>To do this, we will:</p>
+<ul>
+<li>Convert the SMM variable, which is a rate per 10,000 back into a count using the number of live births</li>
+</ul>
+<pre class="r"><code>Poisson_regression_df = project_df </code></pre>
+<div id="outcome-preterm-births" class="section level4">
+<h4>Outcome: Preterm Births</h4>
+<p>Let’s start by fitting a linear model to the preterm births outcome</p>
+<pre class="r"><code>#Combined predictors with preterm births outcome
+preterm_linear_df = predictors_df %&gt;% 
+  mutate(preterm_births = outcome_df$preterm_births)
+
+#Fit the full model 
+full_preterm_linear.model &lt;- lm(preterm_births~., data = preterm_linear_df)
+#Stepwise regression model
+step_preterm_linear.model &lt;- stepAIC(full_preterm_linear.model, direction = &quot;both&quot;, 
+                      trace = FALSE)</code></pre>
+<p>Next, we’ll take a look at the chosen predictors, effect measures, and run regression diagnostics</p>
+<pre class="r"><code>#Display converged model
+step_preterm_linear.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">1.7598673</td>
+<td align="right">2.5887111</td>
+<td align="right">0.6798238</td>
+<td align="right">0.4974894</td>
+</tr>
+<tr class="even">
+<td align="left">hispanic</td>
+<td align="right">0.0193279</td>
+<td align="right">0.0060340</td>
+<td align="right">3.2031890</td>
+<td align="right">0.0016075</td>
+</tr>
+<tr class="odd">
+<td align="left">black_non_hisp</td>
+<td align="right">0.0465313</td>
+<td align="right">0.0062663</td>
+<td align="right">7.4256852</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">other_race</td>
+<td align="right">0.0532779</td>
+<td align="right">0.0369443</td>
+<td align="right">1.4421124</td>
+<td align="right">0.1510083</td>
+</tr>
+<tr class="odd">
+<td align="left">limited_eng</td>
+<td align="right">-0.0176602</td>
+<td align="right">0.0106726</td>
+<td align="right">-1.6547200</td>
+<td align="right">0.0997239</td>
+</tr>
+<tr class="even">
+<td align="left">health_ins</td>
+<td align="right">0.0648516</td>
+<td align="right">0.0261957</td>
+<td align="right">2.4756626</td>
+<td align="right">0.0142234</td>
+</tr>
+<tr class="odd">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.0782940</td>
+<td align="right">0.0425390</td>
+<td align="right">1.8405251</td>
+<td align="right">0.0673376</td>
+</tr>
+<tr class="even">
+<td align="left">non_pcmd_density</td>
+<td align="right">-0.0023236</td>
+<td align="right">0.0014906</td>
+<td align="right">-1.5588573</td>
+<td align="right">0.1207866</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>summary(step_preterm_linear.model)$r.squared</code></pre>
+<pre><code>## [1] 0.6501947</code></pre>
+<p>The 7 variables hispanic, black_non_hisp, other_race, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of <code>summary(step_preterm_linear.model)$r.squared</code>, representing a less-than-ideal fit with our predictor set</p>
+<p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
+<pre class="r"><code>#Regression diagnostics
+plot(step_preterm_linear.model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-11-1.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-11-2.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-11-3.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-11-4.png" width="90%" /></p>
+<pre class="r"><code>#Shapiro test
+preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))</code></pre>
+<p>The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of <code>preterm_linear_shapiro$p.value</code>, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with no outliers outside 3 standard deviations or influential points. Though one point has high leverage, it is not higher than our rule-of-thumb threshold of 0.085. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.</p>
+</div>
+<div id="outcome-gonorrhea" class="section level4">
+<h4>Outcome: Gonorrhea</h4>
+<p>Let’s start by fitting a linear model to the gonorrhea outcome variable</p>
+<pre class="r"><code>#Combined predictors with SMM outcome
+gonorrhea_linear_df = predictors_df %&gt;% 
+  mutate(gonorrhea = outcome_df$gonorrhea)
+
+#Fit the full model 
+full_gonorrhea_linear.model &lt;- lm(gonorrhea~., data = gonorrhea_linear_df)
+#Stepwise regression model
+step_gonorrhea_linear.model &lt;- stepAIC(full_gonorrhea_linear.model, direction = &quot;both&quot;, 
+                      trace = FALSE)</code></pre>
+<p>Next, we’ll take a look at the chosen predictors, effect measures, and run regression diagnostics</p>
+<pre class="r"><code>#Display converged model
+step_gonorrhea_linear.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">958.7225764</td>
+<td align="right">220.1681503</td>
+<td align="right">4.354502</td>
+<td align="right">0.0000231</td>
+</tr>
+<tr class="even">
+<td align="left">total_pop</td>
+<td align="right">0.0008114</td>
+<td align="right">0.0003602</td>
+<td align="right">2.252242</td>
+<td align="right">0.0255942</td>
+</tr>
+<tr class="odd">
+<td align="left">female</td>
+<td align="right">-18.3673381</td>
+<td align="right">4.1971286</td>
+<td align="right">-4.376168</td>
+<td align="right">0.0000211</td>
+</tr>
+<tr class="even">
+<td align="left">hispanic</td>
+<td align="right">1.5942226</td>
+<td align="right">0.8243833</td>
+<td align="right">1.933837</td>
+<td align="right">0.0548040</td>
+</tr>
+<tr class="odd">
+<td align="left">black_non_hisp</td>
+<td align="right">2.1421982</td>
+<td align="right">0.6611569</td>
+<td align="right">3.240076</td>
+<td align="right">0.0014391</td>
+</tr>
+<tr class="even">
+<td align="left">asian_pi</td>
+<td align="right">2.8951692</td>
+<td align="right">0.9999893</td>
+<td align="right">2.895200</td>
+<td align="right">0.0042898</td>
+</tr>
+<tr class="odd">
+<td align="left">limited_eng</td>
+<td align="right">-3.2650069</td>
+<td align="right">1.3840835</td>
+<td align="right">-2.358967</td>
+<td align="right">0.0194684</td>
+</tr>
+<tr class="even">
+<td align="left">edu_less_than_hs</td>
+<td align="right">-4.0744138</td>
+<td align="right">2.1585429</td>
+<td align="right">-1.887576</td>
+<td align="right">0.0607971</td>
+</tr>
+<tr class="odd">
+<td align="left">poverty</td>
+<td align="right">13.8132288</td>
+<td align="right">1.9474852</td>
+<td align="right">7.092854</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">medicaid_enroll</td>
+<td align="right">-5.2761477</td>
+<td align="right">1.5855009</td>
+<td align="right">-3.327748</td>
+<td align="right">0.0010744</td>
+</tr>
+<tr class="odd">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">6.4749328</td>
+<td align="right">3.8047051</td>
+<td align="right">1.701823</td>
+<td align="right">0.0906275</td>
+</tr>
+<tr class="even">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">26.1880599</td>
+<td align="right">15.7444747</td>
+<td align="right">1.663318</td>
+<td align="right">0.0981022</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>summary(step_gonorrhea_linear.model)$r.squared</code></pre>
+<pre><code>## [1] 0.4965378</code></pre>
+<p>The variables female, hispanic, white_non_hisp, black_non_hisp, foreign_born, limited_eng, edu_less_than_hs, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of <code>summary(step_smm_linear.model)$r.squared</code>, representing a reasonably good fit.</p>
+<p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
+<pre class="r"><code>#Regression diagnostics
+plot(step_gonorrhea_linear.model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-14-2.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-14-3.png" width="90%" /><img src="regression_files/figure-html/unnamed-chunk-14-4.png" width="90%" /></p>
+<pre class="r"><code>#Shapiro test
+gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))</code></pre>
+<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of <code>gonorrhea_linear_shapiro$p.value</code>. The plot of residuals vs fitted values has non-random variance, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
+<p>We’ll stop this analysis here since it’s clear the model doesn’t follow linear assumptions, but it’s important to note that further analysis would also have to investigate the potential outliers &amp; high leverage points found in the residuals vs. leverage plot.</p>
+<p>A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell’s Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research [add link here?] suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men.</p>
+<p>Poisson Regression</p>
+<pre class="r"><code>offset_total_pop = log(predictors_df$total_pop)
+
+gonorrhea_poisson_df = predictors_df %&gt;%
+  mutate(gonorrhea_count = round(project_df$gonorrhea*(total_pop/100000))) %&gt;%
+  dplyr::select(-total_pop)
+
+full_gonorrhea_poisson.model &lt;- glm(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df, family=poisson(link = &quot;log&quot;))
+
+step_gonorrhea_poisson.model &lt;- stepAIC(full_gonorrhea_poisson.model, direction = &quot;both&quot;, 
+                      trace = FALSE)
+
+summary(step_gonorrhea_poisson.model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = gonorrhea_count ~ female + hispanic + white_non_hisp + 
+##     black_non_hisp + asian_pi + other_race + foreign_born + limited_eng + 
+##     edu_less_than_hs + poverty + unemployment + health_ins + 
+##     medicaid_enroll + late_no_prenatal_care + clinics_and_chc_density + 
+##     offset(offset_total_pop), family = poisson(link = &quot;log&quot;), 
+##     data = gonorrhea_poisson_df)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -9.7233  -3.1480  -0.9599   1.4784  18.1902  
+## 
+## Coefficients:
+##                          Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)             25.969335  11.229606   2.313 0.020746 *  
+## female                  -0.171087   0.005730 -29.858  &lt; 2e-16 ***
+## hispanic                -0.229036   0.112677  -2.033 0.042085 *  
+## white_non_hisp          -0.250062   0.112749  -2.218 0.026564 *  
+## black_non_hisp          -0.230784   0.112839  -2.045 0.040830 *  
+## asian_pi                -0.228452   0.112831  -2.025 0.042895 *  
+## other_race              -0.263349   0.112516  -2.341 0.019255 *  
+## foreign_born             0.003794   0.001684   2.253 0.024243 *  
+## limited_eng             -0.025827   0.002737  -9.435  &lt; 2e-16 ***
+## edu_less_than_hs        -0.039171   0.003011 -13.011  &lt; 2e-16 ***
+## poverty                  0.093207   0.002570  36.269  &lt; 2e-16 ***
+## unemployment             0.014658   0.003789   3.869 0.000109 ***
+## health_ins               0.005909   0.003619   1.633 0.102559    
+## medicaid_enroll         -0.041648   0.001957 -21.280  &lt; 2e-16 ***
+## late_no_prenatal_care    0.024897   0.004514   5.515 3.49e-08 ***
+## clinics_and_chc_density  0.197757   0.018265  10.827  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 8729.6  on 180  degrees of freedom
+## Residual deviance: 3168.0  on 165  degrees of freedom
+##   (7 observations deleted due to missingness)
+## AIC: 4215.1
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<pre class="r"><code>#Display converged model
+step_gonorrhea_poisson.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">25.9693350</td>
+<td align="right">11.2296057</td>
+<td align="right">2.312578</td>
+<td align="right">0.0207459</td>
+</tr>
+<tr class="even">
+<td align="left">female</td>
+<td align="right">-0.1710872</td>
+<td align="right">0.0057301</td>
+<td align="right">-29.857883</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">hispanic</td>
+<td align="right">-0.2290362</td>
+<td align="right">0.1126768</td>
+<td align="right">-2.032683</td>
+<td align="right">0.0420846</td>
+</tr>
+<tr class="even">
+<td align="left">white_non_hisp</td>
+<td align="right">-0.2500616</td>
+<td align="right">0.1127489</td>
+<td align="right">-2.217862</td>
+<td align="right">0.0265643</td>
+</tr>
+<tr class="odd">
+<td align="left">black_non_hisp</td>
+<td align="right">-0.2307841</td>
+<td align="right">0.1128392</td>
+<td align="right">-2.045248</td>
+<td align="right">0.0408304</td>
+</tr>
+<tr class="even">
+<td align="left">asian_pi</td>
+<td align="right">-0.2284521</td>
+<td align="right">0.1128309</td>
+<td align="right">-2.024730</td>
+<td align="right">0.0428951</td>
+</tr>
+<tr class="odd">
+<td align="left">other_race</td>
+<td align="right">-0.2633491</td>
+<td align="right">0.1125157</td>
+<td align="right">-2.340555</td>
+<td align="right">0.0192551</td>
+</tr>
+<tr class="even">
+<td align="left">foreign_born</td>
+<td align="right">0.0037942</td>
+<td align="right">0.0016839</td>
+<td align="right">2.253264</td>
+<td align="right">0.0242425</td>
+</tr>
+<tr class="odd">
+<td align="left">limited_eng</td>
+<td align="right">-0.0258270</td>
+<td align="right">0.0027373</td>
+<td align="right">-9.435072</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">edu_less_than_hs</td>
+<td align="right">-0.0391711</td>
+<td align="right">0.0030107</td>
+<td align="right">-13.010815</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">poverty</td>
+<td align="right">0.0932068</td>
+<td align="right">0.0025699</td>
+<td align="right">36.269257</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">unemployment</td>
+<td align="right">0.0146580</td>
+<td align="right">0.0037887</td>
+<td align="right">3.868845</td>
+<td align="right">0.0001094</td>
+</tr>
+<tr class="odd">
+<td align="left">health_ins</td>
+<td align="right">0.0059091</td>
+<td align="right">0.0036195</td>
+<td align="right">1.632571</td>
+<td align="right">0.1025592</td>
+</tr>
+<tr class="even">
+<td align="left">medicaid_enroll</td>
+<td align="right">-0.0416484</td>
+<td align="right">0.0019572</td>
+<td align="right">-21.279544</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.0248969</td>
+<td align="right">0.0045143</td>
+<td align="right">5.515137</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">0.1977566</td>
+<td align="right">0.0182646</td>
+<td align="right">10.827288</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+<p>Severe overdispersion (deviance/df &gt;&gt; 1): try negative binomial</p>
+<pre class="r"><code>full_gonorrhea_neg_bin.model &lt;- glm.nb(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df)
+
+step_gonorrhea_neg_bin.model &lt;- stepAIC(full_gonorrhea_neg_bin.model, direction = &quot;both&quot;, 
+                      trace = FALSE)
+
+summary(step_gonorrhea_neg_bin.model)</code></pre>
+<pre><code>## 
+## Call:
+## glm.nb(formula = gonorrhea_count ~ female + hispanic + black_non_hisp + 
+##     asian_pi + limited_eng + edu_less_than_hs + poverty + medicaid_enroll + 
+##     late_no_prenatal_care + clinics_and_chc_density + offset(offset_total_pop), 
+##     data = gonorrhea_poisson_df, init.theta = 3.795503416, link = log)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.6042  -0.8290  -0.1734   0.3556   3.6396  
+## 
+## Coefficients:
+##                          Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)             -0.954326   1.151624  -0.829  0.40729    
+## female                  -0.129289   0.022114  -5.846 5.02e-09 ***
+## hispanic                 0.019714   0.004335   4.548 5.41e-06 ***
+## black_non_hisp           0.021111   0.003450   6.119 9.44e-10 ***
+## asian_pi                 0.025527   0.005384   4.742 2.12e-06 ***
+## limited_eng             -0.022544   0.007258  -3.106  0.00190 ** 
+## edu_less_than_hs        -0.026181   0.011403  -2.296  0.02168 *  
+## poverty                  0.102469   0.010249   9.998  &lt; 2e-16 ***
+## medicaid_enroll         -0.047205   0.008199  -5.757 8.55e-09 ***
+## late_no_prenatal_care    0.029240   0.019741   1.481  0.13857    
+## clinics_and_chc_density  0.224418   0.082535   2.719  0.00655 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for Negative Binomial(3.7955) family taken to be 1)
+## 
+##     Null deviance: 495.83  on 180  degrees of freedom
+## Residual deviance: 187.66  on 170  degrees of freedom
+##   (7 observations deleted due to missingness)
+## AIC: 1699.6
+## 
+## Number of Fisher Scoring iterations: 1
+## 
+## 
+##               Theta:  3.796 
+##           Std. Err.:  0.430 
+## 
+##  2 x log-likelihood:  -1675.638</code></pre>
+<p>This is much better! We will keep this model.</p>
+</div>
+<div id="appendix" class="section level3">
+<h3>Appendix</h3>
+<div id="stepwise-model-selection-criticism" class="section level4">
+<h4>Stepwise model selection criticism</h4>
+<p>Naive, greedy algorithm prone to being stuck in local optima. link to Harrel (2001) Future model selection using Lasso &amp; LAR</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
