@@ -52,8 +52,10 @@ poverty_smm_ggplot =
 
 ggplotly(poverty_smm_ggplot)
 
+```
 
 
+```{r}
 poverty2_smm_ggplot = 
   plots_df %>% 
   ggplot(aes(x = poverty_level, y = smm)) + 
@@ -64,7 +66,6 @@ poverty2_smm_ggplot =
     y = "Rate of SMM per 10,000 Deliveries")
 
 ggplotly(poverty2_smm_ggplot)
-
 
 ```
 
