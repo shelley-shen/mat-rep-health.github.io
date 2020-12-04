@@ -1,0 +1,207 @@
+---
+title: "regression"
+author: "Cynthia Liu (cl3938)"
+date: "11/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(readr)
+library(ggpubr)
+library(corrplot)
+library(RColorBrewer)
+library(Hmisc)
+library(patchwork)
+library(rstatix)
+
+knitr::opts_chunk$set(
+	fig.width = 9, 
+  fig.asp = .6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+### Preliminary regression diagnostics:
+
+#### Normality of outcome variables
+We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea. 
+
+We start by testing normality assumptions of dependent variables using histograms, Q-Q plots and Shapiro tests for normality.
+```{r}
+#separate outcomes into separate dataframe
+outcome_df = project_df %>%
+  select(preterm_births, smm, gonorrhea)
+
+#histograms
+preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
+smm_hist = ggplot(outcome_df, aes(x = smm)) + geom_histogram()
+gonorrhea_hist = ggplot(outcome_df, aes(x = gonorrhea)) + geom_histogram()
+
+#q-q plots
+preterm_qq = ggqqplot(outcome_df$preterm_births)
+smm_qq = ggqqplot(outcome_df$smm)
+gonorrhea_qq = ggqqplot(project_df$gonorrhea)
+
+#create patchwork plots
+preterm_hist + preterm_qq
+
+smm_hist + smm_qq
+
+gonorrhea_hist + gonorrhea_qq
+
+#run shapiro-wilk tests
+outcome_df %>% shapiro_test(preterm_births, smm, gonorrhea) %>%
+  knitr::kable(digits = 3)
+```
+
+Outcome variables are likely sampled from a non-normal distribution, as indicated by significant p-values for the Shapiro test and fat tails in the Q-Q plots: not a deal-breaker, since residuals are what are important, but certainly presents the possibility that linear regression may not be the best model for our data.
+
+#### Exploratory linear regressions
+
+(maybe should delete this part)
+
+Let's start with some exploratory linear regressions with the outcome of several maternal morbidity:
+
+```{r}
+project_df = project_df %>%
+  mutate(clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
+         non_pcmd_density = (non_pcmd/total_pop)*10000) %>%
+  select(-clinics, -community_health_centers)
+  
+
+fit = lm(smm ~ clinics_and_chc_density, data = project_df)
+
+fit %>% 
+  broom::tidy() %>%
+  knitr::kable()
+
+project_df %>% 
+  modelr::add_residuals(fit) %>% 
+  ggplot(aes(x = clinics_and_chc_density, y = resid)) + geom_point()
+
+summary(fit)$r.squared
+```
+These residuals are clearly skewed, with higher positive residuals and negative residuals. Linear regression is likely not appropriate here. Also this is a very bad fit, judging by the R-squared value.
+
+Let's try adding poverty as a confounder:
+
+Linear regression with health centers and poverty
+```{r}
+fit2 = lm(smm ~ clinics_and_chc_density + poverty, data = project_df)
+
+fit2 %>% 
+  broom::tidy() %>%
+  knitr::kable()
+
+project_df %>% 
+  modelr::add_residuals(fit2) %>% 
+  ggplot(aes(x = clinics_and_chc_density, y = resid)) + geom_point()
+
+project_df %>% 
+  modelr::add_residuals(fit2) %>% 
+  ggplot(aes(x = poverty, y = resid)) + geom_point()
+
+summary(fit2)$r.squared
+```
+The normality assumption remains violated, and the fit is better but still nowhere near where we'd like. It's possible things will improve with more predictors added to the model, but doing it by hand may take a while, so we're going to try automatic model selection and should maybe consider some other regression models.
+
+### Analysis Plan
+
+Moving forward, we will try two methods of regression: a multiple linear regression using our rate data, and a Poisson model using count data to account for a possible non-normal response distribution. Models will be selected with stepwise 
+
+Models will be judged on:
+  * Satisfaction of assumptions for their respective method
+  * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to both linear and Poisson models.
+  
+
+
+```{r}
+
+```
+
+```{r}
+fit3 = lm(smm ~ clinics_and_chc_density, poverty, data = project_df)
+
+fit3 %>% 
+  broom::tidy() %>%
+  knitr::kable()
+
+project_df %>% 
+  modelr::add_residuals(fit3) %>% 
+  ggplot(aes(x = clinics_and_chc_density, y = resid)) + geom_point()
+
+project_df %>% 
+  modelr::add_residuals(fit3) %>% 
+  ggplot(aes(x = poverty, y = resid)) + geom_point()
+
+```
+
+Let's check for potential multicollinearity among predictors next:
+
+* Remove identifiers like neighborhood names/NTA codes
+* Remove outcome variables & known correlated values (i.e. clinics & clinic density)
+```{r}
+#create dataset of predictors ONLY
+predictors_df = project_df %>% 
+  select(-nta_name, -nta_code, -preterm_births, -gonorrhea, -smm, -clinis)
+
+M = cor(predictors_df, use = "complete.obs") #case-wise deletion
+N <- rcorr(as.matrix(predictors_df), type = c("pearson")) #pair-wise deletion
+  
+corrplot::corrplot(N$r,
+                   type = "lower",
+                   method = "square", 
+                     addCoef.col = "black", 
+                     diag = FALSE, 
+                     number.cex = .6,
+                     tl.col = "black",
+                     tl.cex = .9,
+                     tl.srt = 45)
+```
+
+```{r}
+remove_corrs_df = predictors_df %>%
+  mutate(clinic_and_community_health_centers = clinics + community_health_centers) %>%
+  select(-c('pcmd', 'non_pcmd', 'adult_care_facilities', 'nursing_homes', 'clinics', 'community_health_centers', 'diagnostic_treatment_centers', 'hospitals', 'school_based_health_facilities', 'total_pop', 'premature_mortality', 'tb', 'hep_b', 'hep_c', 'no_health_ins_u18', 'medicaid_pc_visit'))
+
+write.csv(remove_corrs_df,'data/regression_predictors.csv', row.names = FALSE)
+
+corr_check <- rcorr(as.matrix(remove_corrs_df), type = c("pearson")) #pair-wise deletion
+  
+corrplot::corrplot(corr_check$r,
+                   type = "lower",
+                   method = "square", 
+                     addCoef.col = "black", 
+                     diag = FALSE, 
+                     number.cex = .6,
+                     tl.col = "black",
+                     tl.cex = .9,
+                     tl.srt = 45)
+
+
+```
+
+## Building Poisson regression model
+
+Cleaning the data into appropriate format
+  * Create new variable combining clinics & community health centers to reduce correlation between predictors
+  * Transform rates of SMM & gonorrhea back into counts
+  
+
+```{r}
+Poisson_regression_df = project_df %>%
+  mutate(clinics_and_chc = clinics + community_health_centers,
+         
+  
+  
+```
