@@ -26,15 +26,18 @@ The following are our directed acyclic graphs (DAGs) to visually represent the c
 *Variables of interest*
 Outcomes:
 
-- preterm births
-- SMM
-- gonorrhea
+- `preterm births`: percent preterm births (less than 37 weeks gestation) among all live births
+- `SMM`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries
+- `gonorrhea`: crude rate of gonorrhea cases diagnosed in 2014-2015 per 100,000 population, all ages
 
 
 Predictors:
 
-- health insurance coverage
-- access to health services 
-- race
-- poverty
-- education 
+- `health insurance coverage`: 
+- `access to health services `: 
+- `race`: 
+- `poverty`: 
+- `education `: 
+
+
+
