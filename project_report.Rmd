@@ -1,0 +1,33 @@
+---
+title: "Project Report"
+output: html_document
+---
+
+## Motivation 
+Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services & resources for women across the country.
+
+We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal mortality in New York City, and how these health outcomes vary by socioeconomic factors like income and race.
+
+
+## Questions
+- How does access to reproductive services impact maternal mortality rates and levels of STIs? 
+- Insurance
+- How do socioeconomic factors of health like income and race affect the relationship between access to services and health outcomes? 
+
+
+## Epidemiology 
+The following are our directed acyclic graphs (DAGs) to visually represent the causal assumptions of our project and help identify the presence of confounding for our questions.
+
+
+## Data
+*Source:* 
+[NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
+
+*Variables of interest*
+Outcomes:
+
+Predictors: 
+
+
+
+jkljkl
