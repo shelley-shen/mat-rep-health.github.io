@@ -24,7 +24,7 @@ navbar:
         - text: "The Project"
           href: 
         - text: "The Team"
-          href:
+          href: team.html
 
 output:
   html_document:

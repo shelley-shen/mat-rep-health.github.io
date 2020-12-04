@@ -11,7 +11,7 @@
 
 
 
-<title>Project Report</title>
+<title>The Team</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,7 +20,6 @@
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -248,9 +247,6 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -324,97 +320,18 @@ $(document).ready(function () {
 
 <div class="fluid-row" id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
 
 
-
-<h1 class="title toc-ignore">Project Report</h1>
+<h1 class="title toc-ignore">The Team</h1>
 
 </div>
 
 
-<div id="motivation" class="section level2">
-<h2>Motivation</h2>
-<p>Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services &amp; resources for women across the country.</p>
-<p>We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal mortality in New York City, and how these health outcomes vary by socioeconomic factors like income and race.</p>
-</div>
-<div id="questions" class="section level2">
-<h2>Questions</h2>
-<ul>
-<li>How does access to reproductive services impact maternal mortality rates and levels of STIs?</li>
-<li>Insurance</li>
-<li>How do socioeconomic factors of health like income and race affect the relationship between access to services and health outcomes?</li>
-</ul>
-</div>
-<div id="epidemiology" class="section level2">
-<h2>Epidemiology</h2>
-<p>The following are our directed acyclic graphs (DAGs) to visually represent the causal assumptions of our project and help identify the presence of confounding for our questions.</p>
-</div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<p><em>Source:</em> <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></p>
-<p><em>Variables of interest</em> Outcomes:</p>
-<ul>
-<li><code>preterm births</code>: percent preterm births (less than 37 weeks gestation) among all live births</li>
-<li><code>SMM</code>: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries</li>
-<li><code>gonorrhea</code>: crude rate of gonorrhea cases diagnosed in 2014-2015 per 100,000 population, all ages</li>
-</ul>
-<p>Predictors:</p>
-<ul>
-<li><code>health insurance coverage</code>:</li>
-<li><code>access to health services</code>:</li>
-<li><code>race</code>:</li>
-<li><code>poverty</code>:</li>
-<li><code>education</code>:</li>
-</ul>
-</div>
-<div id="data-tidying" class="section level2">
-<h2>Data Tidying</h2>
-<p>The following steps were taken to clean the NYC NTA data:</p>
-<ul>
-<li>Clean names to improve readability</li>
-<li>Select relevant predictors &amp; outcomes (demographics, SES, health outcomes, insurance status, number of providers)</li>
-<li>Drop neighborhoods that have no residential population (i.e. LaGuardia airport)</li>
-<li>Drop observation representing NYC aggregated</li>
-<li>Remove variables corresponding to 95% CI and reliability metrics of measurements</li>
-<li>Create new variable clinics_and_chc_count representing aggregated clinic and community health centers to reduce multicollinearity</li>
-<li>Create new variables adjusting number of healthcare providers by neighborhood population
-<ul>
-<li>clinics_and_chc_density: clinic &amp; community health centers per 10,000 people</li>
-<li>non_pcmd_density: on-primary care providers (specialists like ob-gyns) per 10,000 people</li>
-</ul></li>
-<li>Saved cleaned dataset to CSV to improve portability across users &amp; programs</li>
-</ul>
-<pre class="r"><code>project_df = read_excel(&quot;./data/nta-metadata.xlsx&quot;, sheet = &quot;NTA Data&quot;) %&gt;%
-  janitor::clean_names() %&gt;%
-  dplyr::select(
-    nta_name:female, 
-    hispanic:limited_eng,
-    edu_less_than_hs:poverty,
-    unemployment,
-    preterm_births:smm_reliability, 
-    gonorrhea, 
-    health_ins, 
-    medicaid_enroll, 
-    late_no_prenatal_care, 
-    clinics, 
-    community_health_centers, 
-    non_pcmd, 
-    -contains(&quot;95cl&quot;), 
-    -contains(&quot;reliability&quot;)) %&gt;%
-  mutate(clinics_and_chc_count = clinics + community_health_centers,
-         clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000) %&gt;%
-  drop_na(total_pop) %&gt;%
-  filter(nta_code != &#39;NYC&#39;)
-
-write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code></pre>
+<p><br></p>
+<p>We are a team of MPH candidates studying epidemiology at Columbia University Mailman School of Public Health.</p>
+<p><br></p>
+<div id="ayeshra-acharya" class="section level1">
+<h1><image source=""><img class="cat_circle" src="images/ayeshra.jpg" style="width:30%" class="left"> Ayeshra Acharya</h1>
 </div>
 
 
@@ -450,11 +367,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

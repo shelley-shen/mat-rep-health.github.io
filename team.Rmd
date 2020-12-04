@@ -1,0 +1,12 @@
+---
+title: "The Team"
+output: html_document
+---
+
+<br>
+
+We are a team of MPH candidates studying epidemiology at Columbia University Mailman School of Public Health. 
+
+<br>
+
+# <image source=""><img class="cat_circle" src="images/ayeshra.jpg" style="width:30%" class="left"> Ayeshra Acharya
