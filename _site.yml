@@ -6,11 +6,11 @@ navbar:
     - text: "Exploratory Analysis"
       menu:
         - text: "Severe Maternal Morbidity"
-          href: 
-        - text: "Premature Birth"
-          href:
+          href: smm.html
+        - text: "Preterm Births"
+          href: preterm_births.html
         - text: "Gonorrhea"
-          href: 
+          href: gonorrhea.html
     - text: "NYC Map"
     - text: "Regression Analysis"
       menu:
@@ -18,8 +18,8 @@ navbar:
           href: initialization.html
         - text: "Severe Maternal Morbidity"
           href: smm_reg.html
-        - text: "Premature Birth"
-          href: premature_reg.html
+        - text: "Preterm Births"
+          href: preterm_reg.html
         - text: "Gonorrhea"
           href: gonorrhea_reg.html
   right:
@@ -30,7 +30,7 @@ navbar:
     - text: "About"
       menu:
         - text: "The Project"
-          href: 
+          href: lit_review.html
         - text: "The Team"
           href: team.html
     - icon: fa-github fa-lg
