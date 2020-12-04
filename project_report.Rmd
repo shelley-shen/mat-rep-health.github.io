@@ -26,5 +26,15 @@ The following are our directed acyclic graphs (DAGs) to visually represent the c
 *Variables of interest*
 Outcomes:
 
-Predictors: 
+- preterm births
+- SMM
+- gonorrhea
 
+
+Predictors:
+
+- health insurance coverage
+- access to health services 
+- race
+- poverty
+- education 
