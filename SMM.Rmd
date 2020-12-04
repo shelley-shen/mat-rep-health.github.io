@@ -43,7 +43,7 @@ The following plots are an exploration of the relationship between various predi
 ```{r}
 poverty_smm_ggplot = 
   plots_df %>% 
-  ggplot(aes(x = poverty, y = smm), group = nta_name) +
+  ggplot(aes(x = poverty, y = smm, group = nta_name)) +
   geom_point(color = "red") + 
   labs(
     title = "Exploration of Poverty and Maternal Morbidity in NYC Neighborhoods",
