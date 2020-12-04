@@ -2,7 +2,7 @@
 title: "Exploratory Analysis of Gonorrhea Outcome"
 output: html_document
 ---
-
+hello
 
 ```{r setup, include=FALSE}
 library(tidyverse)
