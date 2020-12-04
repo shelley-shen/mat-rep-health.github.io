@@ -1,0 +1,92 @@
+---
+title: "Exploratory Analysis of Gonorrhea Outcome"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(readr)
+library(plotly)
+
+knitr::opts_chunk$set(
+	fig.width = 9, 
+  fig.asp = .6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+  
+```{r,  include = FALSE}
+plots_df = read_csv("./data/final_regression_variables_clean.csv") %>%
+    mutate(poverty_level = cut(poverty, breaks = c(-Inf, 10, 20, 30, 40, Inf), labels = c("poverty_10","poverty_20", "poverty_30", "poverty_40", "poverty_40+"))) %>% 
+  pivot_longer(
+   cols = hispanic:other_race,
+   names_to = "race",
+   values_to = "percent_pop",
+   values_drop_na = TRUE
+ ) 
+```
+
+The following plots are an exploration of the relationship between various predictors and the outcome of Gonorrhea.
+
+#### Plot 1: Health Insurance and Gonorrhea 
+
+```{r}
+gonorrhea1_ggplot = 
+  plots_df %>% 
+  ggplot(aes(x = health_ins, y = gonorrhea), group = nta_name) + 
+  geom_point(color = "green") + 
+  labs(
+    title = "Exploration of Health Insurance and  Gonorrhea in NYC Neighborhoods",
+    x = "Percent Population with Health Insurance",
+    y = "Rate of gonorrhea cases per 100,000 (2014-2015)")
+
+ggplotly(gonorrhea1_ggplot)
+
+```
+
+
+
+#### Plot 2: Medicaid and Gonorrhea 
+
+```{r}
+gonorrhea2_ggplot = 
+  plots_df %>% 
+  ggplot(aes(x = medicaid_enroll, y = gonorrhea), group = nta_name) +
+  geom_point(color = "green") + 
+  labs(
+    title = "Exploration of Medicaid Enrollment and  Gonorrhea in NYC Neighborhoods",
+    x = "Percent Population Enrolled in Medicaid",
+    y = "Rate of gonorrhea cases per 100,000 (2014-2015)")
+
+ggplotly(gonorrhea2_ggplot)
+
+```
+
+
+
+#### Plot 3: Education and Gonorrhea
+
+```{r}
+gonorrhea3_ggplot = 
+  plots_df %>% 
+  ggplot(aes(x = edu_less_than_hs, y = gonorrhea), group = nta_name) +
+  geom_point(color = "green") + 
+  labs(
+    title = "Exploration of Education Level and  Gonorrhea in NYC Neighborhoods",
+    x = "Percent Population with Less than High School Education",
+    y = "rate of gonorrhea cases per 100,000 (2014-2015)")
+
+
+ggplotly(gonorrhea3_ggplot)
+
+```
