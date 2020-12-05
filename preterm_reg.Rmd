@@ -18,6 +18,7 @@ library(patchwork)
 library(rstatix)
 library(glmnet)
 library(MASS)
+library(perturb)
 
 knitr::opts_chunk$set(
 	fig.width = 9, 
@@ -59,7 +60,7 @@ step_preterm_linear.model %>%
   knitr::kable(digits = 3)
 
 ```
-The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of `summary(step_preterm_linear.model)$r.squared`, representing a decent, but nowhere near ideal fit with our predictor set
+The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of `r summary(step_preterm_linear.model)$r.squared`, representing a decent fit. This is unsurprisingly given the complex web of factors that contribute to high preterm birth rates. 
 
 However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
 ```{r}
@@ -69,8 +70,22 @@ plot(step_preterm_linear.model)
 #Shapiro test
 preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))
 ```
-The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
+The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `r preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
 
-These results are valid, so we can interpret them!
+These results are valid, so we can interpret them! Because we prioritize simple intuitive models, we'll use our valid linear regression model. 
 
+#### Discussion 
 
+Our final model consists of the 6 predictors hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density. 
+
+Because of correlation between many predictors, we should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.
+
+```{r}
+preterm_coll = colldiag(step_preterm_linear.model)
+
+knitr::kable(list(preterm_coll$condindx, preterm_coll$pi))
+```
+
+As we suspected, there is some collinearity indicated by a single high condition index and unsurprisingly given the correlation matrix we visualized between predictors. However, nearly all of the variation seems to be attributed to the health insurance predictor, with no two predictors having high variance in the corresponding variance decomposition matrix row.
+
+We'll table that variable for now, but note that as we suspected, prenatal care and health insurance status are strongly related to rates of preterm births in NYC neighborhoods, controlling for minority population proportions.

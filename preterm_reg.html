@@ -352,7 +352,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li>
-  <a>
+  <a href="https://www.youtube.com/watch?v=hoJ5Jc2OhsE">
     <span class="fa fa-youtube fa-lg"></span>
      
   </a>
@@ -467,15 +467,152 @@ step_preterm_linear.model %&gt;%
 </tr>
 </tbody>
 </table>
-<p>The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of <code>summary(step_preterm_linear.model)$r.squared</code>, representing a decent, but nowhere near ideal fit with our predictor set</p>
+<p>The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of 0.6461531, representing a decent fit. This is unsurprisingly given the complex web of factors that contribute to high preterm birth rates.</p>
 <p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
 <pre class="r"><code>#Regression diagnostics
 plot(step_preterm_linear.model)</code></pre>
 <p><img src="preterm_reg_files/figure-html/unnamed-chunk-2-1.png" width="90%" /><img src="preterm_reg_files/figure-html/unnamed-chunk-2-2.png" width="90%" /><img src="preterm_reg_files/figure-html/unnamed-chunk-2-3.png" width="90%" /><img src="preterm_reg_files/figure-html/unnamed-chunk-2-4.png" width="90%" /></p>
 <pre class="r"><code>#Shapiro test
 preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))</code></pre>
-<p>The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of <code>preterm_linear_shapiro$p.value</code>, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.</p>
-<p>These results are valid, so we can interpret them!</p>
+<p>The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of 0.2584184, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.</p>
+<p>These results are valid, so we can interpret them! Because we prioritize simple intuitive models, we’ll use our valid linear regression model.</p>
+<div id="discussion" class="section level4">
+<h4>Discussion</h4>
+<p>Our final model consists of the 6 predictors hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density.</p>
+<p>Because of correlation between many predictors, we should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.</p>
+<pre class="r"><code>preterm_coll = colldiag(step_preterm_linear.model)
+
+knitr::kable(list(preterm_coll$condindx, preterm_coll$pi))</code></pre>
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
+<table>
+<thead>
+<tr class="header">
+<th align="right">cond.index</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.000000</td>
+</tr>
+<tr class="even">
+<td align="right">2.403917</td>
+</tr>
+<tr class="odd">
+<td align="right">2.782138</td>
+</tr>
+<tr class="even">
+<td align="right">4.460079</td>
+</tr>
+<tr class="odd">
+<td align="right">6.442939</td>
+</tr>
+<tr class="even">
+<td align="right">10.741038</td>
+</tr>
+<tr class="odd">
+<td align="right">87.317927</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table>
+<colgroup>
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="13%" />
+<col width="11%" />
+<col width="23%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">intercept</th>
+<th align="right">hispanic</th>
+<th align="right">black</th>
+<th align="right">limited_eng</th>
+<th align="right">health_ins</th>
+<th align="right">late_no_prenatal_care</th>
+<th align="right">non_pcmd_density</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.0000441</td>
+<td align="right">0.0050734</td>
+<td align="right">0.0033590</td>
+<td align="right">0.0029112</td>
+<td align="right">0.0000538</td>
+<td align="right">0.0021888</td>
+<td align="right">0.0067837</td>
+</tr>
+<tr class="even">
+<td align="right">0.0000029</td>
+<td align="right">0.0005776</td>
+<td align="right">0.0391500</td>
+<td align="right">0.0004157</td>
+<td align="right">0.0000070</td>
+<td align="right">0.0035426</td>
+<td align="right">0.5957154</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0000008</td>
+<td align="right">0.0344639</td>
+<td align="right">0.1172167</td>
+<td align="right">0.0370426</td>
+<td align="right">0.0000005</td>
+<td align="right">0.0008216</td>
+<td align="right">0.1669063</td>
+</tr>
+<tr class="even">
+<td align="right">0.0008281</td>
+<td align="right">0.2979879</td>
+<td align="right">0.0058401</td>
+<td align="right">0.0075008</td>
+<td align="right">0.0013908</td>
+<td align="right">0.0142826</td>
+<td align="right">0.1407872</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0007884</td>
+<td align="right">0.2553957</td>
+<td align="right">0.0551316</td>
+<td align="right">0.4079468</td>
+<td align="right">0.0016542</td>
+<td align="right">0.0180051</td>
+<td align="right">0.0817990</td>
+</tr>
+<tr class="even">
+<td align="right">0.0000014</td>
+<td align="right">0.2906056</td>
+<td align="right">0.7374822</td>
+<td align="right">0.1402001</td>
+<td align="right">0.0000061</td>
+<td align="right">0.9457102</td>
+<td align="right">0.0049757</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9983343</td>
+<td align="right">0.1158959</td>
+<td align="right">0.0418204</td>
+<td align="right">0.4039827</td>
+<td align="right">0.9968878</td>
+<td align="right">0.0154491</td>
+<td align="right">0.0030327</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As we suspected, there is some collinearity indicated by a single high condition index and unsurprisingly given the correlation matrix we visualized between predictors. However, nearly all of the variation seems to be attributed to the health insurance predictor, with no two predictors having high variance in the corresponding variance decomposition matrix row.</p>
+<p>We’ll table that variable for now, but note that as we suspected, prenatal care and health insurance status are strongly related to rates of preterm births in NYC neighborhoods, controlling for minority population proportions.</p>
+</div>
 
 <hr>
 
