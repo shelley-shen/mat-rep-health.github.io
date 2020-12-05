@@ -9,17 +9,31 @@ We are a team of MPH candidates studying epidemiology at Columbia University Mai
 
 <br>
 
-# <img src="images/ayeshra.jpg" style="width:30%" class="left"> Ayeshra Acharya
+
+# <img src="images/ayeshra.jpg" style="width:30%" class="left"> 
+**Ayeshra Acharya**
+Text about Ayeshra. 
 
 <br>
 
-# <img src="images/zaynub.jpg" style="width:30%" class="left"> Zaynub Ibrahim
+# <img src="images/zaynub.jpg" style="width:30%" class="left"> 
+**Zaynub Ibrahim**
+Text about Zaynub.
 
 <br>
 
-# <img src="images/cynthia.jpg" style="width:30%" class="left"> Cynthia Liu
+# <img src="images/cynthia.jpg" style="width:30%" class="left"> 
+**Cynthia Liu**
+Text about Cynthia.
 
 <br> 
 
-# <img src="images/shelley.jpg" style="width:30%" class="left"> Shelley Shen 
+# <img src="images/shelley.jpg" style="width:30%" class="left"> 
+**Shelley Shen**
+Text about Shelley.
 
+<br>
+
+# <img src="images/sooji.jpg" style="width:30%" class="left"> 
+**Sooji**
+Text about Sooji.
