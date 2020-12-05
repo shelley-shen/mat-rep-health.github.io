@@ -1,6 +1,8 @@
 ---
 title: "Exploratory Analysis of Preterm Births Outcome"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +15,8 @@ library(plotly)
 knitr::opts_chunk$set(
 	fig.width = 9, 
   fig.asp = .6,
-  out.width = "90%"
+  out.width = "90%", 
+	warning=FALSE
 )
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
@@ -36,11 +39,11 @@ plots_df = read_csv("./data/final_regression_variables_clean.csv") %>%
  ) 
 ```
 
-The following plots are an exploration of the relationship between various predictors and the outcome of preterm births.
+#### *The following plots are an exploration of the relationship between various predictors and the outcome of preterm births among women in NYC.*
 
 <br>
 
-### Plot 1: Health Insurance and Preterm Births
+### Part I: Health Insurance and Preterm Births
 
 ```{r}
 preterm_ggplot = 
@@ -49,17 +52,17 @@ preterm_ggplot =
   geom_point(color = "blue") + 
   labs(
     title = "Exploration of Health Insurance and  Preterm Births in NYC Neighborhoods",
-    x = "Percent Population with Health Insurance",
-    y = "Percent Preterm Births Among All Live Births")
+    x = "Percent of population with health insurance",
+    y = "Percent of preterm births among all live births")
 
 ggplotly(preterm_ggplot)
 ```
 
-Generally in NYC neighborhoods, the overall percentage of people with health insurance is fairly high, with the exception of North Corona where only 58.5% of the population has health insurance. Despite this, it appears that those neighborhoods with less percentage of the population enrolled in health insurance have more percentages of preterm births in the population. There does not seem to be a strong relationship, however, it might be worth exploring this association through statistical methods and looking at whether health insurance also modifies the association between prenatal care and preterm births.  
+Generally in NYC neighborhoods, the overall percentage of people with health insurance is fairly high, with the exception of North Corona where only 58.5% of the population has health insurance. Despite this, it appears that those neighborhoods with a lower percentage of the population enrolled in health insurance have higher percentages of preterm births in the population. While there does not appear to be a strong relationship between health insurance coverage and preterm births, it might be worth to explore this association through statistical methods and examine if health insurance modifies the relationship between prenatal care and preterm births.  
 
 <br>
 
-### Plot 2: Prenatal Care and Preterm Births 
+### Part II: Prenatal Care and Preterm Births 
 
 ```{r}
 prenatal_care_ggplot = 
@@ -67,14 +70,14 @@ prenatal_care_ggplot =
   ggplot(aes(x = late_no_prenatal_care, y = preterm_births, group = nta_name)) + 
   geom_point(color = "blue") + 
   labs(
-    title = "Exploration of Access to Prenatal Care and  Preterm Births in NYC Neighborhoods",
-    x = "Percent Live Births Recieving Late or No Prenatal Care",
-    y = "Percent Preterm Births Among All Live Births")
+    title = "Access to Prenatal Care and Preterm Births in NYC Neighborhoods",
+    x = "Percent live births recieving late or no prenatal care",
+    y = "Percent preterm births among all live births")
 
 ggplotly(prenatal_care_ggplot)
 ```
 
-There appears to be a clear direct relationship between the percentage of live births that receive late or no prenatal care and percentage of preterm births among all live births in the population. Neighborhoods with higher percentages of late or no prenatal care are more likely to have higher percentages of preterm births. 
+There appears to be a strong, positive relationship between the percentage of live births that receive late or no prenatal care and percentage of preterm births among all live births in the population. Neighborhoods with higher percentages of late or no prenatal care are more likely to have higher percentages of preterm births. 
 
 
 ```{r}
@@ -83,9 +86,11 @@ preterm2_ggplot =
   ggplot(aes(x = medicaid_enroll, y = preterm_births, group = nta_name)) + 
   geom_point(color = "blue") + 
   labs(
-    title = "Exploration of Medicaid Enrollment and Preterm Births in NYC Neighborhoods",
-    x = "Percent Population Enrolled in Medicaid",
-    y = "Percent Preterm Births Among All Live Births")
+    title = "Medicaid Enrollment and Preterm Births in NYC Neighborhoods",
+    x = "Percent population enrolled in Medicaid",
+    y = "Percent preterm births among all live births")
 
 ggplotly(preterm2_ggplot)
 ```
+
+Aside from a few outliers, there appears to be a positive relationship between the percentage of Medicaid enrollees and the percentage of preterm births among all live births. The outliers include neighborhoods with high Medicaid enrollment percents but low preterm birth rates and appear to contain higher numbers of immigrant residents and higher proportions of the population receiving an education that is lower than high school level. 

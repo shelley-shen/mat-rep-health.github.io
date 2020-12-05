@@ -14,9 +14,10 @@ library(plotly)
 library(patchwork)
 
 knitr::opts_chunk$set(
-	fig.width = 9, 
+	fig.width = 11, 
   fig.asp = .6,
-  out.width = "90%"
+  out.width = "90%", 
+	warning=FALSE
 )
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
@@ -40,12 +41,13 @@ plots_df = read_csv("./data/clean_dataset.csv") %>%
  ) 
   
 ```
+<br>
 
-The following plots are an exploration of the relationship between various predictors and the outcome of Gonorrhea.
+#### *The following plots are an exploration of the relationship between various predictors and the outcome of gonorrhea.*
 
 <br>
 
-### Plot 1: Health Insurance and Gonorrhea 
+### Part I: Health Insurance and Gonorrhea 
 
 ```{r}
 gonorrhea1_ggplot = 
@@ -53,19 +55,18 @@ gonorrhea1_ggplot =
   ggplot(aes(x = health_ins, y = gonorrhea, group = nta_name)) + 
   geom_point(color = "green") + 
   labs(
-    title = "Exploration of Health Insurance and  Gonorrhea in NYC Neighborhoods",
-    x = "Percent Population with Health Insurance",
-    y = "Rate of gonorrhea cases per 100,000 (2014-2015)")
+    title = "Health Insurance and  Gonorrhea in NYC Neighborhoods (2014-2015)",
+    x = "Percent population with pealth pnsurance",
+    y = "Rate of gonorrhea cases per 100,000 people")
 
 ggplotly(gonorrhea1_ggplot)
-
 ```
 
-With the exception of a few outliers, the trend seems to be that neighborhoods with a lower percentage of population enrolled in health insurance have higher rates of gonorrhea cases. The association is not super strong but it is worth exploring further. 
+With the exception of a few outliers, the trend seems to be that neighborhoods with a lower percentage of population enrolled in health insurance have higher rates of gonorrhea cases. The association is not very strong but it is worth exploring further. 
 
 <br>
 
-### Plot 2: Medicaid and Gonorrhea 
+### Part II: Medicaid and Gonorrhea 
 
 ```{r}
 gonorrhea2_ggplot = 
@@ -73,19 +74,19 @@ gonorrhea2_ggplot =
   ggplot(aes(x = medicaid_enroll, y = gonorrhea, group = nta_name)) +
   geom_point(color = "green") + 
   labs(
-    title = "Exploration of Medicaid Enrollment and Gonorrhea in NYC Neighborhoods (2014-2015)",
-    x = "Percent Population Enrolled in Medicaid",
-    y = "Rate of gonorrhea cases per 100,000 People")
+    title = "Medicaid Enrollment and Gonorrhea in NYC Neighborhoods (2014-2015)",
+    x = "Percent population enrolled in Medicaid",
+    y = "Rate of gonorrhea cases per 100,000 people")
 
 ggplotly(gonorrhea2_ggplot)
 
 ```
 
-There is no strong relationship between percentage of population enrolled in Medicaid and rates of gonorrhea in the neighborhood population. However, there is a slight positive trend where neighborhoods with a higher Medicaid enrollment have higher rates of gonorrhea cases. There are a few outliers that do not follow this trend and indicate  high rates of gonorrhea despite having low Medicaid enrollment. 
+There is no strong relationship between percentage of population enrolled in Medicaid and rates of gonorrhea in the neighborhood population. However, there is a slight positive trend where neighborhoods with higher levels of Medicaid enrollment display higher rates of gonorrhea cases. There are a few outliers that do not follow this trend and indicate high rates of gonorrhea despite having low Medicaid enrollment. 
 
 <br>
 
-### Plot 3: Education and Gonorrhea
+### Part III: Education and Gonorrhea
 
 ```{r}
 gonorrhea3_ggplot = 
@@ -93,15 +94,15 @@ gonorrhea3_ggplot =
   ggplot(aes(x = education, y = gonorrhea, group = nta_name)) +
   geom_point(color = "green") + 
   labs(
-    title = "Exploration of Education Level and Gonorrhea in NYC Neighborhoods (2014-2015)",
-    x = "Percent Population with Less than High School Education",
+    title = "Education Level and Gonorrhea in NYC Neighborhoods (2014-2015)",
+    x = "Percent population with less than high school education",
     y = "Rate of gonorrhea cases per 100,000 people")
 
 
 ggplotly(gonorrhea3_ggplot)
 ```
 
-Similar to the association with Medicaid, the association between education level and rates of gonorrhea is not very strong, although, there is a slight positive trend where neighborhoods with higher percentages of the population that have less education also experience higher rates of gonorrhea.    
+Similar to the association with Medicaid enrollment, the association between education level and rates of gonorrhea is not very strong. However, there is a slight positive trend where neighborhoods with higher percentages of the population holding less than high school level education also experience higher rates of gonorrhea.    
 
 <br>
 

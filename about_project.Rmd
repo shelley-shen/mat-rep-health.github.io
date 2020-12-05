@@ -3,8 +3,11 @@ title: "About the Project - Background Information"
 
 output: html_document
 ---
+<br>
 
-## Literature Review
+*Some additional information regarding the nature of our outcomes of interest.*
+
+<br>
 
 **Severe Maternal Morbidity** 
 

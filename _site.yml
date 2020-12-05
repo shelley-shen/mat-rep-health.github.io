@@ -6,7 +6,7 @@ navbar:
     - text: "Exploratory Analysis"
       menu:
         - text: "Severe Maternal Morbidity"
-          href: SMM.html
+          href: smm2.html
         - text: "Preterm Births"
           href: preterm_births.html
         - text: "Gonorrhea"
@@ -30,14 +30,14 @@ navbar:
   right:
     - text: "Project Report"
       href: project_report.html
-    - icon: fa-youtube fa-lg
-      href: 
     - text: "About"
       menu:
         - text: "The Project"
           href: about_project.html
         - text: "The Team"
           href: team.html
+    - icon: fa-youtube fa-lg
+      href: 
     - icon: fa-github fa-lg
       href: https://github.com/shelley-shen/nycmaternalhealth
 output:

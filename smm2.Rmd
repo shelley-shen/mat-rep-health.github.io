@@ -40,7 +40,7 @@ plots_df = read_csv("./data/final_regression_variables_clean.csv") %>%
  ) 
 ```
 
-*The following plots are an exploration of the relationship between various predictors and the outcome of severe maternal morbididy (SMM).*
+#### *The following plots are an exploration of the relationship between various predictors and the outcome of severe maternal morbidity (SMM) among women in NYC.*
 
 <br>
 
@@ -59,7 +59,7 @@ poverty_smm_ggplot =
 ggplotly(poverty_smm_ggplot)
 ```
 
-This plot shows a general positive trend between poverty and severe maternal morbidity. Neighborhoods with higher percentage of their population in poverty also have higher rates of maternal morbidity. However, there are a few outliers that do not follow the trend, including Williamsburg, which has a high population percentage of poverty but much lower rates of SMM compared to other neighborhoods in New York City. 
+This plot shows a general positive trend between poverty and severe maternal morbidity. Neighborhoods with higher percentages of their population in poverty also have higher rates of maternal morbidity. However, there are a few outliers that do not follow the trend, including Williamsburg, which has a high population percentage of poverty but much lower rates of SMM compared to other neighborhoods in New York City. 
 
 ```{r}
 poverty2_smm_ggplot = 
@@ -74,7 +74,7 @@ poverty2_smm_ggplot =
 ggplotly(poverty2_smm_ggplot)
 ```
 
-A new categorical variable for poverty was created to further examine the association between poverty and SMM. The direct relationship between the two variables can be observed in this plot as well. However, it is interesting to note the differing variabilities in each level. For example, amongst neighborhoods where greater than 40% of the population is in poverty, the SMM rates are high, as expected, but there is less variability than neighborhoods where 30% to 40% of the population is in poverty. 
+A new categorical variable for poverty was created to further examine the association between poverty and SMM. The direct relationship between the two variables can be observed in this plot as well. However, it is interesting to note the differing variabilities in each level. For example, amongst neighborhoods where greater than 40% of the population is in poverty, the SMM rates are high, as expected, but there is less variability than among neighborhoods where 30% to 40% of the population is in poverty. 
 
 <br> 
 
