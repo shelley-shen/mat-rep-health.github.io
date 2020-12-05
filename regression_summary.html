@@ -505,6 +505,15 @@ corrplot::corrplot(N$r,
 <p>We’ll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!</p>
 <p> </p>
 </div>
+<<<<<<< HEAD
+=======
+<div id="appendix" class="section level3">
+<h3>Appendix</h3>
+<div id="stepwise-model-selection-criticism" class="section level4">
+<h4>Stepwise Model Selection Criticism</h4>
+<p>Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This <a href="https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6">article</a> details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of ‘ransacking’ of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature.</p>
+<p>Algorithms are never a replacement for rational thought and thorough research. Look no further than <a href="https://tinyurl.com/googleJeffGoldsmith">here</a> for proof that even the most well-fed algorithms make unfortunate mistakes.</p>
+>>>>>>> 94839aed93bea3fdda460ab1e653d0090e44dbcd
 </div>
 <div id="appendix" class="section level2">
 <h2>Appendix</h2>
@@ -516,8 +525,9 @@ corrplot::corrplot(N$r,
 <h3>Future Directions</h3>
 <p>Some potential other directions to build off our work:</p>
 <ul>
-<li>Model selection using Lasso &amp; LAR, which overcome many of the limitations of stepwise model selection and generally have better results</li>
-<li>Spatial regression to account for correlation between</li>
+<li>Model selection using Lasso &amp; LAR, which overcome many of the limitations of stepwise model selection and generally have better model specifications.</li>
+<li>Adding complexity to models by considering the presence of mediators, confounders, and interaction terms in the estimation models</li>
+<li>Spatial regression (using spatial lag residuals as a covariate) to account for correlation between adjacent neighborhoods. This can be done using GeoDa and our QGIS shapefiles</li>
 </ul>
 </div>
 </div>

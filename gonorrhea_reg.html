@@ -285,7 +285,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="SMM.html">Severe Maternal Morbidity</a>
+      <a href="smm2.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -336,12 +336,6 @@ $(document).ready(function () {
         <li>
   <a href="project_report.html">Project Report</a>
 </li>
-<li>
-  <a>
-    <span class="fa fa-youtube fa-lg"></span>
-     
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     About
@@ -356,6 +350,12 @@ $(document).ready(function () {
       <a href="team.html">The Team</a>
     </li>
   </ul>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/shelley-shen/nycmaternalhealth">
@@ -392,12 +392,12 @@ $(document).ready(function () {
 outcome_df = read.csv(&quot;./data/outcomes.csv&quot;)
 
 #Combined predictors with SMM outcome
-gonorrhea_linear_df = predictors_df %&gt;% 
+gonorrhea_df = predictors_df %&gt;% 
   mutate(gonorrhea = outcome_df$gonorrhea) %&gt;%
   dplyr::select(-total_pop)
 
 #Fit the full model 
-full_gonorrhea_linear.model &lt;- lm(gonorrhea~., data = gonorrhea_linear_df)
+full_gonorrhea_linear.model &lt;- lm(gonorrhea~., data = gonorrhea_df)
 #Stepwise regression model
 step_gonorrhea_linear.model &lt;- stepAIC(full_gonorrhea_linear.model, direction = &quot;both&quot;, 
                       trace = FALSE)
@@ -509,19 +509,14 @@ gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))<
 </div>
 <div id="poisson-regression-model" class="section level4">
 <h4>Poisson Regression Model</h4>
-<p>Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could run a Poisson regression to model the outcome. <strong>note: we received mixed feedback as to the validity of this model, so our approach should be considered with a grain of salt</strong></p>
-<pre class="r"><code>#create offset as 
-offset_total_pop = log(predictors_df$total_pop)
-
-#create count variable from rate
-gonorrhea_poisson_df = predictors_df %&gt;%
-  mutate(gonorrhea_count = round(outcome_df$gonorrhea*(total_pop/100000))) %&gt;%
-  dplyr::select(-total_pop)
-
-full_gonorrhea_poisson.model &lt;- glm(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df, family=poisson(link = &quot;log&quot;))
+<p>Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could run a Poisson regression to model the outcome. Running a Poisson model on gonorrhea case rate approximates fitting a Poisson regression on a gonorrhea count variable, using neighborhood population as an offset.</p>
+<pre class="r"><code>full_gonorrhea_poisson.model &lt;- glm(gonorrhea~., data=gonorrhea_df, family=poisson(link = &quot;log&quot;))
 
 step_gonorrhea_poisson.model &lt;- stepAIC(full_gonorrhea_poisson.model, direction = &quot;both&quot;, 
-                      trace = FALSE)</code></pre>
+                      trace = FALSE)
+
+step_gonorrhea_poisson.model$aic</code></pre>
+<pre><code>## [1] Inf</code></pre>
 <pre class="r"><code>#Display converged model
 step_gonorrhea_poisson.model %&gt;% 
   broom::tidy() %&gt;%
@@ -539,135 +534,129 @@ step_gonorrhea_poisson.model %&gt;%
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">31.152</td>
-<td align="right">11.188</td>
-<td align="right">2.785</td>
-<td align="right">0.005</td>
+<td align="right">12.337</td>
+<td align="right">7.681</td>
+<td align="right">1.606</td>
+<td align="right">0.108</td>
 </tr>
 <tr class="even">
 <td align="left">female</td>
-<td align="right">-0.166</td>
-<td align="right">0.006</td>
-<td align="right">-29.437</td>
+<td align="right">-0.147</td>
+<td align="right">0.004</td>
+<td align="right">-36.281</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
 <td align="left">hispanic</td>
-<td align="right">-0.285</td>
-<td align="right">0.112</td>
-<td align="right">-2.541</td>
-<td align="right">0.011</td>
+<td align="right">0.013</td>
+<td align="right">0.077</td>
+<td align="right">0.167</td>
+<td align="right">0.867</td>
 </tr>
 <tr class="even">
 <td align="left">white</td>
-<td align="right">-0.305</td>
-<td align="right">0.112</td>
-<td align="right">-2.716</td>
-<td align="right">0.007</td>
+<td align="right">-0.004</td>
+<td align="right">0.077</td>
+<td align="right">-0.057</td>
+<td align="right">0.954</td>
 </tr>
 <tr class="odd">
 <td align="left">black</td>
-<td align="right">-0.285</td>
-<td align="right">0.112</td>
-<td align="right">-2.536</td>
-<td align="right">0.011</td>
+<td align="right">0.014</td>
+<td align="right">0.077</td>
+<td align="right">0.180</td>
+<td align="right">0.857</td>
 </tr>
 <tr class="even">
 <td align="left">other</td>
-<td align="right">-0.289</td>
-<td align="right">0.112</td>
-<td align="right">-2.575</td>
 <td align="right">0.010</td>
+<td align="right">0.077</td>
+<td align="right">0.134</td>
+<td align="right">0.893</td>
 </tr>
 <tr class="odd">
+<td align="left">foreign_born</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.577</td>
+<td align="right">0.564</td>
+</tr>
+<tr class="even">
 <td align="left">limited_eng</td>
-<td align="right">-0.015</td>
+<td align="right">-0.017</td>
 <td align="right">0.002</td>
-<td align="right">-7.864</td>
+<td align="right">-10.487</td>
 <td align="right">0.000</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">education</td>
-<td align="right">-0.044</td>
-<td align="right">0.003</td>
-<td align="right">-15.052</td>
+<td align="right">-0.040</td>
+<td align="right">0.002</td>
+<td align="right">-19.284</td>
 <td align="right">0.000</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">poverty</td>
-<td align="right">0.093</td>
+<td align="right">0.092</td>
 <td align="right">0.002</td>
-<td align="right">38.818</td>
+<td align="right">54.618</td>
 <td align="right">0.000</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">unemployment</td>
-<td align="right">0.014</td>
-<td align="right">0.004</td>
-<td align="right">3.602</td>
-<td align="right">0.000</td>
-</tr>
-<tr class="odd">
-<td align="left">health_ins</td>
-<td align="right">0.006</td>
+<td align="right">0.009</td>
 <td align="right">0.003</td>
-<td align="right">1.876</td>
-<td align="right">0.061</td>
+<td align="right">3.350</td>
+<td align="right">0.001</td>
 </tr>
 <tr class="even">
+<td align="left">health_ins</td>
+<td align="right">-0.003</td>
+<td align="right">0.003</td>
+<td align="right">-0.975</td>
+<td align="right">0.329</td>
+</tr>
+<tr class="odd">
 <td align="left">medicaid_enroll</td>
-<td align="right">-0.042</td>
-<td align="right">0.002</td>
-<td align="right">-21.904</td>
+<td align="right">-0.040</td>
+<td align="right">0.001</td>
+<td align="right">-29.180</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.036</td>
+<td align="right">0.003</td>
+<td align="right">11.918</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
-<td align="left">late_no_prenatal_care</td>
-<td align="right">0.028</td>
-<td align="right">0.004</td>
-<td align="right">6.353</td>
+<td align="left">clinics_and_chc_density</td>
+<td align="right">0.148</td>
+<td align="right">0.016</td>
+<td align="right">9.500</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="even">
-<td align="left">clinics_and_chc_density</td>
-<td align="right">0.202</td>
-<td align="right">0.018</td>
-<td align="right">11.097</td>
+<td align="left">non_pcmd_density</td>
+<td align="right">0.001</td>
+<td align="right">0.000</td>
+<td align="right">4.403</td>
 <td align="right">0.000</td>
 </tr>
 </tbody>
 </table>
-<p>Our Poisson model selected 13 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is 19.2494786, which indicates that our model is overdispersed.</p>
+<p>Our Poisson model selected 15 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is 45.940339, which indicates that our model is overdispersed.</p>
 </div>
 <div id="negative-binomial-regression-model" class="section level4">
 <h4>Negative Binomial Regression Model</h4>
 <p>There are several ways to address overdispersion in Poisson models, but for our purposes we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha to account for either over or underdispersion.</p>
-<pre class="r"><code>full_gonorrhea_neg_bin.model &lt;- glm.nb(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df)
+<pre class="r"><code>full_gonorrhea_neg_bin.model &lt;- glm.nb(gonorrhea~., data=gonorrhea_df)
 
 step_gonorrhea_neg_bin.model &lt;- stepAIC(full_gonorrhea_neg_bin.model, direction = &quot;both&quot;, 
                       trace = FALSE)
-step_gonorrhea_neg_bin.model</code></pre>
-<pre><code>## 
-## Call:  glm.nb(formula = gonorrhea_count ~ female + hispanic + black + 
-##     other + limited_eng + education + poverty + medicaid_enroll + 
-##     clinics_and_chc_density + offset(offset_total_pop), data = gonorrhea_poisson_df, 
-##     init.theta = 3.719441756, link = log)
-## 
-## Coefficients:
-##             (Intercept)                   female                 hispanic  
-##                -1.00657                 -0.12823                  0.02117  
-##                   black                    other              limited_eng  
-##                 0.02397                  0.02258                 -0.01844  
-##               education                  poverty          medicaid_enroll  
-##                -0.02730                  0.10133                 -0.04611  
-## clinics_and_chc_density  
-##                 0.22309  
-## 
-## Degrees of Freedom: 180 Total (i.e. Null);  171 Residual
-##   (7 observations deleted due to missingness)
-## Null Deviance:       486.9 
-## Residual Deviance: 187.6     AIC: 1701</code></pre>
-<pre class="r"><code>#Display converged model
+
+#Display converged model
 step_gonorrhea_neg_bin.model %&gt;% 
   broom::tidy() %&gt;%
   knitr::kable(digits = 3)</code></pre>
@@ -684,78 +673,91 @@ step_gonorrhea_neg_bin.model %&gt;%
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-1.007</td>
-<td align="right">1.157</td>
-<td align="right">-0.870</td>
-<td align="right">0.384</td>
+<td align="right">10.844</td>
+<td align="right">1.177</td>
+<td align="right">9.211</td>
+<td align="right">0.000</td>
 </tr>
 <tr class="even">
 <td align="left">female</td>
-<td align="right">-0.128</td>
-<td align="right">0.022</td>
-<td align="right">-5.790</td>
+<td align="right">-0.136</td>
+<td align="right">0.023</td>
+<td align="right">-6.014</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
 <td align="left">hispanic</td>
-<td align="right">0.021</td>
+<td align="right">0.017</td>
 <td align="right">0.004</td>
-<td align="right">5.480</td>
+<td align="right">3.981</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="even">
 <td align="left">black</td>
-<td align="right">0.024</td>
-<td align="right">0.003</td>
-<td align="right">8.762</td>
+<td align="right">0.020</td>
+<td align="right">0.004</td>
+<td align="right">5.847</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
 <td align="left">other</td>
-<td align="right">0.023</td>
+<td align="right">0.021</td>
 <td align="right">0.005</td>
-<td align="right">4.800</td>
+<td align="right">4.559</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="even">
 <td align="left">limited_eng</td>
-<td align="right">-0.018</td>
+<td align="right">-0.022</td>
 <td align="right">0.007</td>
-<td align="right">-2.651</td>
-<td align="right">0.008</td>
+<td align="right">-3.107</td>
+<td align="right">0.002</td>
 </tr>
 <tr class="odd">
 <td align="left">education</td>
-<td align="right">-0.027</td>
+<td align="right">-0.022</td>
 <td align="right">0.012</td>
-<td align="right">-2.367</td>
-<td align="right">0.018</td>
+<td align="right">-1.887</td>
+<td align="right">0.059</td>
 </tr>
 <tr class="even">
 <td align="left">poverty</td>
-<td align="right">0.101</td>
-<td align="right">0.010</td>
-<td align="right">9.782</td>
+<td align="right">0.103</td>
+<td align="right">0.011</td>
+<td align="right">9.801</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="odd">
 <td align="left">medicaid_enroll</td>
 <td align="right">-0.046</td>
 <td align="right">0.008</td>
-<td align="right">-5.572</td>
+<td align="right">-5.396</td>
 <td align="right">0.000</td>
 </tr>
 <tr class="even">
-<td align="left">clinics_and_chc_density</td>
-<td align="right">0.223</td>
-<td align="right">0.083</td>
-<td align="right">2.677</td>
-<td align="right">0.007</td>
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.029</td>
+<td align="right">0.020</td>
+<td align="right">1.429</td>
+<td align="right">0.153</td>
+</tr>
+<tr class="odd">
+<td align="left">non_pcmd_density</td>
+<td align="right">0.002</td>
+<td align="right">0.001</td>
+<td align="right">2.227</td>
+<td align="right">0.026</td>
 </tr>
 </tbody>
 </table>
-<p>The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, and clinics_and_chc_density.</p>
-<p>This is much better! We will keep this model.</p>
+<p>The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care and non_pcmd_density.</p>
+<p>This is much better! The model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let’s compare the three models using AIC:</p>
+<ul>
+<li>Linear: AIC = 2209.5396526</li>
+<li>Poisson: AIC = Inf</li>
+<li>Negative binomial: AIC = 2027.4706595</li>
+</ul>
+<p>The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we’ve established AIC as our criteria, we’ll use the negative binomial analysis moving forward.</p>
 </div>
 
 <hr>
@@ -764,14 +766,16 @@ step_gonorrhea_neg_bin.model %&gt;%
 
 <p align="center">
 
+<small>
+
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
 
 <p align="center">
-Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1) and <a href ="https://qgis.org/en/site/">QGIS</a> (v3.16 1 'Hannover'). 
 
 <br>
 
-Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2).
+Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2). </p>
 
 
 

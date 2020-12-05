@@ -43,12 +43,12 @@ predictors_df = read.csv("./data/predictors.csv")
 outcome_df = read.csv("./data/outcomes.csv")
 
 #Combined predictors with SMM outcome
-gonorrhea_linear_df = predictors_df %>% 
+gonorrhea_df = predictors_df %>% 
   mutate(gonorrhea = outcome_df$gonorrhea) %>%
   dplyr::select(-total_pop)
 
 #Fit the full model 
-full_gonorrhea_linear.model <- lm(gonorrhea~., data = gonorrhea_linear_df)
+full_gonorrhea_linear.model <- lm(gonorrhea~., data = gonorrhea_df)
 #Stepwise regression model
 step_gonorrhea_linear.model <- stepAIC(full_gonorrhea_linear.model, direction = "both", 
                       trace = FALSE)
@@ -57,6 +57,7 @@ step_gonorrhea_linear.model <- stepAIC(full_gonorrhea_linear.model, direction = 
 step_gonorrhea_linear.model %>% 
   broom::tidy() %>%
   knitr::kable(digits = 3)
+
 ```
 The variables female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `r summary(step_gonorrhea_linear.model)$r.squared`, representing a reasonably good fit. 
 
@@ -77,21 +78,15 @@ A quick look at the dataset shows that both these data points, corresponding to 
 
 #### Poisson Regression Model
 
-Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could run a Poisson regression to model the outcome. **note: we received mixed feedback as to the validity of this model, so our approach should be considered with a grain of salt**
+Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could run a Poisson regression to model the outcome. Running a Poisson model on gonorrhea case rate approximates fitting a Poisson regression on a gonorrhea count variable, using neighborhood population as an offset.
 
 ```{r}
-#create offset as 
-offset_total_pop = log(predictors_df$total_pop)
-
-#create count variable from rate
-gonorrhea_poisson_df = predictors_df %>%
-  mutate(gonorrhea_count = round(outcome_df$gonorrhea*(total_pop/100000))) %>%
-  dplyr::select(-total_pop)
-
-full_gonorrhea_poisson.model <- glm(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df, family=poisson(link = "log"))
+full_gonorrhea_poisson.model <- glm(gonorrhea~., data=gonorrhea_df, family=poisson(link = "log"))
 
 step_gonorrhea_poisson.model <- stepAIC(full_gonorrhea_poisson.model, direction = "both", 
                       trace = FALSE)
+
+step_gonorrhea_poisson.model$aic
 ```
 
 ```{r}
@@ -100,23 +95,32 @@ step_gonorrhea_poisson.model %>%
   broom::tidy() %>%
   knitr::kable(digits = 3)
 ```
-Our Poisson model selected 13 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is `r step_gonorrhea_poisson.model$deviance/step_gonorrhea_poisson.model$df.residual`, which indicates that our model is overdispersed. 
+Our Poisson model selected 15 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is `r step_gonorrhea_poisson.model$deviance/step_gonorrhea_poisson.model$df.residual`, which indicates that our model is overdispersed. 
 
 #### Negative Binomial Regression Model
 
 There are several ways to address overdispersion in Poisson models, but for our purposes we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha to account for either over or underdispersion.
 
 ```{r}
-full_gonorrhea_neg_bin.model <- glm.nb(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df)
+full_gonorrhea_neg_bin.model <- glm.nb(gonorrhea~., data=gonorrhea_df)
 
 step_gonorrhea_neg_bin.model <- stepAIC(full_gonorrhea_neg_bin.model, direction = "both", 
                       trace = FALSE)
-step_gonorrhea_neg_bin.model
+
 #Display converged model
 step_gonorrhea_neg_bin.model %>% 
   broom::tidy() %>%
   knitr::kable(digits = 3)
 ```
-The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, and clinics_and_chc_density.
+The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care and non_pcmd_density.
 
-This is much better! We will keep this model.
+This is much better! The model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let's compare the three models using AIC: 
+
+  * Linear: AIC = `r AIC(step_gonorrhea_linear.model)`
+  * Poisson: AIC = `r toString(step_gonorrhea_poisson.model$aic)`
+  * Negative binomial: AIC = `r step_gonorrhea_neg_bin.model$aic`
+
+The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we've established AIC as our criteria, we'll use the negative binomial analysis moving forward. 
+
+
+

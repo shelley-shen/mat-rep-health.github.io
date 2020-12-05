@@ -1,7 +1,5 @@
 ---
 title: "regression"
-author: "Cynthia Liu (cl3938)"
-date: "11/23/2020"
 output: html_document
 ---
 
