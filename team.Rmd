@@ -27,7 +27,7 @@ Hi! I am currently a second year MPH student at Columbia University, pursuing a 
 # <img src="images/cynthia.jpg" style="width:30%" class="left"> 
 **Cynthia Liu**
 
-Text about Cynthia.
+I'm Cynthia, an MPH candidate in epidemiology with a certificate in applied biostatistics. I'm passionate about applications of machine learning, data analytics, and bioinformatics that can streamline healthcare systems and improve medical technology. In my free time, I can be found knitting slightly lopsided sweaters while watching professional esports, particular League of Legends and Valorant.
 
 <br> 
 
