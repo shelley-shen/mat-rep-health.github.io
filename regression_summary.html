@@ -352,7 +352,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li>
-  <a>
+  <a href="https://www.youtube.com/watch?v=hoJ5Jc2OhsE">
     <span class="fa fa-youtube fa-lg"></span>
      
   </a>
@@ -387,6 +387,7 @@ $(document).ready(function () {
 
 <div id="summary" class="section level2">
 <h2>Summary</h2>
+<p>Our regression analysis showed strong associations between SMM and both poverty and late or no access to prenatal care. Race is also associated with SMM, showing that neighborhoods with higher populations of Black and Hispanic individuals have higher rates of SMM. Similarly for preterm births, race and access to prenatal care are also significant predictors. We also see an association between health insurance and preterm births. Lastly, in our models for gonorrhea, we also see statistically significant associations with our outcome and race, education level, and poverty. Access to prenatal care also presents an association, though it is not as strong as our other predictors.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
@@ -431,7 +432,9 @@ $(document).ready(function () {
 </div>
 <div id="analysis-plan" class="section level2">
 <h2>Analysis Plan</h2>
-<p>We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships if a linear model is a poor fit. For linear models, we’re particularly concerned about the homoskedasticity and normality assumptions, though it’s possible that our large sample size (n = 188) will help us overcome the latter.</p>
+<p>We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships if a linear model is a poor fit. For linear models, we’re particularly concerned about the homoskedasticity and normality assumptions.</p>
+<p>However, deviations from assumptions are not the end, especially since our model exists for estimation, not prediction purposes. Linearity assumptions are important for t and F-test results, but it’s likely our relatively large sample size (n=188) may help us overcome that.</p>
+<p>Homoskedasticity is an issue: unequal variances will not bias our estimates, but will lead to incorrect standard errors. As a result, model heteroskedasticity may lead to improper fits and irrelevant hypothesis test results. However, assumption deviations are questions of degree, so models may still have meaning if deviations are minor.</p>
 <p>Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm’s pitfalls.</p>
 <p>Models will be judged on:</p>
 <ul>

@@ -35,7 +35,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 ## Summary
-
+Our regression analysis showed strong associations between SMM and both poverty and late or no access to prenatal care. Race is also associated with SMM, showing that neighborhoods with higher populations of Black and Hispanic individuals have higher rates of SMM. Similarly for preterm births, race and access to prenatal care are also significant predictors. We also see an association between health insurance and preterm births. Lastly, in our models for gonorrhea, we also see statistically significant associations with our outcome and race, education level, and poverty. Access to prenatal care also presents an association, though it is not as strong as our other predictors. 
 
 ## Data
 

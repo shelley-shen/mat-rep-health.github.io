@@ -385,6 +385,14 @@ $(document).ready(function () {
 </div>
 
 
+<p><br></p>
+<style type="text/css">
+
+h1.title {text-align: center;}
+
+</style>
+<p><img src="images/rephealth_image1.jpg" style="width:75%" class="center"></p>
+<p><br></p>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Severe maternal morbidity (SMM) includes health outcomes during labor and delivery that may result in both short-term and/or long term health consequences for women. New York City’s rate of SMM increased 28.2 % from 2008 to 2012. Preterm births, when infants are born prior to 37 weeks of gestation, can place the mother at increased risk of physical and mental health complications as well as decreased bonding with the baby. Additionally, STI’s pose a general threat of infection to mothers and infants. Some of the factors contributing to high rates of SMM, preterm births, and STI’s in New York City include access to reproductive health services, health insurance coverage, neighborhood poverty level, education, and race. We will examine these factors that may contribute to the poor maternal health outcomes in New York City. In regards to STI’s in our assessment of reproductive health in NYC, we will choose to focus specifically on gonorrhea as it provides considerable risk to pregnant mothers and newborn babies and is among the most infectious of STI’s <a href="https://www.mayoclinic.org/diseases-conditions/gonorrhea/symptoms-causes/syc-20351774#:~:text=Gonorrhea%20is%20an%20infection%20caused,vaginal%2C%20oral%20or%20anal%20sex">1</a>.</p>
@@ -524,6 +532,16 @@ write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code
 <div id="exploratory-analysis-1" class="section level3">
 <h3>Exploratory Analysis</h3>
 <p>We used data visualizations to conduct some exploratory analysis of our outcomes and predictors to identify any preliminary trends. We approached this by separating the three primary outcomes (SMM, preterm births, and gonorrhea) and selected various predictors based on literature to further examine their relationships. In order to create the plots, we first took our clean data set and restructured the poverty and race predictors into categorical variables. Then, for each outcome we created scatter plots against predictors such as race, poverty, prenatal care, health insurance, medicaid enrollment, and education. For gonorrhea, we also investigated its relationship with education, stratified by race. Similarly, we investigated SMM and prenatal care, stratified by race.</p>
+<pre class="r"><code>plots_df = read_csv(&quot;./data/clean_dataset.csv&quot;) %&gt;%
+  mutate(
+    poverty_level = cut(poverty, breaks = c(-Inf, 10, 20, 30, 40, Inf), 
+    labels = c(&quot;poverty_10&quot;,&quot;poverty_20&quot;, &quot;poverty_30&quot;, &quot;poverty_40&quot;, &quot;poverty_40+&quot;))) %&gt;% 
+  pivot_longer(
+   cols = hispanic:other,
+   names_to = &quot;race&quot;,
+   values_to = &quot;percent_pop&quot;,
+   values_drop_na = TRUE
+ ) </code></pre>
 </div>
 <div id="neighborhood-level-maps-1" class="section level3">
 <h3>Neighborhood-Level Maps</h3>
@@ -544,10 +562,64 @@ write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code
 </div>
 <div id="results-discussion" class="section level2">
 <h2>Results &amp; Discussion</h2>
-<p>strong predictors: poverty, accessed prenatal care at a late stage of pregnancy or no access at all, race moderate strength predictor: Medicaid, education level (gonorrhea) poor predictor: health insurance coverage (for both preterm births and gonorrhea)</p>
-<p>These exploratory visualizations demonstrate the importance of access to care and socioeconomic factors to the health of mothers. From our exploratory analyses, we found that poverty and late or no access to prenatal care are strong predictors of our outcomes, with direct, positive relationships. Race appears to modify the relationship between prenatal care access and SMM. Among populations with greater percent of Hispanic and Black individuals, there were higher rates of SMM as the percentage of low or no prenatal care rose. However, among populations with greater percent of White individuals, levels of late or no prenatal access and SMM were both low.</p>
-<p>While health insurance coverage did not appear to be a strong predictor of preterm births or gonorrhea, the rate of Medicaid enrollment was positively associated with these outcomes. We speculate that those covered by private insurance tend to be healthier and wealthier than those insured by Medicaid, potentially predisposing Medicaid enrollees to worse health outcomes. Another potential reason for the discrepancy between health insurance types is the consequences of cost-sharing. Patients under plans with greater cost-sharing and higher deductibles tend to seek lower amounts of necessary care, which would create negative consequences for those who are poor and sick. This postulation may also help explain the strong influence of the predictor late or no access to prenatal care upon the outcomes of SMM and preterm births. Pregnant mothers who experience poverty, bear more out-of-pocket prenatal care costs, and are in need of healthcare may receive crucial prenatal care belatedly or forgo it altogether, resulting in higher rates of SMM and preterm births.</p>
-<p>Education</p>
+<p>These exploratory visualizations demonstrate the importance of access to care and socioeconomic factors to the health of mothers. From our exploratory analyses, we found that poverty and late or no access to prenatal care are strong predictors of our outcomes, with direct, positive relationships. Race appears to modify the relationship between prenatal care access and SMM. Among populations with greater percent of Hispanic and Black individuals, there were higher rates of SMM as the percentage of low or no prenatal care rose. However, among populations with greater percent of White individuals, levels of late or no prenatal access and SMM were both low. These results support our literature review findings, highlighting the importance of access to care, income level, and race on health outcomes.</p>
+<pre class="r"><code>poverty2_smm_ggplot = 
+  plots_df %&gt;% 
+  ggplot(aes(x = poverty_level, y = smm)) + 
+  geom_boxplot() + 
+  labs(
+    title = &quot;Poverty Levels and Maternal Morbidity in NYC Neighborhoods&quot;,
+    x = &quot;Grouped percentage population below federal poverty level&quot;,
+    y = &quot;Rate of SMM per 10,000 deliveries&quot;)
+
+ggplotly(poverty2_smm_ggplot)
+
+
+prenatal_care_ggplot = 
+  plots_df %&gt;% 
+  ggplot(aes(x = late_no_prenatal_care, y = preterm_births, group = nta_name)) + 
+  geom_point(color = &quot;blue&quot;) + 
+  labs(
+    title = &quot;Access to Prenatal Care and Preterm Births in NYC Neighborhoods&quot;,
+    x = &quot;Percent live births recieving late or no prenatal care&quot;,
+    y = &quot;Percent preterm births among all live births&quot;)
+
+ggplotly(prenatal_care_ggplot)</code></pre>
+<p>While health insurance coverage did not appear to be a strong predictor of preterm births or gonorrhea, the rate of Medicaid enrollment was positively associated with these outcomes. We speculate that those covered by private insurance tend to be healthier and wealthier than those insured by Medicaid, potentially predisposing Medicaid enrollees to worse health outcomes. Another potential reason for the discrepancy between health insurance types is the consequences of cost-sharing. Patients under plans with greater cost-sharing and higher deductibles tend to seek lower amounts of necessary care, which would create negative consequences for those who are poor and sick. This postulation may also help explain the strong influence of the predictor late or no access to prenatal care upon the outcomes of SMM and preterm births. Pregnant mothers who experience poverty, bear more out-of-pocket prenatal care costs, and are in need of healthcare may receive belated crucial prenatal care or forgo it altogether, resulting in higher rates of SMM and preterm births.</p>
+<pre class="r"><code>gonorrhea1_ggplot = 
+  plots_df %&gt;% 
+  ggplot(aes(x = health_ins, y = gonorrhea, group = nta_name)) + 
+  geom_point(color = &quot;green&quot;) + 
+  labs(
+    title = &quot;Health Insurance and  Gonorrhea in NYC Neighborhoods (2014-2015)&quot;,
+    x = &quot;Percent population with health insurance&quot;,
+    y = &quot;Rate of gonorrhea cases per 100,000 people&quot;)
+
+ggplotly(gonorrhea1_ggplot)
+
+
+gonorrhea2_ggplot = 
+  plots_df %&gt;% 
+  ggplot(aes(x = medicaid_enroll, y = gonorrhea, group = nta_name)) +
+  geom_point(color = &quot;green&quot;) + 
+  labs(
+    title = &quot;Medicaid Enrollment and Gonorrhea in NYC Neighborhoods (2014-2015)&quot;,
+    x = &quot;Percent population enrolled in Medicaid&quot;,
+    y = &quot;Rate of gonorrhea cases per 100,000 people&quot;)
+
+ggplotly(gonorrhea2_ggplot)</code></pre>
+<p>We hypothesized that education would be a significant predictor of STI levels, specifically gonorrhea, which was our STI focus. From previous understanding and literature review, individuals with higher levels of education tend to practice safer sex methods and develop lower rates of STIs. Following that reasoning, we expected to see a strong association between the percentage of population with less than high school education and the rate of gonorrhea, where neighborhoods with higher percentages of the population with low education levels would see higher rates of gonorrhea. While a small, positive relationship between the variables does exist, it is a much weaker association than expected, with numerous outliers. We speculate that this weak association may be caused by the tendency of sexual education being taught at the middle school level and that the amount of safe sex practice knowledge may not be as different as we expected between the less-than-high-school level of education and higher education. Additionally, we hypothesize that the outliers of low percent of less-than-high-school education but high gonorrhea rates may be influenced by the large number of LGBTQ+ residents in those neighborhoods. We do not want to make assumptions about these marginalized communities who already experience a heavy burden from stigmatization. But in an attempt to understand potential causes for these data points, we will draw some tentative connections. From <a href="about_project.html">subsequent literature review</a>, we have seen that people identifying as LGBTQ+ have higher rates of STI’s, whether as a result of lower condom usage following increased use of pre-exposure prophylaxis (PrEP) or due to a general, greater willingness to receive STI testing. This may artificially inflate the rate of gonorrhea in these neighborhoods since we have not tested and controlled for the variation of STI testing among different neighborhoods.</p>
+<pre class="r"><code>gonorrhea3_ggplot = 
+  plots_df %&gt;% 
+  ggplot(aes(x = education, y = gonorrhea, group = nta_name)) +
+  geom_point(color = &quot;green&quot;) + 
+  labs(
+    title = &quot;Education Level and Gonorrhea in NYC Neighborhoods (2014-2015)&quot;,
+    x = &quot;Percent population with less than high school education&quot;,
+    y = &quot;Rate of gonorrhea cases per 100,000 people&quot;)
+
+
+ggplotly(gonorrhea3_ggplot)</code></pre>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2>Acknowledgements</h2>
