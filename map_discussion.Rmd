@@ -23,7 +23,7 @@ Here, we can see a relationship between the high cluster areas and high poverty(
 
 <br> 
 
-For this visualization, those who identify as Black and Non-Hispanic are included from the race category. This categorization was chosen due to prior knowledge from the Literature about the maternal health disparities that exist within the Black population in the US. This map shows the percent of population who identifies as Black and Non-Hispanic with clusters of Severe Maternal Morbidity(SMM) overlaid in New York City by Neighborhood Tabulation Areas.
+For this visualization, those who identify as Black and Non-Hispanic are included from the race category. This categorization was chosen due to prior knowledge from the Literature about the maternal health disparities that exist within Black Mothers in the US. This map shows the percent of population who identifies as Black and Non-Hispanic with clusters of Severe Maternal Morbidity(SMM) overlaid in New York City by Neighborhood Tabulation Areas.
 <br>
 Here, we can see a clear relationship between the high cluster areas of SMM and the high percent of Black-identifying populations(shown by the darker purple areas), particularly in Eastern Brooklyn, the Eastern border of Queens and parts of Bronx. We also see a relationship between low percent of Black-identifying populations(shown by the white and lighter purple) and low clusters of SMM. 
 
