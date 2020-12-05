@@ -19,11 +19,21 @@ library(tidyverse)
 library(dplyr)
 library(readxl)
 library(readr)
+library(ggpubr)
+library(corrplot)
+library(RColorBrewer)
+library(Hmisc)
+library(patchwork)
+library(rstatix)
+library(glmnet)
+library(MASS)
+library(perturb)
 library(plotly)
 
 knitr::opts_chunk$set(
   out.width = "100%", 
 	warning = FALSE,
+  message = FALSE,
   results = "hide"
 )
 ```
@@ -77,12 +87,10 @@ Among neighborhoods in NYC...
 
 #### **Potential Predictors:**
 
-- `nta_name`: neighborhood tabulation area names
-- `nta_code`: neighborhood tabulation area code
 - `total_pop`: total population
 - `female`: percent of female population in 2010-2014
 - `foreign_born`: percent of population born outside the US or US territories
-- `limted_eng`: percent of population 5 years and older who report that they speak English "less than very well"
+- `limited_eng`: percent of population 5 years and older who report that they speak English "less than very well"
 - `unemployment`: percent of the civilian (non-military) labor force ages 16 and older who are unemployed in 2010-2014
 - `health_ins`: percent of civilian non-institutionalized population with health insurance in 2010-2014
 - `medicaid_enroll`: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015
@@ -91,7 +99,6 @@ Among neighborhoods in NYC...
 - `poverty`: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses: 
 - `education`: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
 - `non_pcmd`: number of non-primary care providers in 2014
-- `clinics_and_chc_count`: number of clinic & community health per 10,000 people in 2014
 - `clinics_and_chc_density`: clinic & community health centers per 10,000 people in 2014
 - `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
 
@@ -151,7 +158,7 @@ Our final dataset contained data from 188 neighborhoods in New York City, define
 
 ## Methods
 
-In this section, we discuss the analyses we completed and our results.
+In this section, we discuss the analyses we completed. 
 
 ### Exploratory Analysis
 
@@ -177,11 +184,273 @@ We used Local Indicators of Spatial Association(LISA) Clusters within GeoDA, whi
 
 ### Regression Models
 
-#### Outcome
+#### Severe Maternal Morbidity
 
-#### Outcome
+#### Linear Regression Model
 
-#### Outcome
+We fit a linear model to the severe maternal morbidity outcome using our stepwise AIC automatic feature selection algorithm. Next, we'll take a look at the chosen predictors, effect measures, and run regression diagnostics. 
+```{r}
+#Combined predictors with SMM outcome
+predictor_df = read.csv("./data/predictors.csv")
+outcome_df = read.csv("./data/outcomes.csv")
+smm_df = predictor_df %>% 
+  mutate(smm = outcome_df$smm)
+
+#Fit the full model 
+full_smm_linear.model <- lm(smm~., data = smm_df)
+#Stepwise regression model
+step_smm_linear.model <- stepAIC(full_smm_linear.model, direction = "both", 
+                      trace = FALSE)
+
+#Display converged model
+step_smm_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+
+The variables female, hispanic, white, black, foreign_born, limited_eng, education, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `r summary(step_smm_linear.model)$r.squared`, representing a reasonably good fit. 
+
+However, we were concerned about our assumptions for linear regression, so they need to be 
+checked before we can interpret any results. 
+
+```{r}
+#Regression diagnostics
+plot(step_smm_linear.model)
+
+#Shapiro test
+smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))
+```
+
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `r smm_linear_shapiro$p.value`. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. There's also an unequal distribution of leverage among points (though likely not significant), and a few potential outliers.
+
+It's possible that the model is still valid - let's try something else though!
+
+#### Poisson Regression Model
+
+Because our outcome variable, severe maternal morbidity rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we can fit Poisson regression to model the outcome.  
+
+```{r}
+full_smm_poisson.model <- glm(smm~., data=smm_df, family=poisson(link = "log"))
+
+step_smm_poisson.model <- stepAIC(full_smm_poisson.model, direction = "both", 
+                      trace = FALSE)
+
+#Display converged model
+step_smm_poisson.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+
+Our Poisson model failed to converge, which is why it appears all predictors were selected in the final model. A closer look at the regression output shows that this is because the model is overdispersed, violating one of the key assumptions of Poisson regression.
+
+#### Negative Binomial Regression Model
+
+To address that, we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha that can account for overdispersion.
+
+```{r}
+full_smm_neg_bin.model <- glm.nb(smm~., data=smm_df)
+
+step_smm_neg_bin.model <- stepAIC(full_smm_neg_bin.model, direction = "both", 
+                      trace = FALSE)
+
+#Display converged model
+step_smm_neg_bin.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+
+The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: hispanic, white, other, foreign_born, unemployment, medicaid_enroll, late_no_prenatal_care and clinics_and_chc_density.
+
+This model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let's compare the three models we've already built, and just for kicks, a negative binomial regression with variables selected through literature review & causal theory. 
+
+The predictors we'll use in our model are: late_no_prenatal_care, clinics_and_chc_density, medicaid_enroll, hispanic percent population, and black percent population.
+
+```{r}
+theory_smm_neg_bin.model <- glm.nb(smm~ late_no_prenatal_care + clinics_and_chc_density + medicaid_enroll + hispanic + black, data=smm_df)
+
+#Display converged model
+theory_smm_neg_bin.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+
+Let's compare all four models using AIC and discuss the implications of these values.
+
+  * Linear: AIC = `r AIC(step_smm_linear.model)`
+  * Poisson: AIC = `r toString(step_smm_poisson.model$aic)`
+  * Negative binomial: AIC = `r step_smm_neg_bin.model$aic`
+  * Our model: AIC = `r theory_smm_neg_bin.model$aic`
+
+Though the automatically generated negative binomial model has the lowest AIC and is therefore the "winning" model, it's important to note that our curated model is not far behind. Our curated model is also more parsimonious, contains fewer highly correlated predictors, and fits well with the existing body of literature on severe maternal morbidity, all of which are benefits difficult to quantify with a metric like AIC.
+
+#### Discussion
+
+Because of correlation between many predictors, we should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.
+```{r}
+smm_coll = colldiag(step_smm_neg_bin.model)
+
+knitr::kable(list(smm_coll$condindx, smm_coll$pi))
+```
+
+As we suspected, there is some degree of collinearity in our model, indicated by condition indices between 10 and 30. However, it is not extreme and seems to be strongly related to the predictor of white population proportion. We will be careful not to interpret that predictor independently.
+
+As a result, we can safely say that a model containing hispanic, white, other, foreign_born, unemployment, medicaid_enroll, late_no_prenatal_care and clinics_and_chc_density is the best set of predictors for neighborhood-level severe maternal morbidity.
+
+#### Preterm Births
+
+Let's start by fitting a linear model to the preterm births outcome using a stepwise selection process (with AIC as metric). Next, we'll take a look at the chosen predictors, effect measures, and run regression diagnostics of our converged model.
+
+```{r}
+#read in cleaned csv files
+predictors_df = read.csv("./data/predictors.csv")
+outcome_df = read.csv("./data/outcomes.csv")
+
+#Combined predictors with preterm births outcome
+preterm_linear_df = predictors_df %>% 
+  mutate(preterm_births = outcome_df$preterm_births)
+
+#Fit the full model 
+full_preterm_linear.model <- lm(preterm_births~., data = preterm_linear_df)
+#Stepwise regression model
+step_preterm_linear.model <- stepAIC(full_preterm_linear.model, direction = "both", 
+                      trace = FALSE)
+
+
+#Display converged model
+step_preterm_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+
+```
+The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of `r summary(step_preterm_linear.model)$r.squared`, representing a decent fit. This is unsurprisingly given the complex web of factors that contribute to high preterm birth rates. 
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_preterm_linear.model)
+
+#Shapiro test
+preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))
+```
+The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `r preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
+
+These results are valid, so we can interpret them! Because we prioritize simple intuitive models, we'll use our valid linear regression model. 
+
+#### Discussion 
+
+Our final model consists of the 6 predictors hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density. 
+
+Because of correlation between many predictors, we should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.
+
+```{r}
+preterm_coll = colldiag(step_preterm_linear.model)
+
+knitr::kable(list(preterm_coll$condindx, preterm_coll$pi))
+```
+
+As we suspected, there is some collinearity indicated by a single high condition index and unsurprisingly given the correlation matrix we visualized between predictors. However, nearly all of the variation seems to be attributed to the health insurance predictor, with no two predictors having high variance in the corresponding variance decomposition matrix row.
+
+We'll table that variable for now, but note that as we suspected, prenatal care and health insurance status are strongly related to rates of preterm births in NYC neighborhoods, controlling for minority population proportions.
+
+#### Gonorrhea
+
+#### Linear Regression Model
+
+Let's start by fitting a linear model to the gonorrhea outcome variable using our stepwise selection process with AIC. The chosen predictors are indicated in the table below.
+```{r}
+predictors_df = read.csv("./data/predictors.csv")
+outcome_df = read.csv("./data/outcomes.csv")
+
+#Combined predictors with SMM outcome
+gonorrhea_df = predictors_df %>% 
+  mutate(gonorrhea = outcome_df$gonorrhea) %>%
+  dplyr::select(-total_pop)
+
+#Fit the full model 
+full_gonorrhea_linear.model <- lm(gonorrhea~., data = gonorrhea_df)
+#Stepwise regression model
+step_gonorrhea_linear.model <- stepAIC(full_gonorrhea_linear.model, direction = "both", 
+                      trace = FALSE)
+
+#Display converged model
+step_gonorrhea_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+
+```
+The variables female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `r summary(step_gonorrhea_linear.model)$r.squared`, representing a reasonably good fit. 
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_gonorrhea_linear.model)
+
+#Shapiro test
+gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))
+```
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `r gonorrhea_linear_shapiro$p.value`. The plot of residuals vs fitted values has non-random variance, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
+
+We'll stop this analysis here since it's clear the model doesn't follow linear assumptions, but it's important to note that further analysis would also have to investigate the potential outliers & high leverage points found in the residuals vs. leverage plot. 
+
+A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell's Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men. 
+
+
+#### Poisson Regression Model
+
+Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could run a Poisson regression to model the outcome. Running a Poisson model on gonorrhea case rate approximates fitting a Poisson regression on a gonorrhea count variable, using neighborhood population as an offset.
+
+```{r}
+full_gonorrhea_poisson.model <- glm(gonorrhea~., data=gonorrhea_df, family=poisson(link = "log"))
+
+step_gonorrhea_poisson.model <- stepAIC(full_gonorrhea_poisson.model, direction = "both", 
+                      trace = FALSE)
+```
+
+```{r}
+#Display converged model
+step_gonorrhea_poisson.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+Our Poisson model selected 15 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is `r step_gonorrhea_poisson.model$deviance/step_gonorrhea_poisson.model$df.residual`, which indicates that our model is overdispersed. 
+
+#### Negative Binomial Regression Model
+
+There are several ways to address overdispersion in Poisson models, but for our purposes we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha to account for either over or underdispersion.
+
+```{r}
+full_gonorrhea_neg_bin.model <- glm.nb(gonorrhea~., data=gonorrhea_df)
+
+step_gonorrhea_neg_bin.model <- stepAIC(full_gonorrhea_neg_bin.model, direction = "both", 
+                      trace = FALSE)
+
+#Display converged model
+step_gonorrhea_neg_bin.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care and non_pcmd_density.
+
+This is much better! The model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let's compare the three models using AIC: 
+
+  * Linear: AIC = `r AIC(step_gonorrhea_linear.model)`
+  * Poisson: AIC = `r toString(step_gonorrhea_poisson.model$aic)`
+  * Negative binomial: AIC = `r step_gonorrhea_neg_bin.model$aic`
+
+The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we've established AIC as our criteria, we'll use the negative binomial model as our final model moving forward. 
+
+#### Discussion
+
+Our final model shows that female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care and non_pcmd_density are important predictors of gonorrhea rates by neighborhood.
+
+We should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.
+```{r}
+gonorrhea_coll = colldiag(step_gonorrhea_neg_bin.model)
+
+knitr::kable(list(gonorrhea_coll$condindx, gonorrhea_coll$pi))
+```
+
+Though some of our condition indices are very very large, it is difficult to identify exactly which predictors are contributing to this multicollinearity from the variance decomposition matrix. It appears that poverty and medicaid enrollment, as well as hispanic and education, may be collinear pairs in this model. Though this is not ideal, it does not detract from the results of our regression if we leave them together in the model as control variables. 
 
 ## Results & Discussion
 
@@ -212,7 +481,7 @@ prenatal_care_ggplot =
 ggplotly(prenatal_care_ggplot)
 ```
 
-While health insurance coverage did not appear to be a strong predictor of preterm births or gonorrhea, the rate of Medicaid enrollment was positively associated with these outcomes. We speculate that those covered by private insurance tend to be healthier and wealthier than those insured by Medicaid, potentially predisposing Medicaid enrollees to worse health outcomes. Another potential reason for the discrepancy between health insurance types is the consequences of cost-sharing. Patients under plans with greater cost-sharing and higher deductibles tend to seek lower amounts of necessary care, which would create negative consequences for those who are poor and sick. This postulation may also help explain the strong influence of the predictor late or no access to prenatal care upon the outcomes of SMM and preterm births. Pregnant mothers who experience poverty, bear more out-of-pocket prenatal care costs, and are in need of healthcare may receive belated crucial prenatal care or forgo it altogether, resulting in higher rates of SMM and preterm births. 
+While health insurance coverage did not appear to be a strong predictor of preterm births or gonorrhea in our exploratory analysis, it was in our regression model. The rate of Medicaid enrollment was positively associated with these outcomes in exploratory analysis instead. We speculate that those covered by private insurance tend to be healthier and wealthier than those insured by Medicaid, potentially predisposing Medicaid enrollees to worse health outcomes. Another potential reason for the discrepancy between health insurance types is the consequences of cost-sharing. Patients under plans with greater cost-sharing and higher deductibles tend to seek lower amounts of necessary care, which would create negative consequences for those who are poor and sick. This postulation may also help explain the strong influence of the predictor late or no access to prenatal care upon the outcomes of SMM and preterm births. Pregnant mothers who experience poverty, bear more out-of-pocket prenatal care costs, and are in need of healthcare may receive belated crucial prenatal care or forgo it altogether, resulting in higher rates of SMM and preterm births. 
 
 ```{r}
 gonorrhea1_ggplot = 

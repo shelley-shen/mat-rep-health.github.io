@@ -86,8 +86,6 @@ full_gonorrhea_poisson.model <- glm(gonorrhea~., data=gonorrhea_df, family=poiss
 
 step_gonorrhea_poisson.model <- stepAIC(full_gonorrhea_poisson.model, direction = "both", 
                       trace = FALSE)
-
-step_gonorrhea_poisson.model$aic
 ```
 
 ```{r}
