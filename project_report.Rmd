@@ -138,6 +138,7 @@ In this section, we discuss the analyses we completed and our results
 
 ### Exploratory Analysis
 
+We used data visualizations to conduct some exploratory analysis of our outcomes and predictors to identify any preliminary trends. We approched this by separating the three primary outcomes (SMM, preterm births, and gonorrhea) and selected various predictors based on literature to further examine their relationships. In order to create the plots, we first took our clean data set and restructured the poverty and race predictors into categorical variables. Then, for each outcome we created scatter plots against predictors such as race, poverty, prenatal care, health insurance, medicaid enrollment, and education. For gonorrhea, we also investigated its relationship with education, stratified by race. Similarly, we investigated SMM and prenatal care, stratified by race. 
 
 ### Neighborhood-Level Maps
 

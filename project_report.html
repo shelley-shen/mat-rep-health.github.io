@@ -402,13 +402,30 @@ $(document).ready(function () {
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
-<p>Among women in NYC,</p>
+<p>Among neighborhoods in NYC…</p>
+<div id="exploratory-analysis" class="section level3">
+<h3>Exploratory Analysis</h3>
 <ul>
 <li>How does access to reproductive services impact maternal health and levels of STIs?</li>
 <li>How does insurance coverage affect maternal health and levels of STIs?</li>
-<li>How do socioeconomic factors of health like race, income, and education affect the relationship between reproductive services and health outcomes?</li>
+<li>How is the relationship between maternal &amp; reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?</li>
+</ul>
+</div>
+<div id="neighborhood-level-maps" class="section level3">
+<h3>Neighborhood-Level Maps</h3>
+<ul>
+<li>Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods</li>
+<li>Neighborhood clustering patterns to identify areas of particularly high or low risk</li>
+</ul>
+</div>
+<div id="regression-models" class="section level3">
+<h3>Regression Models</h3>
+<ul>
+<li>How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?</li>
+<li>Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective &amp; risk factors?</li>
 </ul>
 <p><br></p>
+</div>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
@@ -497,9 +514,43 @@ $(document).ready(function () {
   filter(nta_code != &#39;NYC&#39;)
 
 write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code></pre>
+<p>Our final dataset contained data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from 2010 US Census data</p>
 </div>
-<div id="exploratory-analysis" class="section level2">
-<h2>Exploratory Analysis</h2>
+<div id="methods" class="section level2">
+<h2>Methods</h2>
+<p>In this section, we discuss the analyses we completed and our results</p>
+<div id="exploratory-analysis-1" class="section level3">
+<h3>Exploratory Analysis</h3>
+<p>We used data visualizations to conduct some exploratory analysis of our outcomes and predictors to identify any preliminary trends. We approched this by separating the three primary outcomes (SMM, preterm births, and gonorrhea) and selected various predictors based on literature to further examine their relationships. In order to create the plots, we first took our clean data set and restructured the poverty and race predictors into categorical variables. Then, for each outcome we created scatter plots against predictors such as race, poverty, prenatal care, health insurance, medicaid enrollment, and education. For gonorrhea, we also investigated its relationship with education, stratified by race. Similarly, we investigated SMM and prenatal care, stratified by race.</p>
+</div>
+<div id="neighborhood-level-maps-1" class="section level3">
+<h3>Neighborhood-Level Maps</h3>
+</div>
+<div id="regression-models-1" class="section level3">
+<h3>Regression Models</h3>
+<div id="outcome" class="section level4">
+<h4>Outcome</h4>
+</div>
+<div id="outcome-1" class="section level4">
+<h4>Outcome</h4>
+</div>
+<div id="outcome-2" class="section level4">
+<h4>Outcome</h4>
+</div>
+</div>
+</div>
+<div id="results-discussion" class="section level2">
+<h2>Results &amp; Discussion</h2>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
+<p>Special thanks to:</p>
+<ul>
+<li>Professor Qixuan Chen &amp; Dr. Dan Liao for their statistics expertise</li>
+<li>Dr. Jeremy Porter for his advice on geospatial information systems (GIS)</li>
+<li>Jeff and the P8105 course staff (with special thanks to our TA, Junxian Chen) for showing us the endless possibilities of R</li>
+<li>The extraordinary, powerful, nasty women who inspire us</li>
+</ul>
 </div>
 
 <hr>
