@@ -18,6 +18,7 @@ library(patchwork)
 library(rstatix)
 library(glmnet)
 library(MASS)
+library(perturb)
 
 knitr::opts_chunk$set(
 	fig.width = 9, 
@@ -69,13 +70,13 @@ plot(step_smm_linear.model)
 #Shapiro test
 smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))
 ```
-The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `r smm_linear_shapiro$p.value`. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `r smm_linear_shapiro$p.value`. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. There's also an unequal distribution of leverage among points (though likely not significant), and a few potential outliers.
 
-Let's try something else since it's clear the model doesn't follow linear assumptions.
+It's possible that the model is still valid - let's try something else though!
 
 #### Poisson Regression Model
 
-Because our outcome variable, severe maternal morbidity rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we can fit Poisson regression to model the outcome. 
+Because our outcome variable, severe maternal morbidity rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we can fit Poisson regression to model the outcome.  
 
 ```{r}
 full_smm_poisson.model <- glm(smm~., data=smm_df, family=poisson(link = "log"))
@@ -89,11 +90,11 @@ step_smm_poisson.model %>%
   knitr::kable(digits = 3)
 ```
 
-Our Poisson model failed to converge, which is why it appears all 16 predictors were selected. 
+Our Poisson model failed to converge, which is why it appears all predictors were selected in the final model. A closer look at the regression output shows that this is because the model is overdispersed, violating one of the key assumptions of Poisson regression.
 
 #### Negative Binomial Regression Model
 
-We will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha that can account for the overdispersion we found with the Poisson model
+To address that, we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha that can account for overdispersion.
 
 ```{r}
 full_smm_neg_bin.model <- glm.nb(smm~., data=smm_df)
@@ -111,6 +112,8 @@ The negative binomial model selection process has yielded a more parsimonious se
 
 This model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let's compare the three models we've already built, and just for kicks, a negative binomial regression with variables selected through literature review & causal theory. 
 
+The predictors we'll use in our model are: late_no_prenatal_care, clinics_and_chc_density, medicaid_enroll, hispanic percent population, and black percent population.
+
 ```{r}
 theory_smm_neg_bin.model <- glm.nb(smm~ late_no_prenatal_care + clinics_and_chc_density + medicaid_enroll + hispanic + black, data=smm_df)
 
@@ -119,6 +122,7 @@ theory_smm_neg_bin.model %>%
   broom::tidy() %>%
   knitr::kable(digits = 3)
 ```
+
 Let's compare all four models using AIC and discuss the implications of these values.
 
   * Linear: AIC = `r AIC(step_smm_linear.model)`
@@ -128,3 +132,15 @@ Let's compare all four models using AIC and discuss the implications of these va
 
 Though the automatically generated negative binomial model has the lowest AIC and is therefore the "winning" model, it's important to note that our curated model is not far behind. Our curated model is also more parsimonious, contains fewer highly correlated predictors, and fits well with the existing body of literature on severe maternal morbidity, all of which are benefits difficult to quantify with a metric like AIC.
 
+#### Discussion
+
+Because of correlation between many predictors, we should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.
+```{r}
+smm_coll = colldiag(step_smm_neg_bin.model)
+
+knitr::kable(list(smm_coll$condindx, smm_coll$pi))
+```
+
+As we suspected, there is some degree of collinearity in our model, indicated by condition indices between 10 and 30. However, it is not extreme and seems to be strongly related to the predictor of white population proportion. We will be careful not to interpret that predictor independently.
+
+As a result, we can safely say that a model containing hispanic, white, other, foreign_born, unemployment, medicaid_enroll, late_no_prenatal_care and clinics_and_chc_density is the best set of predictors for neighborhood-level severe maternal morbidity.
