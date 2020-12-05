@@ -318,7 +318,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="initialization.html">Initial Diagnostics</a>
+      <a href="initial_diag.html">Initial Diagnostics</a>
     </li>
     <li>
       <a href="smm_reg.html">Severe Maternal Morbidity</a>
@@ -453,6 +453,8 @@ $(document).ready(function () {
 <li><code>clinics_and_chc_density</code>: clinic &amp; community health centers per 10,000 people</li>
 <li><code>non_pcmd_density</code>: on-primary care providers (specialists like ob-gyns) per 10,000 people</li>
 </ul></li>
+<li>Renamed variables for ease of reading</li>
+<li>Combined Asians into the ‘other’ race category</li>
 <li>Saved cleaned dataset to CSV to improve portability across users &amp; programs</li>
 </ul>
 <pre class="r"><code>project_df = read_excel(&quot;./data/nta-metadata.xlsx&quot;, sheet = &quot;NTA Data&quot;) %&gt;%
