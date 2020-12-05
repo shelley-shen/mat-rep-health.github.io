@@ -13,19 +13,20 @@ output: html_document
 # <img src="images/ayeshra.jpg" style="width:30%" class="left"> 
 **Ayeshra Acharya**
 
-Hi! I am a 2nd year MPH candidate in Epidemiology at Columbia University. Some of my interests within the field include maternal and reproductive health and disparities in breast cancer diagnosis and screening. During my free time, I enjoy exploring different parks in New York City and cooking! 
+Hi! I am a 2nd year MPH candidate in Epidemiology at Columbia University. Some of my interests within the field include maternal and reproductive health and disparities in breast cancer diagnosis and screening. During my free time, I enjoy exploring different parks in New York City and cooking! [Website](https://aacharya7.github.io/)
 
 <br>
 
 # <img src="images/zaynub.jpg" style="width:30%" class="left"> 
 **Zaynub Ibrahim**
 
-Hi! I am currently a second year MPH student at Columbia University, pursuing a degree in epidemiology with a concentration in global health. My undergraduate degree is in animal science, so I hope to combine these two areas of study and am interested in working with zoonotic diseases in the future but also have a strong interest in maternal and reproductive health. Academics aside, my hobbies include rock climbing and bothering my pets (especially Sooji)! [Website]()
+Hi! I am currently a second year MPH student at Columbia University, pursuing a degree in epidemiology with a concentration in global health. My undergraduate degree is in animal science, so I hope to combine these two areas of study and am interested in working with zoonotic diseases in the future but also have a strong interest in maternal and reproductive health. Academics aside, my hobbies include rock climbing and bothering my pets (especially Sooji)! [Website](https://zaynub.github.io/zi2125.github.io/)
 
 <br>
 
 # <img src="images/cynthia.jpg" style="width:30%" class="left"> 
 **Cynthia Liu**
+
 Text about Cynthia.
 
 <br> 
@@ -33,7 +34,7 @@ Text about Cynthia.
 # <img src="images/shelley.jpg" style="width:30%" class="left"> 
 **Shelley Shen** 
 
-Hi, I'm Shelley and my degree focuses on epidemiology and health policy. My professional interests include the built environment, chronic disease, health disparities, and policy effectiveness. I hope to utilize data analysis and visualization to influence policies that can improve our physical and social environments and, subsequently, transform our health outcomes. Outside the classroom, I enjoy hiking, skiing, visiting art museums, and exploring new recipes. [Website]()
+Hi, I'm Shelley and my degree focuses on epidemiology and health policy. My professional interests include the built environment, chronic disease, health disparities, and policy effectiveness. I hope to utilize data analysis and visualization to influence policies that can improve our physical and social environments and, subsequently, transform our health outcomes. Outside the classroom, I enjoy hiking, skiing, visiting art museums, and exploring new recipes. [Website](https://shelley-shen.github.io/)
 
 <br>
 
