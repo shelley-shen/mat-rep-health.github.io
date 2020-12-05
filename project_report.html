@@ -285,7 +285,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="smm.html">Severe Maternal Morbidity</a>
+      <a href="SMM.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -400,6 +400,9 @@ $(document).ready(function () {
 <p>STI transmission and prevention is a big part of reproductive health. Gonorrhea in particular is a sexually transmitted infection that affects both men and women. It causes infections in the genitals, rectum, and throat and is treatable with antibiotics. While it is a sexually transmitted disease, gonorrhea can also be spread from mother to child during childbirth <a href="https://www.cdc.gov/std/gonorrhea/stdfact-gonorrhea.htm">1</a>. New York City has one of the highest rates of gonorrhea infections in the United States and this rate has almost doubled between 2010 and 2017. In 2017, there were 23,491 cases reported in NYC which was a 23.4% increase from 2016. In part, this is due to an increased use of pre-exposure prophylaxis which has led to decreased condom use. This behavior change has allowed other STI’s, like gonorrhea, to increase <a href="https://www.politico.com/states/new-york/albany/story/2018/09/25/in-nyc-gonorrhea-chlamydia-cases-up-syphilis-down-625004#:~:text=There%20were%2023%2C491%20cases%20of,percent%20from%20the%20prior%20year.">2</a>. Despite these increasing trends, most of the new cases are amongst men, not women <a href="https://www.health.ny.gov/statistics/diseases/communicable/std/docs/sti_surveillance_report_2017.pdf">3</a>. At a national level, rates of gonorrhea remain highest among the black population (7.7 times the rate amongst the white population in 2018) <a href="https://www.cdc.gov/std/stats18/STDSurveillance2018-full-report.pdf">4</a>. Overall, there is not a great body of literature that shows population level relationships, instead trends are focused at the individual level.</p>
 <p><br></p>
 </div>
+<div id="inspiration" class="section level2">
+<h2>Inspiration</h2>
+</div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
 <p>Among neighborhoods in NYC…</p>
@@ -431,7 +434,7 @@ $(document).ready(function () {
 <h2>Data</h2>
 <div id="source-nyc-neighborhood-health-atlas" class="section level4">
 <h4><strong>Source:</strong>  <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></h4>
-<p> </p>
+<p><br></p>
 </div>
 <div id="variables-of-interest" class="section level3">
 <h3><em>Variables of interest</em></h3>
@@ -443,13 +446,20 @@ $(document).ready(function () {
 <li><code>gonorrhea</code>: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015</li>
 </ul>
 </div>
-<div id="predictors" class="section level4">
-<h4><strong>Predictors:</strong></h4>
+<div id="potential-predictors" class="section level4">
+<h4><strong>Potential Predictors:</strong></h4>
 <ul>
+<li><code>nta_name</code>:</li>
+<li><code>nta_code</code>:</li>
+<li><code>total_pop</code>:</li>
+<li><code>female</code>: percent of female population in 2010-2014</li>
+<li><code>foreign_born</code>: percent of population born outside the US or US territories</li>
+<li><code>limted_eng</code>:</li>
+<li><code>unemployment</code>:</li>
 <li><code>health_ins</code>: percent of civilian noninstitutionalized population with health insurance in 2010-2014</li>
 <li><code>medicaid_enroll</code>: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015</li>
 <li><code>late_no_prenatal_care</code>: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014</li>
-<li><code>race</code>: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other</li>
+<li><code>race</code>: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other</li>
 <li><code>poverty</code>: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses:
 <ul>
 <li><code>poverty_10</code>: less than 10% of population living below the federal poverty level</li>
@@ -459,6 +469,12 @@ $(document).ready(function () {
 <li><code>poverty_40+</code>: greater than 40% of population living below the federal poverty level</li>
 </ul></li>
 <li><code>education</code>: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED</li>
+<li><code>clinics</code>:</li>
+<li><code>community_health_centers</code>:</li>
+<li><code>non_pcmd</code>:</li>
+<li><code>clinics_and_chc_count</code>:</li>
+<li><code>clinics_and_chc_density</code>:</li>
+<li><code>non-pcmd_density</code>:</li>
 </ul>
 <p><br></p>
 </div>
@@ -521,11 +537,18 @@ write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code
 <p>In this section, we discuss the analyses we completed and our results</p>
 <div id="exploratory-analysis-1" class="section level3">
 <h3>Exploratory Analysis</h3>
+<<<<<<< HEAD
 <p>We used data visualizations to conduct some exploratory analysis of our outcomes and predictors to identify any preliminary trends. We approched this by separating the three primary outcomes (SMM, preterm births, and gonorrhea) and selected various predictors based on literature to further examine their relationships. In order to create the plots, we first took our clean data set and restructured the poverty and race predictors into categorical variables. Then, for each outcome we created scatter plots against predictors such as race, poverty, prenatal care, health insurance, medicaid enrollment, and education. For gonorrhea, we also investigated its relationship with education, stratified by race. Similarly, we investigated SMM and prenatal care, stratified by race.</p>
 </div>
 <div id="neighborhood-level-maps-1" class="section level3">
 <h3>Neighborhood-Level Maps</h3>
 </div>
+=======
+</div>
+<div id="neighborhood-level-maps-1" class="section level3">
+<h3>Neighborhood-Level Maps</h3>
+</div>
+>>>>>>> 4bba9886b2c1252c4e4834c650bbb1ab9adbd5c4
 <div id="regression-models-1" class="section level3">
 <h3>Regression Models</h3>
 <div id="outcome" class="section level4">

@@ -33,6 +33,10 @@ STI transmission and prevention is a big part of reproductive health. Gonorrhea 
 
 <br>
 
+## Inspiration
+
+
+
 ## Questions
 
 Among neighborhoods in NYC...
@@ -55,7 +59,7 @@ Among neighborhoods in NYC...
 ## Data
 #### **Source:** \ [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
 
-&nbsp;
+<br>
 
 ### *Variables of interest*
 #### **Outcomes:**
@@ -64,12 +68,19 @@ Among neighborhoods in NYC...
 - `smm`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012
 - `gonorrhea`: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015 
 
-#### **Predictors:**
+#### **Potential Predictors:**
 
+- `nta_name`: 
+- `nta_code`: 
+- `total_pop`:
+- `female`: percent of female population in 2010-2014
+- `foreign_born`: percent of population born outside the US or US territories
+- `limted_eng`:
+- `unemployment`:
 - `health_ins`: percent of civilian noninstitutionalized population with health insurance in 2010-2014
 - `medicaid_enroll`: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015
 - `late_no_prenatal_care`: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014
-- `race`: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other
+- `race`: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other
 - `poverty`: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses: 
   + `poverty_10`: less than 10% of population living below the federal poverty level
   + `poverty_20`: between 10-20% of population living below the federal poverty level
@@ -77,6 +88,12 @@ Among neighborhoods in NYC...
   + `poverty_40`: between 30-40% of population living below the federal poverty level
   + `poverty_40+`: greater than 40% of population living below the federal poverty level
 - `education`: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
+- `clinics`:
+- `community_health_centers`:
+- `non_pcmd`: 
+- `clinics_and_chc_count`:
+- `clinics_and_chc_density`:
+- `non-pcmd_density`:
 
 <br>
 
