@@ -352,7 +352,7 @@ $(document).ready(function () {
   </ul>
 </li>
 <li>
-  <a>
+  <a href="https://www.youtube.com/watch?v=hoJ5Jc2OhsE">
     <span class="fa fa-youtube fa-lg"></span>
      
   </a>
@@ -513,10 +513,7 @@ gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))<
 <pre class="r"><code>full_gonorrhea_poisson.model &lt;- glm(gonorrhea~., data=gonorrhea_df, family=poisson(link = &quot;log&quot;))
 
 step_gonorrhea_poisson.model &lt;- stepAIC(full_gonorrhea_poisson.model, direction = &quot;both&quot;, 
-                      trace = FALSE)
-
-step_gonorrhea_poisson.model$aic</code></pre>
-<pre><code>## [1] Inf</code></pre>
+                      trace = FALSE)</code></pre>
 <pre class="r"><code>#Display converged model
 step_gonorrhea_poisson.model %&gt;% 
   broom::tidy() %&gt;%
