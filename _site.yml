@@ -14,7 +14,7 @@ navbar:
     - text: "NYC Maps"
       menu:
         - text: "Maps"
-          href: nyc_maternal_map/index.html
+          href: nyc_maternal_mapfinal/index.html
         - text: "Discussion of Maps"
           href: nyc_maternal_map/map_discussion.html
     - text: "Regression Analysis"
