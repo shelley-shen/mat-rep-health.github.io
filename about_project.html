@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>About the Project - Background Information</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploratory Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="SMM.html">Severe Maternal Morbidity</a>
+    </li>
+    <li>
+      <a href="preterm_births.html">Preterm Births</a>
+    </li>
+    <li>
+      <a href="gonorrhea.html">Gonorrhea</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    NYC Maps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="nyc_maternal_mapfinal/index.html">Maps</a>
+    </li>
+    <li>
+      <a href="nyc_maternal_map/map_discussion.html">Discussion of Maps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="initial_diag.html">Initial Diagnostics</a>
+    </li>
+    <li>
+      <a href="smm_reg.html">Severe Maternal Morbidity</a>
+    </li>
+    <li>
+      <a href="preterm_reg.html">Preterm Births</a>
+    </li>
+    <li>
+      <a href="gonorrhea_reg.html">Gonorrhea</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="project_report.html">Project Report</a>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    About
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="about_project.html">The Project</a>
+    </li>
+    <li>
+      <a href="team.html">The Team</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/shelley-shen/nycmaternalhealth">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">About the Project - Background Information</h1>
+
+</div>
+
+
+<div id="literature-review" class="section level2">
+<h2>Literature Review</h2>
+<p><strong>Severe Maternal Morbidity</strong></p>
+<p>Maternal morbidity is defined by the WHO as “any health condition attributed to and/or aggravated by pregnancy and childbirth that has a negative impact on the woman’s well-being”. The medical causes of morbidity include hemorrhaging and pregnancy related infections, induced abortions, and complications during labor. Outside of these medical factors, there are many socioeconomic determinants to rates of maternal morbidity within a population. According to literature these most often include access to quality maternal health services, both during pregnancy and during labor. Access may come in the form of health insurance, proximity to reproductive health care facilities, and quality of care available at health care facilities <a href="https://www.ncbi.nlm.nih.gov/books/NBK361917/">1</a>. In New York City, racial and ethnic disparities have contributed significantly to high rates of maternal morbidity. According to a study published in the Maternal and Child Health Journal, SMM rates were high among black, non-latina women in particular. Maternal education, income, and lack of prenatal care were also significantly associated with SMM <a href="https://link-springer-com.ezproxy.cul.columbia.edu/article/10.1007/s10995-018-2682-z">2</a>.</p>
+<p><strong>Preterm Births</strong></p>
+<p>Preterm birth is defined as the live birth of an infant prior to 37 weeks of gestation, with the categories of late preterm at 34-36 weeks, moderately preterm at 32-36 weeks, and very preterm at less than 32 weeks <a href="https://www.marchofdimes.org/peristats/ViewTopic.aspx?reg=36&amp;top=3&amp;lev=0&amp;slev=4">1</a>. In addition to putting babies at risk of underdevelopment of vital organs, preterm births also affect maternal health by increasing the mother’s risk of developing postnatal physical health problems, depression, and lower usage of postnatal support <a href="https://bmjopen.bmj.com/content/6/10/e012676">2</a>, <a href="https://www.frontiersin.org/articles/10.3389/fpubh.2018.00359/full">3</a>. Racial and ethnic disparities exist in preterm birth rates across the nation, with the highest rates of preterm births among African-American mothers (14.4%) that are almost 50% higher than the rates among white (9.3%) or Hispanic (10%) women in 2019 <a href="https://www.cdc.gov/reproductivehealth/maternalinfanthealth/pretermbirth.htm">4</a>. In NYC, the overall rate of preterm births was 9.0% in 2017. When categorized by race, the preterm birth rate was 12.7% among Black women, 9.6% among Hispanic women, 7.9% among Asian women, 6.9% among White women, and 9.9% among women of Other race <a href="https://data.cccnewyork.org/data/table/1276/preterm-births#1277/1480/25/a/a">5</a>. While there are multiple risk factors for preterm birth including previous preterm births, pregnancy with multiples, tobacco and substance usage, short durations between pregnancies, and pregnancy complications, the socioeconomic environment of the mother is also important <a href="https://www.cdc.gov/reproductivehealth/features/premature-birth/">6</a>. In a 2008 International Journal of Epidemiology report, maternal educational level was found to be the strongest predictor for preterm birth out of five socioeconomic factors, more so than income and occupation <a href="https://watermark.silverchair.com/dyn112.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAApwwggKYBgkqhkiG9w0BBwagggKJMIIChQIBADCCAn4GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMTy4eP8rA23acKExiAgEQgIICT7nfOcXpJt31qdbBKOIboYVrwnd_WHQhBeR2zPtf2_4u3bePmf8VV6qV0fEXrHgXvb3N2XB4sesbpMG_2si0irr_CROVEu1ViSWoRkPfTWYpg4tzoXjDr6sR8yZBM-Ka_4WEOclHYN3-guKHuT5Xtrm0cLFG4dcV8cv8xodawfaFfug75W9choeMXMKMea9ndCCyFL0xUuMLS16cXGVHSYzSixgj2MK1vDWLB-jt973iC34bxIBwwTP39ibenmDoH5qD8g6KphGfp8V5ANpwJofRkzYf3CKu9PbMeQzEqOOmTfShwfSn0Wi7jeR8Q37ZwznMKHiFrChO5ndZ46cTAY6az5Dw-ryrQP-S7yOK8t_M9a90Tcj6sUmhsie3WusXcASh_tlI2NySIF7sqMGjWuo_tybivPEpyxjpZUaNd-zaXLmI_wXbhtFWv4UsxzOVi8xG82P3BfvqImmsdkKJT2K28fC6qdBU5ee1Jo7jwXAEtAFpa262U5O1x64gQr76VZ15Z3QSQvYnG6YuJBjq1U3PGYN6svysasziSMNghnwNFgKZroCkWoyv2xe_FBKBP5Ju9Wt5ivOzkT9TLKlfw1n70UmqImeO4CQpdIYafasooL4ijLl_el-A7f5RvP_T9hvdAJ-7Sm-iI_c93luRWtsFJ46JDh4fkADgPRRp41ktocLFPP1KnHxE_diJbS-GscLBxE6jlxRsk8VdObQldz_VSoHw4lRQS0R05dbxcvlVtURdqJeAj8hXgtJLvmCPt9zaErgQZTaDO9bKlxJ8yQ">7</a>. System-level factors are also seen to affect preterm birth, including the amount of prenatal care, management of maternal chronic disease, and health insurance coverage <a href="https://www.tandfonline.com/doi/full/10.1080/10796126.2016.1254601">8</a>.</p>
+<p><strong>Gonorrhea</strong></p>
+<p>STI transmission and prevention is a big part of reproductive health. Gonorrhea in particular is a sexually transmitted infection that affects both men and women. It causes infections in the genitals, rectum, and throat and is treatable with antibiotics. While it is a sexually transmitted disease, gonorrhea can also be spread from mother to child during childbirth <a href="https://www.cdc.gov/std/gonorrhea/stdfact-gonorrhea.htm">1</a>. New York City has one of the highest rates of gonorrhea infections in the United States and this rate has almost doubled between 2010 and 2017. In 2017, there were 23,491 cases reported in NYC which was a 23.4% increase from 2016. In part, this is due to an increased use of pre-exposure prophylaxis which has led to decreased condom use. This behavior change has allowed other STI’s, like gonorrhea, to increase <a href="https://www.politico.com/states/new-york/albany/story/2018/09/25/in-nyc-gonorrhea-chlamydia-cases-up-syphilis-down-625004#:~:text=There%20were%2023%2C491%20cases%20of,percent%20from%20the%20prior%20year.">2</a>. Despite these increasing trends, most of the new cases are amongst men, not women <a href="https://www.health.ny.gov/statistics/diseases/communicable/std/docs/sti_surveillance_report_2017.pdf">3</a>. At a national level, rates of gonorrhea remain highest among the black population (7.7 times the rate amongst the white population in 2018) <a href="https://www.cdc.gov/std/stats18/STDSurveillance2018-full-report.pdf">4</a>. Overall, there is not a great body of literature that shows population level relationships, instead trends are focused at the individual level.</p>
+<p><br></p>
+</div>
+
+<hr>
+
+<br>
+
+<p align="center">
+  <small>
+Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -128,7 +128,7 @@ smm_gonorrhea_hispanic =
   geom_point(aes(color = hispanic_percent)) +
   labs(
     title = "Gonorrhea vs education by % Hispanic population",
-    x = "% with < high school education",
+    x = "% with less than high school education",
     y = "Gonorrhea",
     color = "Population:" 
   )
@@ -139,7 +139,7 @@ smm_gonorrhea_black =
   geom_point(aes(color = black_percent)) +
   labs(
     title = "Gonorrhea vs education by % Black population",
-    x = "% with < high school education",
+    x = "% with less than high school education",
     y = "Gonorrhea",
     color = "Population:" 
   )
@@ -150,7 +150,7 @@ smm_gonorrhea_white =
   geom_point(aes(color = white_percent)) +
   labs(
     title = "Gonorrhea vs education by % White population",
-    x = "% with < high school education",
+    x = "% with less than high school education",
     y = "Gonorrhea",
     color = "Population:" 
   )
@@ -161,7 +161,7 @@ smm_gonorrhea_other =
   geom_point(aes(color = other_percent)) +
   labs(
     title = "Gonorrhea vs education by % Other race population",
-    x = "Education",
+    x = "% with less than high school education",
     y = "Gonorrhea",
     color = "Population:" 
   )
