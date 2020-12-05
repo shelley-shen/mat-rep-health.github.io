@@ -34,11 +34,21 @@ STI transmission and prevention is a big part of reproductive health. Gonorrhea 
 <br>
 
 ## Questions
-Among women in NYC,
 
+Among neighborhoods in NYC...
+
+### Exploratory Analysis
 - How does access to reproductive services impact maternal health and levels of STIs? 
 - How does insurance coverage affect maternal health and levels of STIs?
-- How do socioeconomic factors of health like race, income, and education affect the relationship between reproductive services and health outcomes? 
+- How is the relationship between maternal & reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?
+
+### Neighborhood-Level Maps
+- Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods
+- Neighborhood clustering patterns to identify areas of particularly high or low risk
+
+### Regression Models
+- How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?
+- Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective & risk factors?
 
 <br>
 
@@ -83,6 +93,8 @@ The following steps were taken to clean the NYC NTA data:
   * Create new variables adjusting number of healthcare providers by neighborhood population
       + `clinics_and_chc_density`: clinic & community health centers per 10,000 people
       + `non_pcmd_density`: on-primary care providers (specialists like ob-gyns) per 10,000 people
+  * Renamed variables for ease of reading
+  * Combined Asians into the 'other' race category
   * Saved cleaned dataset to CSV to improve portability across users & programs
 
 ```{r}
@@ -118,7 +130,38 @@ project_df = read_excel("./data/nta-metadata.xlsx", sheet = "NTA Data") %>%
 
 write.csv(project_df, 'data/clean_dataset.csv', row.names = FALSE)
 ```
+Our final dataset contained data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from 2010 US Census data
+
+## Methods
+
+In this section, we discuss the analyses we completed and our results
+
+### Exploratory Analysis
 
 
-## Exploratory Analysis
+### Neighborhood-Level Maps
+
+### Regression Models
+
+#### Outcome
+
+#### Outcome
+
+#### Outcome
+
+## Results & Discussion
+
+## Acknowledgements
+
+Special thanks to:
+
+* Professor Qixuan Chen & Dr. Dan Liao for their statistics expertise
+* Dr. Jeremy Porter for his advice on geospatial information systems (GIS)
+* Jeff and the P8105 course staff (with special thanks to our TA, Junxian Chen) for showing us the endless possibilities of R
+* The extraordinary, powerful, nasty women who inspire us
+
+
+
+
+
 

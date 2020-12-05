@@ -14,13 +14,13 @@ navbar:
     - text: "NYC Maps"
       menu:
         - text: "Maps"
-          href: nyc_maternal_map/index.html
+          href: nyc_maternal_mapfinal/index.html
         - text: "Discussion of Maps"
           href: nyc_maternal_map/map_discussion.html
     - text: "Regression Analysis"
       menu:
         - text: "Initial Diagnostics"
-          href: initialization.html
+          href: initial_diag.html
         - text: "Severe Maternal Morbidity"
           href: smm_reg.html
         - text: "Preterm Births"
