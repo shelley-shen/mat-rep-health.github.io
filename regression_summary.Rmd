@@ -137,5 +137,14 @@ Most starkly, race remains highly correlated with health and SES-related outcome
 
 We'll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!
 
+### Appendix
+#### Stepwise Model Selection Criticism
+Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This [article](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6) details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of 'ransacking' of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature. 
+
+### Future Directions
+Some potential other directions to build off our work:
+
+* Model selection using Lasso & LAR, which overcome many of the limitations of stepwise model selection and generally have better results
+* Spatial regression to account for correlation between 
 
 

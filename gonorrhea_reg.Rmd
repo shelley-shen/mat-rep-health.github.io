@@ -52,13 +52,13 @@ full_gonorrhea_linear.model <- lm(gonorrhea~., data = gonorrhea_linear_df)
 #Stepwise regression model
 step_gonorrhea_linear.model <- stepAIC(full_gonorrhea_linear.model, direction = "both", 
                       trace = FALSE)
-step_gonorrhea_linear.model
+
 #Display converged model
 step_gonorrhea_linear.model %>% 
   broom::tidy() %>%
   knitr::kable(digits = 3)
 ```
-The variables female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `summary(step_smm_linear.model)$r.squared`, representing a reasonably good fit. 
+The variables female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `r summary(step_gonorrhea_linear.model)$r.squared`, representing a reasonably good fit. 
 
 However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
 ```{r}
@@ -68,7 +68,7 @@ plot(step_gonorrhea_linear.model)
 #Shapiro test
 gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))
 ```
-The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `gonorrhea_linear_shapiro$p.value`. The plot of residuals vs fitted values has non-random variance, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `r gonorrhea_linear_shapiro$p.value`. The plot of residuals vs fitted values has non-random variance, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
 
 We'll stop this analysis here since it's clear the model doesn't follow linear assumptions, but it's important to note that further analysis would also have to investigate the potential outliers & high leverage points found in the residuals vs. leverage plot. 
 
@@ -77,7 +77,7 @@ A quick look at the dataset shows that both these data points, corresponding to 
 
 #### Poisson Regression Model
 
-Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could transform our data back into a count, then use the log(total population) as an offset to model the case rate in a Poisson regression using glm. **note: we received mixed feedback as to the validity of this model, so our approach should be considered with a grain of salt**
+Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could run a Poisson regression to model the outcome. **note: we received mixed feedback as to the validity of this model, so our approach should be considered with a grain of salt**
 
 ```{r}
 #create offset as 
@@ -100,7 +100,7 @@ step_gonorrhea_poisson.model %>%
   broom::tidy() %>%
   knitr::kable(digits = 3)
 ```
-Our Poisson model selected 13 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is `step_gonorrhea_poisson.model$deviance/step_gonorrhea_poisson.model$df.residual`, which indicates that our model is overdispersed. 
+Our Poisson model selected 13 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is `r step_gonorrhea_poisson.model$deviance/step_gonorrhea_poisson.model$df.residual`, which indicates that our model is overdispersed. 
 
 #### Negative Binomial Regression Model
 

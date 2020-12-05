@@ -285,7 +285,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="smm.html">Severe Maternal Morbidity</a>
+      <a href="SMM.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -350,7 +350,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="lit_review.html">The Project</a>
+      <a href="about_project.html">The Project</a>
     </li>
     <li>
       <a href="team.html">The Team</a>
@@ -494,14 +494,14 @@ step_smm_linear.model %&gt;%
 </tr>
 </tbody>
 </table>
-<p>The variables female, hispanic, white, black, foreign_born, limited_eng, education, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of <code>summary(step_smm_linear.model)$r.squared</code>, representing a reasonably good fit.</p>
+<p>The variables female, hispanic, white, black, foreign_born, limited_eng, education, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of 0.7602807, representing a reasonably good fit.</p>
 <p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
 <pre class="r"><code>#Regression diagnostics
 plot(step_smm_linear.model)</code></pre>
 <p><img src="smm_reg_files/figure-html/unnamed-chunk-2-1.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-2.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-3.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-4.png" width="90%" /></p>
 <pre class="r"><code>#Shapiro test
 smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
-<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of <code>smm_linear_shapiro$p.value</code>. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
+<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of 0.0019526. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
 <p>We’ll stop this analysis here since it’s clear the model doesn’t follow linear assumptions.</p>
 </div>
 <div id="transformed-regression-model" class="section level4">
@@ -513,8 +513,15 @@ smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
 <br>
 
 <p align="center">
-  <small>
+
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
+
+<p align="center">
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
+
+<br>
+
+Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2).
 
 
 
