@@ -18,6 +18,7 @@ library(patchwork)
 library(rstatix)
 library(glmnet)
 library(MASS)
+library(perturb)
 
 knitr::opts_chunk$set(
 	fig.width = 9, 
@@ -120,7 +121,17 @@ This is much better! The model is more parsimonious, and satisfies assumptions, 
   * Poisson: AIC = `r toString(step_gonorrhea_poisson.model$aic)`
   * Negative binomial: AIC = `r step_gonorrhea_neg_bin.model$aic`
 
-The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we've established AIC as our criteria, we'll use the negative binomial analysis moving forward. 
+The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we've established AIC as our criteria, we'll use the negative binomial model as our final model moving forward. 
 
+#### Discussion
 
+Our final model shows that female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care and non_pcmd_density are important predictors of gonorrhea rates by neighborhood.
 
+We should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.
+```{r}
+gonorrhea_coll = colldiag(step_gonorrhea_neg_bin.model)
+
+knitr::kable(list(gonorrhea_coll$condindx, gonorrhea_coll$pi))
+```
+
+Though some of our condition indices are very very large, it is difficult to identify exactly which predictors are contributing to this multicollinearity from the variance decomposition matrix. It appears that poverty and medicaid enrollment, as well as hispanic and education, may be collinear pairs in this model. Though this is not ideal, it does not detract from the results of our regression if we leave them together in the model as control variables. 
