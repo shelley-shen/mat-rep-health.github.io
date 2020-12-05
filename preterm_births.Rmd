@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Analysis of Preterm Births Outcome"
+title: "Exploratory Analysis of Preterm Births"
 output: 
   html_document:
     code_folding: hide
