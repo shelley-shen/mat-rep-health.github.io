@@ -1,0 +1,88 @@
+---
+title: "Initial Diagnostics"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(readr)
+library(ggpubr)
+library(corrplot)
+library(RColorBrewer)
+library(Hmisc)
+library(patchwork)
+library(rstatix)
+library(glmnet)
+library(MASS)
+
+knitr::opts_chunk$set(
+	fig.width = 9, 
+  fig.asp = .6,
+  out.width = "90%"
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+## Summary
+[summary of results goes here]
+
+## Data
+
+#### **Source:** \ [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
+
+The NTA Neighborhood data contains data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from whole census tracts from 2010 US Census data. Created by aggregating adjacent census tracts, the NTA neighborhood dataset is a happy compromise between the high sampling error of NYC's overly granular 2,168 census tracts and the broad strokes of the 59 community districts. However, because their primary boundary creation consideration is population, NTAs do not accurately represent the boundaries of NYC's historic neighborhoods.
+
+&nbsp;
+
+### *Variables of interest*
+#### **Outcomes:**
+
+- `preterm_births`: percent preterm births (<37 weeks gestation) among all live births in 2010-2014
+- `smm`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012
+- `gonorrhea`: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015 
+
+#### **Predictors:**
+
+#### Normality of outcome variables
+
+We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea. 
+
+We start by testing normality assumptions of dependent variables using histograms, Q-Q plots and Shapiro tests for normality.
+
+```{r}
+#separate outcomes into separate dataframe
+outcome_df = project_df %>%
+  dplyr::select(preterm_births, smm, gonorrhea)
+
+#histograms
+preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
+smm_hist = ggplot(outcome_df, aes(x = smm)) + geom_histogram()
+gonorrhea_hist = ggplot(outcome_df, aes(x = gonorrhea)) + geom_histogram()
+
+#q-q plots
+preterm_qq = ggqqplot(outcome_df$preterm_births)
+smm_qq = ggqqplot(outcome_df$smm)
+gonorrhea_qq = ggqqplot(project_df$gonorrhea)
+
+#create patchwork plots
+preterm_hist + preterm_qq
+
+smm_hist + smm_qq
+
+gonorrhea_hist + gonorrhea_qq
+
+#run shapiro-wilk tests
+outcome_df %>% shapiro_test(preterm_births, smm, gonorrhea) %>%
+  knitr::kable(digits = 3)
+```
+
+Outcome variables are likely sampled from a non-normal distribution, as indicated by significant p-values for the Shapiro test and fat tails in the Q-Q plots: not a deal-breaker, since residuals are what are important, but certainly presents the possibility that linear regression may not be the best model for our data.

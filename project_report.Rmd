@@ -12,34 +12,27 @@ library(readxl)
 library(readr)
 ```
 
-## Introduction
-Severe maternal morbidity (SMM) includes health outcomes during labor and delivery that may result in both short-term and/or long term health consequences for women. New York City’s rate of SMM increased 28.2 % from 2008 to 2012. Preterm births, when infants are born prior to 37 weeks of gestation, can place the mother at increased risk of physical and mental health complications as well as decreased bonding with the baby. Additionally, STI's pose a general threat of infection to mothers and infants. Some of the factors contributing to high rates of SMM, preterm births, and STI's in New York City include access to reproductive health services, health insurance coverage, neighborhood poverty level, education, and race. We will examine these factors that may contribute to the poor maternal health outcomes in New York City. In regards to STI's in our assessment of reproductive health in NYC, we will choose to focus specifically on gonorrhea as it provides considerable risk to pregnant mothers and newborn babies and is among the most infectious of STI's [1](https://www.mayoclinic.org/diseases-conditions/gonorrhea/symptoms-causes/syc-20351774#:~:text=Gonorrhea%20is%20an%20infection%20caused,vaginal%2C%20oral%20or%20anal%20sex).  
+## Motivation 
+Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services & resources for women across the country.
 
+We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race.
 
-Additional background information regarding our outcomes of interest can be found in our About section under [The Project](about_project.html). 
 <br>
-
-## Inspiration
-
-The following resources are part of the inspiration behind this project: 
-
-- ["Why America's Black Mothers and Babies Are in a Life-or-Death Crisis."](https://www.nytimes.com/2018/04/11/magazine/black-mothers-babies-death-maternal-mortality.html) *New York Times*. April 11, 2018. 
-- [2020 Maternal & Infant Health Summit](https://dcmaternalhealth.com/2020-summit/) hosted by Mayor Muriel Bowser's  Maternal & Infant Health Initiative. September 15-18, 2020. 
 
 ## Questions
 
 Among neighborhoods in NYC...
 
-#### Exploratory Analysis
+### Exploratory Analysis
 - How does access to reproductive services impact maternal health and levels of STIs? 
 - How does insurance coverage affect maternal health and levels of STIs?
 - How is the relationship between maternal & reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?
 
-#### Neighborhood-Level Maps
+### Neighborhood-Level Maps
 - Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods
 - Neighborhood clustering patterns to identify areas of particularly high or low risk
 
-#### Regression Models
+### Regression Models
 - How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?
 - Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective & risk factors?
 
@@ -48,7 +41,7 @@ Among neighborhoods in NYC...
 ## Data
 #### **Source:** \ [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
 
-<br>
+&nbsp;
 
 ### *Variables of interest*
 #### **Outcomes:**
@@ -57,19 +50,12 @@ Among neighborhoods in NYC...
 - `smm`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012
 - `gonorrhea`: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015 
 
-#### **Potential Predictors:**
+#### **Predictors:**
 
-- `nta_name`: neighborhood tabulation area names
-- `nta_code`: neighborhood tabulation area code
-- `total_pop`: total population
-- `female`: percent of female population in 2010-2014
-- `foreign_born`: percent of population born outside the US or US territories
-- `limted_eng`: percent of population 5 years and older who report that they speak English "less than very well"
-- `unemployment`: percent of the civilian (non-military) labor force ages 16 and older who are unemployed in 2010-2014
-- `health_ins`: percent of civilian non-institutionalized population with health insurance in 2010-2014
+- `health_ins`: percent of civilian noninstitutionalized population with health insurance in 2010-2014
 - `medicaid_enroll`: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015
 - `late_no_prenatal_care`: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014
-- `race`: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other
+- `race`: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other
 - `poverty`: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses: 
   + `poverty_10`: less than 10% of population living below the federal poverty level
   + `poverty_20`: between 10-20% of population living below the federal poverty level
@@ -77,12 +63,6 @@ Among neighborhoods in NYC...
   + `poverty_40`: between 30-40% of population living below the federal poverty level
   + `poverty_40+`: greater than 40% of population living below the federal poverty level
 - `education`: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
-- `clinics`: number of clinics in 2014
-- `community_health_centers`: number of community health centers in 2014
-- `non_pcmd`: number of non-primary care providers in 2014
-- `clinics_and_chc_count`: number of clinic & community health per 10,000 people 
-- `clinics_and_chc_density`: clinic & community health centers per 10,000 people
-- `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
 
 <br>
 
@@ -95,10 +75,10 @@ The following steps were taken to clean the NYC NTA data:
   * Drop neighborhoods that have no residential population (i.e. LaGuardia airport)
   * Drop observation representing NYC aggregated
   * Remove variables corresponding to 95% CI and reliability metrics of measurements
-  * Create new variable `clinics_and_chc_count` representing aggregated clinic and community health centers to reduce multicollinearity
+  * Create new variable clinics_and_chc_count representing aggregated clinic and community health centers to reduce multicollinearity
   * Create new variables adjusting number of healthcare providers by neighborhood population
       + `clinics_and_chc_density`: clinic & community health centers per 10,000 people
-      + `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
+      + `non_pcmd_density`: on-primary care providers (specialists like ob-gyns) per 10,000 people
   * Renamed variables for ease of reading
   * Combined Asians into the 'other' race category
   * Saved cleaned dataset to CSV to improve portability across users & programs
@@ -136,7 +116,7 @@ project_df = read_excel("./data/nta-metadata.xlsx", sheet = "NTA Data") %>%
 
 write.csv(project_df, 'data/clean_dataset.csv', row.names = FALSE)
 ```
-Our final dataset contained data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from 2010 US Census data
+
 
 ## Methods
 
@@ -144,7 +124,6 @@ In this section, we discuss the analyses we completed and our results
 
 ### Exploratory Analysis
 
-We used data visualizations to conduct some exploratory analysis of our outcomes and predictors to identify any preliminary trends. We approched this by separating the three primary outcomes (SMM, preterm births, and gonorrhea) and selected various predictors based on literature to further examine their relationships. In order to create the plots, we first took our clean data set and restructured the poverty and race predictors into categorical variables. Then, for each outcome we created scatter plots against predictors such as race, poverty, prenatal care, health insurance, medicaid enrollment, and education. For gonorrhea, we also investigated its relationship with education, stratified by race. Similarly, we investigated SMM and prenatal care, stratified by race. 
 
 ### Neighborhood-Level Maps
 
