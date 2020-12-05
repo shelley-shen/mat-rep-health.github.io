@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Analysis of Gonorrhea Outcome"
+title: "Exploratory Analysis of Gonorrhea"
 output: 
   html_document:
     code_folding: hide
@@ -56,7 +56,7 @@ gonorrhea1_ggplot =
   geom_point(color = "green") + 
   labs(
     title = "Health Insurance and  Gonorrhea in NYC Neighborhoods (2014-2015)",
-    x = "Percent population with pealth pnsurance",
+    x = "Percent population with health insurance",
     y = "Rate of gonorrhea cases per 100,000 people")
 
 ggplotly(gonorrhea1_ggplot)
@@ -106,7 +106,8 @@ Similar to the association with Medicaid enrollment, the association between edu
 
 <br>
 
-#### Education and Gonorrhea - stratified by race
+#### Education and Gonorrhea - Stratified by Race
+
 ```{r, include=FALSE}
 race_df = read_csv("./data/clean_dataset.csv") %>% 
   mutate(

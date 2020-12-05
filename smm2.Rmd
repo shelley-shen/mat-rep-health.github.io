@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Analysis of Severe Maternal Morbidity Outcome"
+title: "Exploratory Analysis of Severe Maternal Morbidity"
 output: 
   html_document:
     code_folding: hide
@@ -54,7 +54,7 @@ poverty_smm_ggplot =
   labs(
     title = "Poverty Levels and Maternal Morbidity in NYC Neighborhoods",
     x = "Percentage population below federal poverty level",
-    y = "Rate of SMM per 10,000 deliveries")
+    y = "Rate of SMM per 10,000 deliveries") 
 
 ggplotly(poverty_smm_ggplot)
 ```
@@ -121,7 +121,7 @@ smm_prenatal_hispanic =
   geom_point(aes(color = hispanic_percent)) +
   labs(
     title = "SMM vs late/no prenatal care by % Hispanic population",
-    x = "Late/no prenatal care",
+    x = "Percent live births recieving late or no prenatal care",
     y = "SMM rate",
     color = "% of population:" 
   )
@@ -132,7 +132,7 @@ smm_prenatal_black =
   geom_point(aes(color = black_percent)) +
   labs(
     title = "SMM vs late/no prenatal care by % Black population",
-    x = "Late/no prenatal care",
+    x = "Percent live births recieving late or no prenatal care",
     y = "SMM rate",
     color = "% of population:" 
   )
@@ -143,7 +143,7 @@ smm_prenatal_white =
   geom_point(aes(color = white_percent)) +
   labs(
     title = "SMM vs late/no prenatal care by % White population",
-    x = "Late/no prenatal care",
+    x = "Percent live births recieving late or no prenatal care",
     y = "SMM rate",
     color = "% of population:" 
   )
@@ -154,7 +154,7 @@ smm_prenatal_other =
   geom_point(aes(color = other_percent)) +
   labs(
     title = "SMM vs late/no prenatal care by % Other race population",
-    x = "Late/no prenatal care",
+    x = "Percent live births recieving late or no prenatal care",
     y = "SMM rate",
     color = "% of population:" 
   )
