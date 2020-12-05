@@ -15,7 +15,7 @@ navbar:
     - text: "Regression Analysis"
       menu:
         - text: "Initial Diagnostics"
-          href: initialization.html
+          href: initial_diag.html
         - text: "Severe Maternal Morbidity"
           href: smm_reg.html
         - text: "Preterm Births"
