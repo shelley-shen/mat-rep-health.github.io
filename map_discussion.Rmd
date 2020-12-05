@@ -1,7 +1,6 @@
 ---
 title: "Clusters of Severe Maternal Morbidity and Key Predictors"
 output: html_document
-theme: sandstone
 ---
 
 <br>
