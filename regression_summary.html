@@ -306,7 +306,7 @@ $(document).ready(function () {
       <a href="nyc_maternal_mapfinal/index.html">Maps</a>
     </li>
     <li>
-      <a href="nyc_maternal_map/map_discussion.html">Discussion of Maps</a>
+      <a href="map_discussion.html">Discussion of Maps</a>
     </li>
   </ul>
 </li>
@@ -417,7 +417,11 @@ $(document).ready(function () {
 <h2>Analysis Plan</h2>
 <p>We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships via transformation if a linear model is a poor fit.</p>
 <p>Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm’s pitfalls.</p>
-<p>Models will be judged on: * Satisfaction of assumptions for their respective method * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.</p>
+<p>Models will be judged on:</p>
+<ul>
+<li>Satisfaction of assumptions for their respective method</li>
+<li>Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.</li>
+</ul>
 <div id="outcome-variables" class="section level3">
 <h3>Outcome Variables</h3>
 <p>We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea.</p>
@@ -505,21 +509,13 @@ corrplot::corrplot(N$r,
 <p>We’ll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!</p>
 <p> </p>
 </div>
-<<<<<<< HEAD
-=======
-<div id="appendix" class="section level3">
-<h3>Appendix</h3>
-<div id="stepwise-model-selection-criticism" class="section level4">
-<h4>Stepwise Model Selection Criticism</h4>
-<p>Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This <a href="https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6">article</a> details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of ‘ransacking’ of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature.</p>
-<p>Algorithms are never a replacement for rational thought and thorough research. Look no further than <a href="https://tinyurl.com/googleJeffGoldsmith">here</a> for proof that even the most well-fed algorithms make unfortunate mistakes.</p>
->>>>>>> 94839aed93bea3fdda460ab1e653d0090e44dbcd
 </div>
 <div id="appendix" class="section level2">
 <h2>Appendix</h2>
 <div id="stepwise-model-selection-criticism" class="section level3">
 <h3>Stepwise Model Selection Criticism</h3>
 <p>Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This <a href="https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6">article</a> details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of ‘ransacking’ of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature.</p>
+<p>Algorithms are never a replacement for rational thought and thorough research. Look no further than <a href="https://tinyurl.com/googleJeffGoldsmith">here</a> for proof that even the most well-fed algorithms make unfortunate mistakes.</p>
 </div>
 <div id="future-directions" class="section level3">
 <h3>Future Directions</h3>
