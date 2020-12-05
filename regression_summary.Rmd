@@ -1,0 +1,151 @@
+---
+title: "Regression Overview"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(readr)
+library(ggpubr)
+library(corrplot)
+library(RColorBrewer)
+library(Hmisc)
+library(patchwork)
+library(rstatix)
+library(glmnet)
+library(MASS)
+
+knitr::opts_chunk$set(
+	fig.width = 9, 
+  fig.asp = .6,
+  out.width = "90%",
+	warning = FALSE,
+	message = FALSE
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+## Summary
+[summary of results goes here]
+
+## Data
+
+#### **Source:** \ [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page)
+
+The NTA Neighborhood data contains data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from whole census tracts from 2010 US Census data. Created by aggregating adjacent census tracts, the NTA neighborhood dataset is a happy medium between the high sampling error of NYC's overly granular 2,168 census tracts and the broad strokes of the 59 community districts. However, because their primary boundary creation consideration is population, NTAs do not accurately represent the boundaries of NYC's historic neighborhoods.
+
+&nbsp;
+
+### *Variables of interest*
+#### **Outcomes:**
+
+- `preterm_births`: percent preterm births (<37 weeks gestation) among all live births in 2010-2014
+- `smm`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012
+- `gonorrhea`: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015 
+
+#### **Predictors:**
+
+15 potential predictor variables were identified after cleaning and transformation. Predictor selection was driven by subject matter knowledge, literature review, dataset constraints, and common sense.
+
+## Analysis Plan
+
+We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships via transformation if a linear model is a poor fit. 
+
+Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm's pitfalls.
+
+Models will be judged on:
+  * Satisfaction of assumptions for their respective method
+  * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.
+  
+### Outcome Variables
+
+We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea. 
+
+We start with univariate analyses dependent variables using histograms, Q-Q plots and Shapiro tests for normality. Ultimately, it is the residual distribution that matters in multivariable regression, but it never hurts to visualize data.
+
+```{r}
+#read in data
+project_df = read.csv("./data/clean_dataset.csv")
+#separate outcomes into separate dataframe
+outcome_df = project_df %>%
+  dplyr::select(preterm_births, smm, gonorrhea)
+
+write.csv(outcome_df, 'data/outcomes.csv', row.names = FALSE)
+
+#histograms
+preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
+smm_hist = ggplot(outcome_df, aes(x = smm)) + geom_histogram()
+gonorrhea_hist = ggplot(outcome_df, aes(x = gonorrhea)) + geom_histogram()
+
+#q-q plots
+preterm_qq = ggqqplot(outcome_df$preterm_births)
+smm_qq = ggqqplot(outcome_df$smm)
+gonorrhea_qq = ggqqplot(project_df$gonorrhea)
+
+#create patchwork plots
+preterm_hist + preterm_qq
+
+smm_hist + smm_qq
+
+gonorrhea_hist + gonorrhea_qq
+
+#run shapiro-wilk tests
+outcome_df %>% shapiro_test(preterm_births, smm, gonorrhea) %>%
+  knitr::kable(digits = 3)
+```
+
+Outcome variables are likely sampled from a non-normal distribution, as indicated by significant p-values for the Shapiro test and fat tails in the Q-Q plots: not a deal-breaker, since residuals are what are important, but certainly presents the possibility that linear regression may not be the best model for our data.
+
+### Multicollinearity Considerations
+
+Before we start building models, let's check for potential multicollinearity among predictors, since stepwise model selection will exacerbate any existing multicollinearity in our model. 
+
+To summarize simple correlations between variables, we'll construct Pearson correlation matrix of predictors, using pair-wise (instead of case) deletion of datapoints with missing values.
+
+```{r}
+#create dataset of predictors ONLY
+predictors_df = project_df %>% 
+  dplyr::select(-c("nta_name","nta_code", "preterm_births", "gonorrhea", "smm", "clinics", "community_health_centers", "non_pcmd", "clinics_and_chc_count"))
+
+write.csv(predictors_df, 'data/predictors.csv', row.names = FALSE)
+
+N <- rcorr(as.matrix(predictors_df), type = c("pearson")) #pair-wise deletion
+
+corrplot::corrplot(N$r,
+                   type = "upper",
+                   method = "square", 
+                     addCoef.col = "black", 
+                     diag = FALSE, 
+                     number.cex = .6,
+                     tl.col = "black",
+                     tl.cex = .9,
+                     tl.srt = 45)
+```
+
+There appears to several highly correlated potential predictors in our dataset, with strong positive and negative relationships present. There is a strong possibility of multicollinearity in our final models. 
+
+Most starkly, race remains highly correlated with health and SES-related outcomes at a neighborhood level. For example, there is a strong negative correlation between percent population that identifies as white and levels of poverty, unemployment, and late or no prenatal care. This relationship becomes positive when considering percent population that identifies as Hispanic. Surprisingly, proportion of population that identifies as black have weak to no relationship with SES-related outcomes like low educational attainment or poverty, but the strongest relationship with late or no prenatal care (R = 0.54). 
+
+We'll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!
+
+### Appendix
+#### Stepwise Model Selection Criticism
+Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This [article](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6) details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of 'ransacking' of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature. 
+
+Algorithms are never a replacement for rational thought and thorough research. Look no further than [here](https://tinyurl.com/googleJeffGoldsmith) for proof that even the most well-fed algorithms make unfortunate mistakes. 
+
+### Future Directions
+Some potential other directions to build off our work:
+
+* Model selection using Lasso & LAR, which overcome many of the limitations of stepwise model selection and generally have better model specifications.
+* Adding complexity to models by considering the presence of mediators, confounders, and interaction terms in the estimation models
+* Spatial regression (using spatial lag residuals as a covariate) to account for correlation between adjacent neighborhoods. This can be done using GeoDa and our QGIS shapefiles

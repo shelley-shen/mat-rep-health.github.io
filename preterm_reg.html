@@ -9,11 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Cynthia Liu (cl3938)" />
 
-<meta name="date" content="2020-11-18" />
 
-<title>Data Initialization</title>
+<title>Preterm Births Regression</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -287,7 +285,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="smm2.html">Severe Maternal Morbidity</a>
+      <a href="smm.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -320,7 +318,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="initial_diag.html">Initial Diagnostics</a>
+      <a href="regression_summary.html">Summary</a>
     </li>
     <li>
       <a href="smm_reg.html">Severe Maternal Morbidity</a>
@@ -352,7 +350,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="about_project.html">The Project</a>
+      <a href="lit_review.html">The Project</a>
     </li>
     <li>
       <a href="team.html">The Team</a>
@@ -382,71 +380,110 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Data Initialization</h1>
-<h4 class="author">Cynthia Liu (cl3938)</h4>
-<h4 class="date">11/18/2020</h4>
+<h1 class="title toc-ignore">Preterm Births Regression</h1>
 
 </div>
 
 
-<div id="tidying-data" class="section level2">
-<h2>Tidying data</h2>
-<p>The following steps were taken to clean the NYC NTA data:</p>
-<ul>
-<li>Clean names to improve readability</li>
-<li>Select relevant predictors &amp; outcomes (demographics, SES, health outcomes, insurance status, number of providers)</li>
-<li>Drop neighborhoods that have no residential population (i.e. LaGuardia airport)</li>
-<li>Drop observation representing NYC aggregated</li>
-<li>Remove variables corresponding to 95% CI and reliability metrics of measurements</li>
-<li>Create new variable clinics_and_chc_count representing aggregated clinic and community health centers to reduce multicollinearity between predictors</li>
-<li>Create new variables adjusting number of healthcare providers by population in each neighborhood
-<ul>
-<li>clinics_and_chc_density: clinic &amp; community health centers per 10,000 people</li>
-<li>non_pcmd_density: on-primary care providers (specialists like ob-gyns) per 10,000 people</li>
-</ul></li>
-</ul>
-<pre class="r"><code>project_df = read_excel(&quot;./data/nta-metadata.xlsx&quot;, sheet = &quot;NTA Data&quot;) %&gt;%
-  janitor::clean_names() %&gt;%
-  dplyr::select(
-    nta_name:female, 
-    hispanic:limited_eng,
-    edu_less_than_hs:poverty,
-    unemployment,
-    preterm_births:smm_reliability,
-    gonorrhea,
-    health_ins,
-    medicaid_enroll,
-    late_no_prenatal_care,
-    clinics,
-    community_health_centers,
-    non_pcmd,
-    -contains(&quot;95cl&quot;),
-    -contains(&quot;reliability&quot;)) %&gt;%
-  mutate(clinics_and_chc_count = clinics + community_health_centers,
-         clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000) %&gt;%
-  drop_na(total_pop) %&gt;%
-  filter(nta_code != &#39;NYC&#39;)
+<p>Let’s start by fitting a linear model to the preterm births outcome using a stepwise selection process (with AIC as metric). Next, we’ll take a look at the chosen predictors, effect measures, and run regression diagnostics of our converged model.</p>
+<pre class="r"><code>#read in cleaned csv files
+predictors_df = read.csv(&quot;./data/predictors.csv&quot;)
+outcome_df = read.csv(&quot;./data/outcomes.csv&quot;)
 
-write.csv(project_df, &#39;data/final_regression_variables_clean.csv&#39;, row.names = FALSE)</code></pre>
-</div>
+#Combined predictors with preterm births outcome
+preterm_linear_df = predictors_df %&gt;% 
+  mutate(preterm_births = outcome_df$preterm_births)
+
+#Fit the full model 
+full_preterm_linear.model &lt;- lm(preterm_births~., data = preterm_linear_df)
+#Stepwise regression model
+step_preterm_linear.model &lt;- stepAIC(full_preterm_linear.model, direction = &quot;both&quot;, 
+                      trace = FALSE)
+
+
+#Display converged model
+step_preterm_linear.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">3.010</td>
+<td align="right">2.446</td>
+<td align="right">1.230</td>
+<td align="right">0.220</td>
+</tr>
+<tr class="even">
+<td align="left">hispanic</td>
+<td align="right">0.017</td>
+<td align="right">0.006</td>
+<td align="right">2.926</td>
+<td align="right">0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">black</td>
+<td align="right">0.045</td>
+<td align="right">0.006</td>
+<td align="right">7.265</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">limited_eng</td>
+<td align="right">-0.022</td>
+<td align="right">0.010</td>
+<td align="right">-2.170</td>
+<td align="right">0.031</td>
+</tr>
+<tr class="odd">
+<td align="left">health_ins</td>
+<td align="right">0.054</td>
+<td align="right">0.025</td>
+<td align="right">2.136</td>
+<td align="right">0.034</td>
+</tr>
+<tr class="even">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.089</td>
+<td align="right">0.042</td>
+<td align="right">2.104</td>
+<td align="right">0.037</td>
+</tr>
+<tr class="odd">
+<td align="left">non_pcmd_density</td>
+<td align="right">-0.002</td>
+<td align="right">0.001</td>
+<td align="right">-1.519</td>
+<td align="right">0.131</td>
+</tr>
+</tbody>
+</table>
+<p>The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of <code>summary(step_preterm_linear.model)$r.squared</code>, representing a decent, but nowhere near ideal fit with our predictor set</p>
+<p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
+<pre class="r"><code>#Regression diagnostics
+plot(step_preterm_linear.model)</code></pre>
+<p><img src="preterm_reg_files/figure-html/unnamed-chunk-2-1.png" width="90%" /><img src="preterm_reg_files/figure-html/unnamed-chunk-2-2.png" width="90%" /><img src="preterm_reg_files/figure-html/unnamed-chunk-2-3.png" width="90%" /><img src="preterm_reg_files/figure-html/unnamed-chunk-2-4.png" width="90%" /></p>
+<pre class="r"><code>#Shapiro test
+preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))</code></pre>
+<p>The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of <code>preterm_linear_shapiro$p.value</code>, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.</p>
+<p>These results are valid, so we can interpret them!</p>
 
 <hr>
 
 <br>
 
 <p align="center">
-
-<small>
-
+  <small>
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
-
-<p align="center">
-Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
-
-<br>
-
-Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2). </p>
 
 
 
