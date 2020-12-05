@@ -1,14 +1,7 @@
 ---
-title: "map_discussion"
+title: "Mapping Clusters of SMM and Key Predictors"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## The Clustering of Severe Maternal Morbidity(SMM) and Key Predictors
-
 
 
 ### SMM and Poverty 

@@ -11,7 +11,7 @@
 
 
 
-<title>map_discussion</title>
+<title>Mapping Clusters of SMM and Key Predictors</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -281,7 +281,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="smm.html">Severe Maternal Morbidity</a>
+      <a href="smm2.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -314,7 +314,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="initial_diag.html">Initial Diagnostics</a>
+      <a href="regression_summary.html">Summary</a>
     </li>
     <li>
       <a href="smm_reg.html">Severe Maternal Morbidity</a>
@@ -332,12 +332,6 @@ $(document).ready(function () {
         <li>
   <a href="project_report.html">Project Report</a>
 </li>
-<li>
-  <a>
-    <span class="fa fa-youtube fa-lg"></span>
-     
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     About
@@ -346,12 +340,18 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="lit_review.html">The Project</a>
+      <a href="about_project.html">The Project</a>
     </li>
     <li>
       <a href="team.html">The Team</a>
     </li>
   </ul>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/shelley-shen/nycmaternalhealth">
@@ -368,17 +368,15 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">map_discussion</h1>
+<h1 class="title toc-ignore">Mapping Clusters of SMM and Key Predictors</h1>
 
 </div>
 
 
-<div id="the-clustering-of-severe-maternal-morbiditysmm-and-key-predictors" class="section level2">
-<h2>The Clustering of Severe Maternal Morbidity(SMM) and Key Predictors</h2>
 <div id="smm-and-poverty" class="section level3">
 <h3>SMM and Poverty</h3>
 <p><img src="maps/Poverty_SMM.png" style="width:75%" class="center"></p>
-<p>Based on our mapping visualizations, there appears to be a high cluster …</p>
+<p>This visualization shows the percent of population living in poverty with clusters of Severe Maternal Morbidity(SMM) overlaid in New York City by Neighborhood Tabulation Areas. Local Spatial Autocorrelation (LISA) clusters shows us the categorization of all significant spatial clusters. The “high” cluster areas represent portions of the city that have statistically significant clusters of high SMM rates and the “low” cluster areas represent portions of the city that have statistically significant clusters of low SMM rates. Here, we can see a relationship between the high cluster areas and poverty, particularly in East New York and the Bronx. We also see a relationship between the low poverty areas and low clusters of SMM, particularly in Staten Island and parts of Lower Manhattan.</p>
 </div>
 <div id="smm-and-race" class="section level3">
 <h3>SMM and Race</h3>
@@ -387,15 +385,23 @@ $(document).ready(function () {
 <div id="smm-and" class="section level3">
 <h3>SMM and …</h3>
 </div>
-</div>
 
 <hr>
 
 <br>
 
 <p align="center">
-  <small>
+
+<small>
+
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
+
+<p align="center">
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1) and <a href ="https://qgis.org/en/site/">QGIS</a> (v3.16 1 'Hannover'). 
+
+<br>
+
+Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2). </p>
 
 
 
