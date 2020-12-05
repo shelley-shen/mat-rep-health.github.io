@@ -1,7 +1,5 @@
 ---
 title: "map_discussion"
-author: "Ayeshra Acharya"
-date: "12/5/2020"
 output: html_document
 ---
 
@@ -9,12 +7,27 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Mapping Hypothesized Predictors 
+## The Clustering of Severe Maternal Morbidity(SMM) and Key Predictors
 
-### Cluster of Severe Maternal Morbidity 
+
+
+### SMM and Poverty 
 
 <img src="maps/Poverty_SMM.png" style="width:75%" class="center">
 
 
-Based on our mapping visualizations, there appears to be a high cluster 
+Based on our mapping visualizations, there appears to be a high cluster ... 
+
+
+
+### SMM and Race
+
+<img src="maps/Race_SMM.png" style="width:75%" class="center">
+
+
+
+
+### SMM and ... 
+
+
 
