@@ -1,31 +1,28 @@
 ---
-title: "Mapping Clusters of SMM and Key Predictors"
+title: "Clusters of Severe Maternal Morbidity and Key Predictors"
 output: html_document
+theme: sandstone
 ---
 
+<br>
 
-### SMM and Poverty 
+### Severe Maternal Morbidity and Poverty 
 
 <img src="maps/Poverty_SMM.png" style="width:75%" class="center">
 
+<br>
 
 This visualization shows the percent of population living in poverty with clusters of Severe Maternal Morbidity(SMM) overlaid in New York City by Neighborhood Tabulation Areas. Local Spatial Autocorrelation (LISA) clusters shows us the categorization of all significant spatial clusters. The "high" cluster areas represent portions of the city that have statistically significant clusters of high SMM rates and the "low" cluster areas represent portions of the city that have statistically significant clusters of low SMM rates. Here, we can see a relationship between the high cluster areas and poverty, particularly in East New York and the Bronx. We also see a relationship between the low poverty areas and low clusters of SMM, particularly in Staten Island and parts of Lower Manhattan. 
 
+<br>
 
-
-### SMM and Race
+### Severe Maternal Morbidity and Race
 
 <img src="maps/Race_SMM.png" style="width:75%" class="center">
 
+<br> 
 
-
-
-
-
-
-
-
-### SMM and ... 
+For this visualization, those who identify as Black and Non-Hispanic are included from the race category. This map shows the percent of population who identifies as Black and Non-Hispanic with clusters of Severe Maternal Morbidity(SMM) overlaid in New York City by Neighborhood Tabulation Areas.
 
 
 
