@@ -511,8 +511,6 @@ ggplotly(gonorrhea2_ggplot)
 
 We hypothesized that education would be a significant predictor of STI levels, specifically gonorrhea, which was our STI focus. From previous understanding and literature review, individuals with higher levels of education tend to practice safer sex methods and develop lower rates of STIs. Following that reasoning, we expected to see a strong association between the percentage of population with less than high school education and the rate of gonorrhea, where neighborhoods with higher percentages of the population with low education levels would see higher rates of gonorrhea. While a small, positive relationship between the variables does exist, it is a much weaker association than expected, with numerous outliers. We speculate that this weak association may be caused by the tendency of sexual education being taught at the middle school level and that the amount of safe sex practice knowledge may not be as different as we expected between the less-than-high-school level of education and higher education. Additionally, we hypothesize that the outliers of low percent of less-than-high-school education but high gonorrhea rates may be influenced by the large number of LGBTQ+ residents in those neighborhoods. We do not want to make assumptions about these marginalized communities who already experience a heavy burden from stigmatization. But in an attempt to understand potential causes for these data points, we will draw some tentative connections. From [subsequent literature review](about_project.html), we have seen that people identifying as LGBTQ+ have higher rates of STI’s, whether as a result of lower condom usage following increased use of pre-exposure prophylaxis (PrEP) or due to a general, greater willingness to receive STI testing. This may artificially inflate the rate of gonorrhea in these neighborhoods since we have not tested and controlled for the variation of STI testing among different neighborhoods. Furthermore, we found that when stratifying the relationship between education and gonorrhea by race, there was a similar output to when we stratified the relationship between prenatal care and SMM. Populations with higher percent of Hispanic and Black individuals demonstrated higher levels of gonorrhea compared to populations with higher percent of White individuals. These findings were supported by the inclusion of Hispanic and Black race variables in the final fitted negative binomial regression model.
 
-Our analyses show that significant disparities in reproductive and maternal health outcomes still remain among NYC neighborhoods, and they are highly correlated with sociodemographic characteristics. Public health interventions in this field are exceedingly necessary, especially given shifts in current events.
-
 ```{r}
 gonorrhea3_ggplot = 
   plots_df %>% 
@@ -527,6 +525,7 @@ gonorrhea3_ggplot =
 ggplotly(gonorrhea3_ggplot)
 ```
 
+Our analyses show that significant disparities in reproductive and maternal health outcomes still remain among NYC neighborhoods, and they are highly correlated with sociodemographic characteristics. Public health interventions in this field are exceedingly necessary, especially given shifts in current events.
 ## Acknowledgements
 
 Special thanks to:
