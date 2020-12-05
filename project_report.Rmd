@@ -142,7 +142,7 @@ We used data visualizations to conduct some exploratory analysis of our outcomes
 ### Neighborhood-Level Maps
 
 We used Geographic Information System(GIS) to join our two datasets, overlaying the NYC Neighborhood Health Atlas data to the NTA shapefile. Using QGIS, we created several maps portraying the distribution of our outcomes and hypothesized predictors, the darker colors representing higher rates. Our interactive web map allows us to assess each outcome individually and clearly see high(darker colors) and low(lighter colors) rates.The points for Neighborhood Tabulation Area provides us with an overall summary of Percent of Black-identifying population, percent in poverty and the crude rate of SMM. 
-We used GeoDA to 
+We used Local Indicators of Spatial Association(LISA) Clusters within GeoDA, which allowed us to map the categorization of significant spatial clusters. The high cluster areas represent NTAs with statistically significant clusters of high SMM rates and the low cluster areas represent NTAs with statistically significant clusters of low SMM rates. Cluster analysis allowed us to visually check for an association between our predictors and outcome SMM. 
 
 ### Regression Models
 
