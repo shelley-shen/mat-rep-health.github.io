@@ -37,7 +37,7 @@ navbar:
         - text: "The Team"
           href: team.html
     - icon: fa-youtube fa-lg
-      href: 
+      href: https://www.youtube.com/watch?v=hoJ5Jc2OhsE
     - icon: fa-github fa-lg
       href: https://github.com/shelley-shen/nycmaternalhealth
 output:

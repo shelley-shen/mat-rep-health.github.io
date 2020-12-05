@@ -501,8 +501,8 @@ plot(step_smm_linear.model)</code></pre>
 <p><img src="smm_reg_files/figure-html/unnamed-chunk-2-1.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-2.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-3.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-4.png" width="90%" /></p>
 <pre class="r"><code>#Shapiro test
 smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
-<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of 0.0019526. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
-<p>Let’s try something else since it’s clear the model doesn’t follow linear assumptions.</p>
+<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of 0.0019526. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. There’s also an unequal distribution of leverage among points (though likely not significant), and a few potential outliers.</p>
+<p>It’s possible that the model is still valid - let’s try something else though!</p>
 </div>
 <div id="poisson-regression-model" class="section level4">
 <h4>Poisson Regression Model</h4>
@@ -648,11 +648,11 @@ step_smm_poisson.model %&gt;%
 </tr>
 </tbody>
 </table>
-<p>Our Poisson model failed to converge, which is why it appears all 16 predictors were selected.</p>
+<p>Our Poisson model failed to converge, which is why it appears all predictors were selected in the final model. A closer look at the regression output shows that this is because the model is overdispersed, violating one of the key assumptions of Poisson regression.</p>
 </div>
 <div id="negative-binomial-regression-model" class="section level4">
 <h4>Negative Binomial Regression Model</h4>
-<p>We will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha that can account for the overdispersion we found with the Poisson model</p>
+<p>To address that, we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha that can account for overdispersion.</p>
 <pre class="r"><code>full_smm_neg_bin.model &lt;- glm.nb(smm~., data=smm_df)
 
 step_smm_neg_bin.model &lt;- stepAIC(full_smm_neg_bin.model, direction = &quot;both&quot;, 
@@ -740,6 +740,7 @@ step_smm_neg_bin.model %&gt;%
 </table>
 <p>The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: hispanic, white, other, foreign_born, unemployment, medicaid_enroll, late_no_prenatal_care and clinics_and_chc_density.</p>
 <p>This model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let’s compare the three models we’ve already built, and just for kicks, a negative binomial regression with variables selected through literature review &amp; causal theory.</p>
+<p>The predictors we’ll use in our model are: late_no_prenatal_care, clinics_and_chc_density, medicaid_enroll, hispanic percent population, and black percent population.</p>
 <pre class="r"><code>theory_smm_neg_bin.model &lt;- glm.nb(smm~ late_no_prenatal_care + clinics_and_chc_density + medicaid_enroll + hispanic + black, data=smm_df)
 
 #Display converged model
@@ -809,6 +810,188 @@ theory_smm_neg_bin.model %&gt;%
 <li>Our model: AIC = 1916.7557983</li>
 </ul>
 <p>Though the automatically generated negative binomial model has the lowest AIC and is therefore the “winning” model, it’s important to note that our curated model is not far behind. Our curated model is also more parsimonious, contains fewer highly correlated predictors, and fits well with the existing body of literature on severe maternal morbidity, all of which are benefits difficult to quantify with a metric like AIC.</p>
+</div>
+<div id="discussion" class="section level4">
+<h4>Discussion</h4>
+<p>Because of correlation between many predictors, we should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.</p>
+<pre class="r"><code>smm_coll = colldiag(step_smm_neg_bin.model)
+
+knitr::kable(list(smm_coll$condindx, smm_coll$pi))</code></pre>
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
+<table>
+<thead>
+<tr class="header">
+<th align="right">cond.index</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.000000</td>
+</tr>
+<tr class="even">
+<td align="right">2.800656</td>
+</tr>
+<tr class="odd">
+<td align="right">3.272090</td>
+</tr>
+<tr class="even">
+<td align="right">3.800429</td>
+</tr>
+<tr class="odd">
+<td align="right">6.313091</td>
+</tr>
+<tr class="even">
+<td align="right">9.440829</td>
+</tr>
+<tr class="odd">
+<td align="right">12.010112</td>
+</tr>
+<tr class="even">
+<td align="right">16.244112</td>
+</tr>
+<tr class="odd">
+<td align="right">24.910449</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table>
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="10%" />
+<col width="10%" />
+<col width="12%" />
+<col width="17%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">intercept</th>
+<th align="right">hispanic</th>
+<th align="right">white</th>
+<th align="right">other</th>
+<th align="right">foreign_born</th>
+<th align="right">unemployment</th>
+<th align="right">medicaid_enroll</th>
+<th align="right">late_no_prenatal_care</th>
+<th align="right">clinics_and_chc_density</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.0002989</td>
+<td align="right">0.0029580</td>
+<td align="right">0.0009095</td>
+<td align="right">0.0022771</td>
+<td align="right">0.0008556</td>
+<td align="right">0.0007905</td>
+<td align="right">0.0014156</td>
+<td align="right">0.0009634</td>
+<td align="right">0.0058101</td>
+</tr>
+<tr class="even">
+<td align="right">0.0002103</td>
+<td align="right">0.0315001</td>
+<td align="right">0.0490713</td>
+<td align="right">0.0400084</td>
+<td align="right">0.0001241</td>
+<td align="right">0.0017710</td>
+<td align="right">0.0028046</td>
+<td align="right">0.0064170</td>
+<td align="right">0.0080565</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0001360</td>
+<td align="right">0.0005009</td>
+<td align="right">0.0000511</td>
+<td align="right">0.0165047</td>
+<td align="right">0.0024313</td>
+<td align="right">0.0001266</td>
+<td align="right">0.0005759</td>
+<td align="right">0.0006668</td>
+<td align="right">0.8832346</td>
+</tr>
+<tr class="even">
+<td align="right">0.0012187</td>
+<td align="right">0.0059244</td>
+<td align="right">0.0678192</td>
+<td align="right">0.1982788</td>
+<td align="right">0.0031474</td>
+<td align="right">0.0021549</td>
+<td align="right">0.0003488</td>
+<td align="right">0.0001282</td>
+<td align="right">0.0473930</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0012306</td>
+<td align="right">0.6558164</td>
+<td align="right">0.0059963</td>
+<td align="right">0.0240112</td>
+<td align="right">0.0016297</td>
+<td align="right">0.0132268</td>
+<td align="right">0.0025061</td>
+<td align="right">0.0786007</td>
+<td align="right">0.0215077</td>
+</tr>
+<tr class="even">
+<td align="right">0.0019715</td>
+<td align="right">0.1878480</td>
+<td align="right">0.0000950</td>
+<td align="right">0.0000675</td>
+<td align="right">0.0487215</td>
+<td align="right">0.0449255</td>
+<td align="right">0.5423697</td>
+<td align="right">0.1040083</td>
+<td align="right">0.0041980</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0029891</td>
+<td align="right">0.0501458</td>
+<td align="right">0.0049691</td>
+<td align="right">0.4399179</td>
+<td align="right">0.3183426</td>
+<td align="right">0.2900813</td>
+<td align="right">0.2408876</td>
+<td align="right">0.0000195</td>
+<td align="right">0.0180505</td>
+</tr>
+<tr class="even">
+<td align="right">0.0047403</td>
+<td align="right">0.0252732</td>
+<td align="right">0.1197088</td>
+<td align="right">0.2553645</td>
+<td align="right">0.5020032</td>
+<td align="right">0.3414235</td>
+<td align="right">0.1965850</td>
+<td align="right">0.6478617</td>
+<td align="right">0.0098244</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9872046</td>
+<td align="right">0.0400333</td>
+<td align="right">0.7513796</td>
+<td align="right">0.0235698</td>
+<td align="right">0.1227445</td>
+<td align="right">0.3054998</td>
+<td align="right">0.0125067</td>
+<td align="right">0.1613344</td>
+<td align="right">0.0019252</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As we suspected, there is some degree of collinearity in our model, indicated by condition indices between 10 and 30. However, it is not extreme and seems to be strongly related to the predictor of white population proportion. We will be careful not to interpret that predictor independently.</p>
+<p>As a result, we can safely say that a model containing hispanic, white, other, foreign_born, unemployment, medicaid_enroll, late_no_prenatal_care and clinics_and_chc_density is the best set of predictors for neighborhood-level severe maternal morbidity.</p>
 </div>
 
 <hr>

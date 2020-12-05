@@ -757,7 +757,243 @@ step_gonorrhea_neg_bin.model %&gt;%
 <li>Poisson: AIC = Inf</li>
 <li>Negative binomial: AIC = 2027.4706595</li>
 </ul>
-<p>The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we’ve established AIC as our criteria, we’ll use the negative binomial analysis moving forward.</p>
+<p>The negative binomial model is slightly better than the linear model, and both the linear and negative binomial models are much better than the Poisson model. Since we’ve established AIC as our criteria, we’ll use the negative binomial model as our final model moving forward.</p>
+</div>
+<div id="discussion" class="section level4">
+<h4>Discussion</h4>
+<p>Our final model shows that female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care and non_pcmd_density are important predictors of gonorrhea rates by neighborhood.</p>
+<p>We should assess for multicollinearity in our fitted model using condition indexes and a variance decomposition matrix.</p>
+<pre class="r"><code>gonorrhea_coll = colldiag(step_gonorrhea_neg_bin.model)
+
+knitr::kable(list(gonorrhea_coll$condindx, gonorrhea_coll$pi))</code></pre>
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
+<table>
+<thead>
+<tr class="header">
+<th align="right">cond.index</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.000000</td>
+</tr>
+<tr class="even">
+<td align="right">2.887999</td>
+</tr>
+<tr class="odd">
+<td align="right">3.228840</td>
+</tr>
+<tr class="even">
+<td align="right">3.992485</td>
+</tr>
+<tr class="odd">
+<td align="right">7.605202</td>
+</tr>
+<tr class="even">
+<td align="right">8.497865</td>
+</tr>
+<tr class="odd">
+<td align="right">12.885140</td>
+</tr>
+<tr class="even">
+<td align="right">14.464381</td>
+</tr>
+<tr class="odd">
+<td align="right">21.283722</td>
+</tr>
+<tr class="even">
+<td align="right">27.859224</td>
+</tr>
+<tr class="odd">
+<td align="right">118.526536</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>
+<table>
+<colgroup>
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="8%" />
+<col width="7%" />
+<col width="7%" />
+<col width="11%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">intercept</th>
+<th align="right">female</th>
+<th align="right">hispanic</th>
+<th align="right">black</th>
+<th align="right">other</th>
+<th align="right">limited_eng</th>
+<th align="right">education</th>
+<th align="right">poverty</th>
+<th align="right">medicaid_enroll</th>
+<th align="right">late_no_prenatal_care</th>
+<th align="right">non_pcmd_density</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.0000160</td>
+<td align="right">0.0000156</td>
+<td align="right">0.0007941</td>
+<td align="right">0.0007726</td>
+<td align="right">0.0011709</td>
+<td align="right">0.0006015</td>
+<td align="right">0.0003219</td>
+<td align="right">0.0003690</td>
+<td align="right">0.0002117</td>
+<td align="right">0.0007657</td>
+<td align="right">0.0017864</td>
+</tr>
+<tr class="even">
+<td align="right">0.0000079</td>
+<td align="right">0.0000054</td>
+<td align="right">0.0005899</td>
+<td align="right">0.0295685</td>
+<td align="right">0.0383582</td>
+<td align="right">0.0016299</td>
+<td align="right">0.0002200</td>
+<td align="right">0.0004456</td>
+<td align="right">0.0000786</td>
+<td align="right">0.0029683</td>
+<td align="right">0.2419545</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0000088</td>
+<td align="right">0.0000158</td>
+<td align="right">0.0012300</td>
+<td align="right">0.0298396</td>
+<td align="right">0.0227281</td>
+<td align="right">0.0070604</td>
+<td align="right">0.0005609</td>
+<td align="right">0.0000033</td>
+<td align="right">0.0002460</td>
+<td align="right">0.0010035</td>
+<td align="right">0.3946965</td>
+</tr>
+<tr class="even">
+<td align="right">0.0000738</td>
+<td align="right">0.0000819</td>
+<td align="right">0.0340533</td>
+<td align="right">0.0406936</td>
+<td align="right">0.0984766</td>
+<td align="right">0.0004899</td>
+<td align="right">0.0018226</td>
+<td align="right">0.0030956</td>
+<td align="right">0.0001348</td>
+<td align="right">0.0006775</td>
+<td align="right">0.0749206</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0024862</td>
+<td align="right">0.0023397</td>
+<td align="right">0.0326256</td>
+<td align="right">0.0562102</td>
+<td align="right">0.0460763</td>
+<td align="right">0.0169572</td>
+<td align="right">0.0059190</td>
+<td align="right">0.0054989</td>
+<td align="right">0.0084058</td>
+<td align="right">0.0009383</td>
+<td align="right">0.1793519</td>
+</tr>
+<tr class="even">
+<td align="right">0.0003447</td>
+<td align="right">0.0003823</td>
+<td align="right">0.1438125</td>
+<td align="right">0.0045733</td>
+<td align="right">0.0604427</td>
+<td align="right">0.0002985</td>
+<td align="right">0.0000874</td>
+<td align="right">0.0649887</td>
+<td align="right">0.0124987</td>
+<td align="right">0.1444315</td>
+<td align="right">0.0146382</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0002111</td>
+<td align="right">0.0001417</td>
+<td align="right">0.1086810</td>
+<td align="right">0.0019189</td>
+<td align="right">0.6010802</td>
+<td align="right">0.5740691</td>
+<td align="right">0.0072542</td>
+<td align="right">0.0642179</td>
+<td align="right">0.0000004</td>
+<td align="right">0.0145656</td>
+<td align="right">0.0084083</td>
+</tr>
+<tr class="even">
+<td align="right">0.0000121</td>
+<td align="right">0.0000001</td>
+<td align="right">0.1970267</td>
+<td align="right">0.5351710</td>
+<td align="right">0.0120211</td>
+<td align="right">0.0302819</td>
+<td align="right">0.0379518</td>
+<td align="right">0.0559748</td>
+<td align="right">0.0044280</td>
+<td align="right">0.7821537</td>
+<td align="right">0.0084025</td>
+</tr>
+<tr class="odd">
+<td align="right">0.0004222</td>
+<td align="right">0.0001561</td>
+<td align="right">0.4247615</td>
+<td align="right">0.1855308</td>
+<td align="right">0.0767589</td>
+<td align="right">0.1125247</td>
+<td align="right">0.8886815</td>
+<td align="right">0.1428805</td>
+<td align="right">0.0055370</td>
+<td align="right">0.0409648</td>
+<td align="right">0.0172200</td>
+</tr>
+<tr class="even">
+<td align="right">0.0001493</td>
+<td align="right">0.0000008</td>
+<td align="right">0.0500087</td>
+<td align="right">0.0519140</td>
+<td align="right">0.0426132</td>
+<td align="right">0.2508350</td>
+<td align="right">0.0436124</td>
+<td align="right">0.6186499</td>
+<td align="right">0.9634105</td>
+<td align="right">0.0064226</td>
+<td align="right">0.0307347</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9962680</td>
+<td align="right">0.9968606</td>
+<td align="right">0.0064167</td>
+<td align="right">0.0638074</td>
+<td align="right">0.0002737</td>
+<td align="right">0.0052518</td>
+<td align="right">0.0135681</td>
+<td align="right">0.0438758</td>
+<td align="right">0.0050484</td>
+<td align="right">0.0051084</td>
+<td align="right">0.0278862</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Though some of our condition indices are very very large, it is difficult to identify exactly which predictors are contributing to this multicollinearity from the variance decomposition matrix. It appears that poverty and medicaid enrollment, as well as hispanic and education, may be collinear pairs in this model. Though this is not ideal, it does not detract from the results of our regression if we leave them together in the model as control variables.</p>
 </div>
 
 <hr>

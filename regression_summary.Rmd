@@ -35,7 +35,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 ## Summary
-Our regression analysis showed strong associations between SMM and both poverty and late or no access to prenatal care. Race appears to modify the relationship between prenatal care and SMM, showing that neighborhoods with higher populations of Black and Hispanic individuals have higher rates of SMM. Similarly for preterm births, race and access to prenatal care are also significant predictors. We also see an association between health insurance and preterm births. Lastly, in our models for gonorrhea, we also see statistically significant associations with our outcome and race, education level, and poverty. Access to prenatal care also presents an association, though it is not as strong as our other predictors. 
+Our regression analysis showed strong associations between SMM and both poverty and late or no access to prenatal care. Race is also associated with SMM, showing that neighborhoods with higher populations of Black and Hispanic individuals have higher rates of SMM. Similarly for preterm births, race and access to prenatal care are also significant predictors. We also see an association between health insurance and preterm births. Lastly, in our models for gonorrhea, we also see statistically significant associations with our outcome and race, education level, and poverty. Access to prenatal care also presents an association, though it is not as strong as our other predictors. 
 
 ## Data
 
@@ -52,21 +52,41 @@ The NTA Neighborhood data contains data from 188 neighborhoods in New York City,
 - `smm`: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012
 - `gonorrhea`: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015 
 
-#### **Predictors:**
+#### **Potential Predictors:**
 
-15 potential predictor variables were identified after cleaning and transformation. Predictor selection was driven by subject matter knowledge, literature review, dataset constraints, and common sense.
+15 potential predictor variables were identified after cleaning and transformation. Predictor selection was driven by subject matter knowledge, literature review, dataset constraints, and common sense. Missingness was not an issue in this dataset: on average, less than 5% of values were missing for any given value. 
+
+- `total_pop`: total neighborhood population 2010-2014
+- `female`: percent of female population in 2010-2014
+- `foreign_born`: percent of population born outside the US or US territories
+- `limted_eng`: percent of population 5 years and older who report that they speak English "less than very well"
+- `unemployment`: percent of the civilian (non-military) labor force ages 16 and older who are unemployed in 2010-2014
+- `health_ins`: percent of civilian non-institutionalized population with health insurance in 2010-2014
+- `medicaid_enroll`: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015
+- `late_no_prenatal_care`: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014
+- `race`: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other
+- `poverty`: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses: 
+- `education`: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
+- `non_pcmd`: number of non-primary care providers in 2014
+- `clinics_and_chc_count`: number of clinic & community health per 10,000 people in 2014
+- `clinics_and_chc_density`: clinic & community health centers per 10,000 people in 2014
+- `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
 
 &nbsp;
 
 ## Analysis Plan
 
-We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships via transformation if a linear model is a poor fit. 
+We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships if a linear model is a poor fit. For linear models, we're particularly concerned about the homoskedasticity and normality assumptions.
+
+However, deviations from assumptions are not the end, especially since our model exists for estimation, not prediction purposes. Linearity assumptions are important for t and F-test results, but it's likely our relatively large sample size (n=188) may help us overcome that. 
+
+Homoskedasticity is an issue: unequal variances will not bias our estimates, but will lead to incorrect standard errors. As a result, model heteroskedasticity may lead to improper fits and irrelevant hypothesis test results. However, assumption deviations are questions of degree, so models may still have meaning if deviations are minor.
 
 Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm's pitfalls.
 
 Models will be judged on: 
 
-  * Satisfaction of assumptions for their respective method 
+  * Satisfaction of assumptions for their respective method.
   * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.
   
 ### Outcome Variables
@@ -95,11 +115,11 @@ smm_qq = ggqqplot(outcome_df$smm)
 gonorrhea_qq = ggqqplot(project_df$gonorrhea)
 
 #create patchwork plots
-preterm_hist + preterm_qq
+preterm_hist + preterm_qq + plot_annotation(title = 'Distribution and Normal Q-Q Plot of Preterm Birth Rate')
 
-smm_hist + smm_qq
+smm_hist + smm_qq + plot_annotation(title = 'Distribution and Normal Q-Q Plot of Severe Maternal Morbidity Rate')
 
-gonorrhea_hist + gonorrhea_qq
+gonorrhea_hist + gonorrhea_qq + plot_annotation(title = 'Distribution and Normal Q-Q Plot of Gonorrhea Rate')
 
 #run shapiro-wilk tests
 outcome_df %>% shapiro_test(preterm_births, smm, gonorrhea) %>%
@@ -138,13 +158,15 @@ There appears to several highly correlated potential predictors in our dataset, 
 
 Most starkly, race remains highly correlated with health and SES-related outcomes at a neighborhood level. For example, there is a strong negative correlation between percent population that identifies as white and levels of poverty, unemployment, and late or no prenatal care. This relationship becomes positive when considering percent population that identifies as Hispanic. Surprisingly, proportion of population that identifies as black have weak to no relationship with SES-related outcomes like low educational attainment or poverty, but the strongest relationship with late or no prenatal care (R = 0.54). 
 
-We'll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!
+We'll keep these relationships in mind, as well as the correlations we saw in our exploratory analysis, as we interpret our results. Select an outcome from the dropdown and read on!
 
 &nbsp;
 
 ## Appendix
 ### Stepwise Model Selection Criticism
-Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This [article](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6) details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of 'ransacking' of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature. 
+Stepwise model selection, the method we used to select our model, is a greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. Similarly, AIC is a naive metric of fit that does not assess how well the model fits the data, only that some models are better than others. 
+
+This [article](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6) details some of the critiques of stepwise model selection. The most relevant to our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of 'ransacking' of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature. 
 
 Algorithms are never a replacement for rational thought and thorough research. Look no further than [here](https://tinyurl.com/googleJeffGoldsmith) for proof that even the most well-fed algorithms make unfortunate mistakes. 
 
@@ -152,5 +174,6 @@ Algorithms are never a replacement for rational thought and thorough research. L
 Some potential other directions to build off our work:
 
 * Model selection using Lasso & LAR, which overcome many of the limitations of stepwise model selection and generally have better model specifications.
+* Testing additional model fits, such as non-parametric methods or data transformations (i.e. Box-Cox)
 * Adding complexity to models by considering the presence of mediators, confounders, and interaction terms in the estimation models
-* Spatial regression (using spatial lag residuals as a covariate) to account for correlation between adjacent neighborhoods. This can be done using GeoDa and our QGIS shapefiles
+* Spatial regression (using spatial lag residuals as a covariate) to account for correlation between adjacent neighborhoods. This can be done using GeoDa and our QGIS shapefiles.
