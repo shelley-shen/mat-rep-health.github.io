@@ -13,44 +13,33 @@ library(readr)
 ```
 
 ## Introduction
-Severe maternal morbidity (SMM) includes health outcomes during labor and delivery that may result in both short-term and/or long term health consequences for women. New York City’s rate of SMM increased 28.2 % from 2008 to 2012. Some of the factors contributing to high rates of SMM in New York City may include access to reproductive health services, rates of sexually transmitted infections (STIs), neighborhood poverty level and race. We will examine the factors that may contribute to the high SMM rates in New York City. To further assess the status of maternal health in nyc, we will examine the outcome of preterm births which are babies born less than 37 weeks of gestation. In regard to STI's in our assessment of reproductive health in NYC, we will choose to focus specifically on gonorrhea as it is provides considerable risk to pregnant mothers and newborn babies as well [1](https://www.mayoclinic.org/diseases-conditions/gonorrhea/symptoms-causes/syc-20351774#:~:text=Gonorrhea%20is%20an%20infection%20caused,vaginal%2C%20oral%20or%20anal%20sex.).  
+Severe maternal morbidity (SMM) includes health outcomes during labor and delivery that may result in both short-term and/or long term health consequences for women. New York City’s rate of SMM increased 28.2 % from 2008 to 2012. Preterm births, when infants are born prior to 37 weeks of gestation, can place the mother at increased risk of physical and mental health complications as well as decreased bonding with the baby. Additionally, STI's pose a general threat of infection to mothers and infants. Some of the factors contributing to high rates of SMM, preterm births, and STI's in New York City include access to reproductive health services, health insurance coverage, neighborhood poverty level, education, and race. We will examine these factors that may contribute to the poor maternal health outcomes in New York City. In regards to STI's in our assessment of reproductive health in NYC, we will choose to focus specifically on gonorrhea as it provides considerable risk to pregnant mothers and newborn babies and is among the most infectious of STI's [1](https://www.mayoclinic.org/diseases-conditions/gonorrhea/symptoms-causes/syc-20351774#:~:text=Gonorrhea%20is%20an%20infection%20caused,vaginal%2C%20oral%20or%20anal%20sex).  
 
-<br>
 
-## Literature Review
-
-**Severe Maternal Morbidity** 
-
-Maternal morbidity is defined by the WHO as "any health condition attributed to and/or aggravated by pregnancy and childbirth that has a negative impact on the woman’s well-being”. The medical causes of morbidity include hemorrhaging and pregnancy related infections, induced abortions, and complications during labor. Outside of these medical factors, there are many socioeconomic determinants to rates of maternal morbidity within a population. According to literature these most often include access to quality maternal health services, both during pregnancy and during labor. Access may come in the form of health insurance, proximity to reproductive health care facilities, and quality of care available at health care facilities [1](https://www.ncbi.nlm.nih.gov/books/NBK361917/). In New York City, racial and ethnic disparities have contributed significantly to high rates of maternal morbidity. According to a study published in the Maternal and Child Health Journal, SMM rates were high among black, non-latina women in particular. Maternal education, income, and lack of prenatal care were also significantly associated with SMM [2](https://link-springer-com.ezproxy.cul.columbia.edu/article/10.1007/s10995-018-2682-z).  
-
-**Preterm Births**
-
-Preterm birth is defined as the live birth of an infant prior to 37 weeks of gestation, with the categories of late preterm at 34-36 weeks, moderately preterm at 32-36 weeks, and very preterm at less than 32 weeks [1](https://www.marchofdimes.org/peristats/ViewTopic.aspx?reg=36&top=3&lev=0&slev=4). In addition to putting babies at risk of underdevelopment of vital organs, preterm births also affect maternal health by increasing the mother’s risk of developing postnatal physical health problems, depression, and lower usage of postnatal support [2](https://bmjopen.bmj.com/content/6/10/e012676), [3](https://www.frontiersin.org/articles/10.3389/fpubh.2018.00359/full). Racial and ethnic disparities exist in preterm birth rates across the nation, with the highest rates of preterm births among African-American mothers (14.4%) that are almost 50% higher than the rates among white (9.3%) or Hispanic (10%) women in 2019 [4](https://www.cdc.gov/reproductivehealth/maternalinfanthealth/pretermbirth.htm). In NYC, the overall rate of preterm births was 9.0% in 2017. When categorized by race, the preterm birth rate was 12.7% among Black women, 9.6% among Hispanic women, 7.9% among Asian women, 6.9% among White women, and 9.9% among women of Other race [5](https://data.cccnewyork.org/data/table/1276/preterm-births#1277/1480/25/a/a). While there are multiple risk factors for preterm birth including previous preterm births, pregnancy with multiples, tobacco and substance usage, short durations between pregnancies, and pregnancy complications, the socioeconomic environment of the mother is also important [6](https://www.cdc.gov/reproductivehealth/features/premature-birth/). In a 2008 International Journal of Epidemiology report, maternal educational level was found to be the strongest predictor for preterm birth out of five socioeconomic factors, more so than income and occupation [7](https://watermark.silverchair.com/dyn112.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAApwwggKYBgkqhkiG9w0BBwagggKJMIIChQIBADCCAn4GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMTy4eP8rA23acKExiAgEQgIICT7nfOcXpJt31qdbBKOIboYVrwnd_WHQhBeR2zPtf2_4u3bePmf8VV6qV0fEXrHgXvb3N2XB4sesbpMG_2si0irr_CROVEu1ViSWoRkPfTWYpg4tzoXjDr6sR8yZBM-Ka_4WEOclHYN3-guKHuT5Xtrm0cLFG4dcV8cv8xodawfaFfug75W9choeMXMKMea9ndCCyFL0xUuMLS16cXGVHSYzSixgj2MK1vDWLB-jt973iC34bxIBwwTP39ibenmDoH5qD8g6KphGfp8V5ANpwJofRkzYf3CKu9PbMeQzEqOOmTfShwfSn0Wi7jeR8Q37ZwznMKHiFrChO5ndZ46cTAY6az5Dw-ryrQP-S7yOK8t_M9a90Tcj6sUmhsie3WusXcASh_tlI2NySIF7sqMGjWuo_tybivPEpyxjpZUaNd-zaXLmI_wXbhtFWv4UsxzOVi8xG82P3BfvqImmsdkKJT2K28fC6qdBU5ee1Jo7jwXAEtAFpa262U5O1x64gQr76VZ15Z3QSQvYnG6YuJBjq1U3PGYN6svysasziSMNghnwNFgKZroCkWoyv2xe_FBKBP5Ju9Wt5ivOzkT9TLKlfw1n70UmqImeO4CQpdIYafasooL4ijLl_el-A7f5RvP_T9hvdAJ-7Sm-iI_c93luRWtsFJ46JDh4fkADgPRRp41ktocLFPP1KnHxE_diJbS-GscLBxE6jlxRsk8VdObQldz_VSoHw4lRQS0R05dbxcvlVtURdqJeAj8hXgtJLvmCPt9zaErgQZTaDO9bKlxJ8yQ). System-level factors are also seen to affect preterm birth, including the amount of prenatal care, management of maternal chronic disease, and health insurance coverage [8](https://www.tandfonline.com/doi/full/10.1080/10796126.2016.1254601). 
-
-**Gonorrhea**
-
-STI transmission and prevention is a big part of reproductive health. Gonorrhea in particular is a sexually transmitted infection that affects both men and women. It causes infections in the genitals, rectum, and throat and is treatable with antibiotics. While it is a sexually transmitted disease, gonorrhea can also be spread from mother to child during childbirth [1](https://www.cdc.gov/std/gonorrhea/stdfact-gonorrhea.htm). New York City has one of the highest rates of gonorrhea infections in the United States and this rate has almost doubled between 2010 and 2017. In 2017, there were 23,491 cases reported in NYC which was a 23.4% increase from 2016. In part, this is due to an increased use of pre-exposure prophylaxis which has led to decreased condom use. This behavior change has allowed other STI's, like gonorrhea, to increase [2](https://www.politico.com/states/new-york/albany/story/2018/09/25/in-nyc-gonorrhea-chlamydia-cases-up-syphilis-down-625004#:~:text=There%20were%2023%2C491%20cases%20of,percent%20from%20the%20prior%20year.). Despite these increasing trends, most of the new cases are amongst men, not women [3](https://www.health.ny.gov/statistics/diseases/communicable/std/docs/sti_surveillance_report_2017.pdf). At a national level, rates of gonorrhea remain highest among the black population (7.7 times the rate amongst the white population in 2018) [4](https://www.cdc.gov/std/stats18/STDSurveillance2018-full-report.pdf). Overall, there is not a great body of literature that shows population level relationships, instead trends are focused at the individual level.  
-
+Additional background information regarding our outcomes of interest can be found in our About section under [The Project](about_project.html). 
 <br>
 
 ## Inspiration
 
+The following resources are part of the inspiration behind this project: 
 
+- ["Why America's Black Mothers and Babies Are in a Life-or-Death Crisis."](https://www.nytimes.com/2018/04/11/magazine/black-mothers-babies-death-maternal-mortality.html) *New York Times*. April 11, 2018. 
+- [2020 Maternal & Infant Health Summit](https://dcmaternalhealth.com/2020-summit/) hosted by Mayor Muriel Bowser's  Maternal & Infant Health Initiative. September 15-18, 2020. 
 
 ## Questions
 
 Among neighborhoods in NYC...
 
-### Exploratory Analysis
+#### Exploratory Analysis
 - How does access to reproductive services impact maternal health and levels of STIs? 
 - How does insurance coverage affect maternal health and levels of STIs?
 - How is the relationship between maternal & reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?
 
-### Neighborhood-Level Maps
+#### Neighborhood-Level Maps
 - Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods
 - Neighborhood clustering patterns to identify areas of particularly high or low risk
 
-### Regression Models
+#### Regression Models
 - How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?
 - Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective & risk factors?
 
@@ -70,14 +59,14 @@ Among neighborhoods in NYC...
 
 #### **Potential Predictors:**
 
-- `nta_name`: 
-- `nta_code`: 
-- `total_pop`:
+- `nta_name`: neighborhood tabulation area names
+- `nta_code`: neighborhood tabulation area code
+- `total_pop`: total population
 - `female`: percent of female population in 2010-2014
 - `foreign_born`: percent of population born outside the US or US territories
-- `limted_eng`:
-- `unemployment`:
-- `health_ins`: percent of civilian noninstitutionalized population with health insurance in 2010-2014
+- `limted_eng`: percent of population 5 years and older who report that they speak English "less than very well"
+- `unemployment`: percent of the civilian (non-military) labor force ages 16 and older who are unemployed in 2010-2014
+- `health_ins`: percent of civilian non-institutionalized population with health insurance in 2010-2014
 - `medicaid_enroll`: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015
 - `late_no_prenatal_care`: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014
 - `race`: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other
@@ -88,12 +77,12 @@ Among neighborhoods in NYC...
   + `poverty_40`: between 30-40% of population living below the federal poverty level
   + `poverty_40+`: greater than 40% of population living below the federal poverty level
 - `education`: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
-- `clinics`:
-- `community_health_centers`:
-- `non_pcmd`: 
-- `clinics_and_chc_count`:
-- `clinics_and_chc_density`:
-- `non-pcmd_density`:
+- `clinics`: number of clinics in 2014
+- `community_health_centers`: number of community health centers in 2014
+- `non_pcmd`: number of non-primary care providers in 2014
+- `clinics_and_chc_count`: number of clinic & community health per 10,000 people 
+- `clinics_and_chc_density`: clinic & community health centers per 10,000 people
+- `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
 
 <br>
 
@@ -106,10 +95,10 @@ The following steps were taken to clean the NYC NTA data:
   * Drop neighborhoods that have no residential population (i.e. LaGuardia airport)
   * Drop observation representing NYC aggregated
   * Remove variables corresponding to 95% CI and reliability metrics of measurements
-  * Create new variable clinics_and_chc_count representing aggregated clinic and community health centers to reduce multicollinearity
+  * Create new variable `clinics_and_chc_count` representing aggregated clinic and community health centers to reduce multicollinearity
   * Create new variables adjusting number of healthcare providers by neighborhood population
       + `clinics_and_chc_density`: clinic & community health centers per 10,000 people
-      + `non_pcmd_density`: on-primary care providers (specialists like ob-gyns) per 10,000 people
+      + `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
   * Renamed variables for ease of reading
   * Combined Asians into the 'other' race category
   * Saved cleaned dataset to CSV to improve portability across users & programs
