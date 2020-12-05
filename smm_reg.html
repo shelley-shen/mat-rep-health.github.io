@@ -285,7 +285,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="SMM.html">Severe Maternal Morbidity</a>
+      <a href="smm2.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -336,12 +336,6 @@ $(document).ready(function () {
         <li>
   <a href="project_report.html">Project Report</a>
 </li>
-<li>
-  <a>
-    <span class="fa fa-youtube fa-lg"></span>
-     
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     About
@@ -356,6 +350,12 @@ $(document).ready(function () {
       <a href="team.html">The Team</a>
     </li>
   </ul>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/shelley-shen/nycmaternalhealth">
@@ -391,11 +391,11 @@ $(document).ready(function () {
 <pre class="r"><code>#Combined predictors with SMM outcome
 predictor_df = read.csv(&quot;./data/predictors.csv&quot;)
 outcome_df = read.csv(&quot;./data/outcomes.csv&quot;)
-smm_linear_df = predictor_df %&gt;% 
+smm_df = predictor_df %&gt;% 
   mutate(smm = outcome_df$smm)
 
 #Fit the full model 
-full_smm_linear.model &lt;- lm(smm~., data = smm_linear_df)
+full_smm_linear.model &lt;- lm(smm~., data = smm_df)
 #Stepwise regression model
 step_smm_linear.model &lt;- stepAIC(full_smm_linear.model, direction = &quot;both&quot;, 
                       trace = FALSE)
@@ -502,10 +502,313 @@ plot(step_smm_linear.model)</code></pre>
 <pre class="r"><code>#Shapiro test
 smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
 <p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of 0.0019526. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
-<p>We’ll stop this analysis here since it’s clear the model doesn’t follow linear assumptions.</p>
+<p>Let’s try something else since it’s clear the model doesn’t follow linear assumptions.</p>
 </div>
-<div id="transformed-regression-model" class="section level4">
-<h4>Transformed Regression Model</h4>
+<div id="poisson-regression-model" class="section level4">
+<h4>Poisson Regression Model</h4>
+<p>Because our outcome variable, severe maternal morbidity rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we can fit Poisson regression to model the outcome.</p>
+<pre class="r"><code>full_smm_poisson.model &lt;- glm(smm~., data=smm_df, family=poisson(link = &quot;log&quot;))
+
+step_smm_poisson.model &lt;- stepAIC(full_smm_poisson.model, direction = &quot;both&quot;, 
+                      trace = FALSE)
+
+#Display converged model
+step_smm_poisson.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.232</td>
+<td align="right">6.274</td>
+<td align="right">-0.037</td>
+<td align="right">0.971</td>
+</tr>
+<tr class="even">
+<td align="left">total_pop</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">-0.259</td>
+<td align="right">0.796</td>
+</tr>
+<tr class="odd">
+<td align="left">female</td>
+<td align="right">0.009</td>
+<td align="right">0.003</td>
+<td align="right">2.869</td>
+<td align="right">0.004</td>
+</tr>
+<tr class="even">
+<td align="left">hispanic</td>
+<td align="right">0.045</td>
+<td align="right">0.063</td>
+<td align="right">0.717</td>
+<td align="right">0.473</td>
+</tr>
+<tr class="odd">
+<td align="left">white</td>
+<td align="right">0.043</td>
+<td align="right">0.063</td>
+<td align="right">0.680</td>
+<td align="right">0.497</td>
+</tr>
+<tr class="even">
+<td align="left">black</td>
+<td align="right">0.050</td>
+<td align="right">0.063</td>
+<td align="right">0.796</td>
+<td align="right">0.426</td>
+</tr>
+<tr class="odd">
+<td align="left">other</td>
+<td align="right">0.041</td>
+<td align="right">0.063</td>
+<td align="right">0.647</td>
+<td align="right">0.518</td>
+</tr>
+<tr class="even">
+<td align="left">foreign_born</td>
+<td align="right">0.007</td>
+<td align="right">0.001</td>
+<td align="right">6.713</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">limited_eng</td>
+<td align="right">-0.004</td>
+<td align="right">0.001</td>
+<td align="right">-3.640</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">education</td>
+<td align="right">0.007</td>
+<td align="right">0.002</td>
+<td align="right">4.770</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">poverty</td>
+<td align="right">0.003</td>
+<td align="right">0.001</td>
+<td align="right">2.022</td>
+<td align="right">0.043</td>
+</tr>
+<tr class="even">
+<td align="left">unemployment</td>
+<td align="right">0.015</td>
+<td align="right">0.002</td>
+<td align="right">6.951</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">health_ins</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.782</td>
+<td align="right">0.434</td>
+</tr>
+<tr class="even">
+<td align="left">medicaid_enroll</td>
+<td align="right">-0.004</td>
+<td align="right">0.001</td>
+<td align="right">-3.245</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.015</td>
+<td align="right">0.003</td>
+<td align="right">5.839</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">0.056</td>
+<td align="right">0.013</td>
+<td align="right">4.267</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">non_pcmd_density</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.379</td>
+<td align="right">0.705</td>
+</tr>
+</tbody>
+</table>
+<p>Our Poisson model failed to converge, which is why it appears all 16 predictors were selected.</p>
+</div>
+<div id="negative-binomial-regression-model" class="section level4">
+<h4>Negative Binomial Regression Model</h4>
+<p>We will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha that can account for the overdispersion we found with the Poisson model</p>
+<pre class="r"><code>full_smm_neg_bin.model &lt;- glm.nb(smm~., data=smm_df)
+
+step_smm_neg_bin.model &lt;- stepAIC(full_smm_neg_bin.model, direction = &quot;both&quot;, 
+                      trace = FALSE)
+
+#Display converged model
+step_smm_neg_bin.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">5.528</td>
+<td align="right">0.123</td>
+<td align="right">45.021</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">hispanic</td>
+<td align="right">-0.005</td>
+<td align="right">0.001</td>
+<td align="right">-5.107</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">white</td>
+<td align="right">-0.008</td>
+<td align="right">0.001</td>
+<td align="right">-7.682</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">other</td>
+<td align="right">-0.011</td>
+<td align="right">0.002</td>
+<td align="right">-6.678</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">foreign_born</td>
+<td align="right">0.004</td>
+<td align="right">0.002</td>
+<td align="right">1.922</td>
+<td align="right">0.055</td>
+</tr>
+<tr class="even">
+<td align="left">unemployment</td>
+<td align="right">0.025</td>
+<td align="right">0.007</td>
+<td align="right">3.802</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">medicaid_enroll</td>
+<td align="right">-0.003</td>
+<td align="right">0.001</td>
+<td align="right">-2.148</td>
+<td align="right">0.032</td>
+</tr>
+<tr class="even">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.018</td>
+<td align="right">0.008</td>
+<td align="right">2.259</td>
+<td align="right">0.024</td>
+</tr>
+<tr class="odd">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">0.056</td>
+<td align="right">0.031</td>
+<td align="right">1.836</td>
+<td align="right">0.066</td>
+</tr>
+</tbody>
+</table>
+<p>The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: hispanic, white, other, foreign_born, unemployment, medicaid_enroll, late_no_prenatal_care and clinics_and_chc_density.</p>
+<p>This model is more parsimonious, and satisfies assumptions, which is not necessarily true for the linear and Poisson models. Let’s compare the three models we’ve already built, and just for kicks, a negative binomial regression with variables selected through literature review &amp; causal theory.</p>
+<pre class="r"><code>theory_smm_neg_bin.model &lt;- glm.nb(smm~ late_no_prenatal_care + clinics_and_chc_density + medicaid_enroll + hispanic + black, data=smm_df)
+
+#Display converged model
+theory_smm_neg_bin.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">4.822</td>
+<td align="right">0.040</td>
+<td align="right">121.703</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">0.027</td>
+<td align="right">0.007</td>
+<td align="right">3.703</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">0.055</td>
+<td align="right">0.032</td>
+<td align="right">1.740</td>
+<td align="right">0.082</td>
+</tr>
+<tr class="even">
+<td align="left">medicaid_enroll</td>
+<td align="right">-0.001</td>
+<td align="right">0.001</td>
+<td align="right">-0.497</td>
+<td align="right">0.619</td>
+</tr>
+<tr class="odd">
+<td align="left">hispanic</td>
+<td align="right">0.005</td>
+<td align="right">0.001</td>
+<td align="right">4.639</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">black</td>
+<td align="right">0.010</td>
+<td align="right">0.001</td>
+<td align="right">10.707</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s compare all four models using AIC and discuss the implications of these values.</p>
+<ul>
+<li>Linear: AIC = 1950.0754887</li>
+<li>Poisson: AIC = Inf</li>
+<li>Negative binomial: AIC = 1908.2102369</li>
+<li>Our model: AIC = 1916.7557983</li>
+</ul>
+<p>Though the automatically generated negative binomial model has the lowest AIC and is therefore the “winning” model, it’s important to note that our curated model is not far behind. Our curated model is also more parsimonious, contains fewer highly correlated predictors, and fits well with the existing body of literature on severe maternal morbidity, all of which are benefits difficult to quantify with a metric like AIC.</p>
 </div>
 
 <hr>
@@ -514,14 +817,16 @@ smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
 
 <p align="center">
 
+<small>
+
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
 
 <p align="center">
-Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1) and <a href ="https://qgis.org/en/site/">QGIS</a> (v3.16 1 'Hannover'). 
 
 <br>
 
-Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2).
+Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2). </p>
 
 
 

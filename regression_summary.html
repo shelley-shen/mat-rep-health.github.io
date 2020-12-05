@@ -285,7 +285,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="SMM.html">Severe Maternal Morbidity</a>
+      <a href="smm2.html">Severe Maternal Morbidity</a>
     </li>
     <li>
       <a href="preterm_births.html">Preterm Births</a>
@@ -336,12 +336,6 @@ $(document).ready(function () {
         <li>
   <a href="project_report.html">Project Report</a>
 </li>
-<li>
-  <a>
-    <span class="fa fa-youtube fa-lg"></span>
-     
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     About
@@ -356,6 +350,12 @@ $(document).ready(function () {
       <a href="team.html">The Team</a>
     </li>
   </ul>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/shelley-shen/nycmaternalhealth">
@@ -508,14 +508,16 @@ corrplot::corrplot(N$r,
 <div id="stepwise-model-selection-criticism" class="section level4">
 <h4>Stepwise Model Selection Criticism</h4>
 <p>Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This <a href="https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6">article</a> details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of ‘ransacking’ of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature.</p>
+<p>Algorithms are never a replacement for rational thought and thorough research. Look no further than <a href="https://tinyurl.com/googleJeffGoldsmith">here</a> for proof that even the most well-fed algorithms make unfortunate mistakes.</p>
 </div>
 </div>
 <div id="future-directions" class="section level3">
 <h3>Future Directions</h3>
 <p>Some potential other directions to build off our work:</p>
 <ul>
-<li>Model selection using Lasso &amp; LAR, which overcome many of the limitations of stepwise model selection and generally have better results</li>
-<li>Spatial regression to account for correlation between</li>
+<li>Model selection using Lasso &amp; LAR, which overcome many of the limitations of stepwise model selection and generally have better model specifications.</li>
+<li>Adding complexity to models by considering the presence of mediators, confounders, and interaction terms in the estimation models</li>
+<li>Spatial regression (using spatial lag residuals as a covariate) to account for correlation between adjacent neighborhoods. This can be done using GeoDa and our QGIS shapefiles</li>
 </ul>
 </div>
 </div>
@@ -526,14 +528,16 @@ corrplot::corrplot(N$r,
 
 <p align="center">
 
+<small>
+
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
 
 <p align="center">
-Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1) and <a href ="https://qgis.org/en/site/">QGIS</a> (v3.16 1 'Hannover'). 
 
 <br>
 
-Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2).
+Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2). </p>
 
 
 
