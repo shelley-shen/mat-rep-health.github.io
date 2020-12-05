@@ -1,0 +1,20 @@
+---
+title: "map_discussion"
+author: "Ayeshra Acharya"
+date: "12/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Mapping Hypothesized Predictors 
+
+### Cluster of Severe Maternal Morbidity 
+
+<img src="maps/Poverty_SMM.png" style="width:75%" class="center">
+
+
+Based on our mapping visualizations, there appears to be a high cluster 
+
