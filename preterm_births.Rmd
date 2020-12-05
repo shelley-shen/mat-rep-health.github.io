@@ -55,7 +55,7 @@ preterm_ggplot =
 ggplotly(preterm_ggplot)
 ```
 
-Generally in NYC neighborhoods, the overall percentage of people with health insurance is fairly high, with the exception of North Corona where only 58.5% of the population has health insurance. Despite this, it appears that those neighborhoods with less percentage of the population enrolled in health insurance have more percentages of preterm births in the population. There does not seem to be a strong relationship, however, it might be worth exploring this asscoiation through statistical methods and looking at whether health insurance also modifies the association between prenatal care and preterm births.  
+Generally in NYC neighborhoods, the overall percentage of people with health insurance is fairly high, with the exception of North Corona where only 58.5% of the population has health insurance. Despite this, it appears that those neighborhoods with less percentage of the population enrolled in health insurance have more percentages of preterm births in the population. There does not seem to be a strong relationship, however, it might be worth exploring this association through statistical methods and looking at whether health insurance also modifies the association between prenatal care and preterm births.  
 
 <br>
 
@@ -75,3 +75,17 @@ ggplotly(prenatal_care_ggplot)
 ```
 
 There appears to be a clear direct relationship between the percentage of live births that receive late or no prenatal care and percentage of preterm births among all live births in the population. Neighborhoods with higher percentages of late or no prenatal care are more likely to have higher percentages of preterm births. 
+
+
+```{r}
+preterm2_ggplot = 
+  plots_df %>% 
+  ggplot(aes(x = medicaid_enroll, y = preterm_births, group = nta_name)) + 
+  geom_point(color = "blue") + 
+  labs(
+    title = "Exploration of Medicaid Enrollment and Preterm Births in NYC Neighborhoods",
+    x = "Percent Population Enrolled in Medicaid",
+    y = "Percent Preterm Births Among All Live Births")
+
+ggplotly(preterm2_ggplot)
+```
