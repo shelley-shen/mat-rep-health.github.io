@@ -6,7 +6,7 @@ navbar:
     - text: "Exploratory Analysis"
       menu:
         - text: "Severe Maternal Morbidity"
-          href: SMM.html
+          href: smm.html
         - text: "Preterm Births"
           href: preterm_births.html
         - text: "Gonorrhea"
