@@ -35,6 +35,6 @@ In the regression analysis section, we built a biostatistical models analyzing t
 
 <br>
 
-You can find our final project report [here](project_report.html) and watch a screencast of our project here.
+You can find our final project report [here](project_report.html) and watch a screencast of our project [here](https://www.youtube.com/watch?v=hoJ5Jc2OhsE&t=6s).
 
 <br>
