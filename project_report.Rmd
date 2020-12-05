@@ -71,17 +71,10 @@ Among neighborhoods in NYC...
 - `late_no_prenatal_care`: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014
 - `race`: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other
 - `poverty`: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses: 
-  + `poverty_10`: less than 10% of population living below the federal poverty level
-  + `poverty_20`: between 10-20% of population living below the federal poverty level
-  + `poverty_30`: between 20-30% of population living below the federal poverty level
-  + `poverty_40`: between 30-40% of population living below the federal poverty level
-  + `poverty_40+`: greater than 40% of population living below the federal poverty level
 - `education`: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED
-- `clinics`: number of clinics in 2014
-- `community_health_centers`: number of community health centers in 2014
 - `non_pcmd`: number of non-primary care providers in 2014
-- `clinics_and_chc_count`: number of clinic & community health per 10,000 people 
-- `clinics_and_chc_density`: clinic & community health centers per 10,000 people
+- `clinics_and_chc_count`: number of clinic & community health per 10,000 people in 2014
+- `clinics_and_chc_density`: clinic & community health centers per 10,000 people in 2014
 - `non_pcmd_density`: non-primary care providers (specialists like ob-gyns) per 10,000 people
 
 <br>
