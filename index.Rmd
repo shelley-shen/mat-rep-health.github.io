@@ -13,8 +13,10 @@ h1.title {text-align: center;}
 
 <img src="images/rephealth_image3.jpg" style="width:75%" class="center">
 
-## Introduction
-Severe maternal morbidity (SMM) includes health outcomes during labor and delivery that may result in both short-term and/or long term health consequences for women. New York City’s rate of SMM increased 28.2 % from 2008 to 2012. Some of the factors contributing to high rates of SMM in New York City may include access to reproductive health services, rates of sexually transmitted infections (STIs), neighborhood poverty level and race. We will examine the factors that may contribute to the high SMM rates in New York City. 
+## Motivation 
+Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services & resources for women across the country.
+
+We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race. Specifically, we will be examining the outcomes of maternal morbidity, preterm births, and gonorrhea in our assessment of maternal and reproductive health. 
 
 <br>
 
