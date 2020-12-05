@@ -391,21 +391,41 @@ $(document).ready(function () {
 <p>We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race.</p>
 <p><br></p>
 </div>
+<div id="inspiration" class="section level2">
+<h2>Inspiration</h2>
+</div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
-<p>Among women in NYC,</p>
+<p>Among neighborhoods in NYC…</p>
+<div id="exploratory-analysis" class="section level3">
+<h3>Exploratory Analysis</h3>
 <ul>
 <li>How does access to reproductive services impact maternal health and levels of STIs?</li>
 <li>How does insurance coverage affect maternal health and levels of STIs?</li>
-<li>How do socioeconomic factors of health like race, income, and education affect the relationship between reproductive services and health outcomes?</li>
+<li>How is the relationship between maternal &amp; reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?</li>
+</ul>
+</div>
+<div id="neighborhood-level-maps" class="section level3">
+<h3>Neighborhood-Level Maps</h3>
+<ul>
+<li>Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods</li>
+<li>Neighborhood clustering patterns to identify areas of particularly high or low risk</li>
+</ul>
+</div>
+<div id="regression-models" class="section level3">
+<h3>Regression Models</h3>
+<ul>
+<li>How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?</li>
+<li>Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective &amp; risk factors?</li>
 </ul>
 <p><br></p>
+</div>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
 <div id="source-nyc-neighborhood-health-atlas" class="section level4">
 <h4><strong>Source:</strong>  <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></h4>
-<p> </p>
+<p><br></p>
 </div>
 <div id="variables-of-interest" class="section level3">
 <h3><em>Variables of interest</em></h3>
@@ -417,13 +437,20 @@ $(document).ready(function () {
 <li><code>gonorrhea</code>: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015</li>
 </ul>
 </div>
-<div id="predictors" class="section level4">
-<h4><strong>Predictors:</strong></h4>
+<div id="potential-predictors" class="section level4">
+<h4><strong>Potential Predictors:</strong></h4>
 <ul>
+<li><code>nta_name</code>:</li>
+<li><code>nta_code</code>:</li>
+<li><code>total_pop</code>:</li>
+<li><code>female</code>: percent of female population in 2010-2014</li>
+<li><code>foreign_born</code>: percent of population born outside the US or US territories</li>
+<li><code>limted_eng</code>:</li>
+<li><code>unemployment</code>:</li>
 <li><code>health_ins</code>: percent of civilian noninstitutionalized population with health insurance in 2010-2014</li>
 <li><code>medicaid_enroll</code>: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015</li>
 <li><code>late_no_prenatal_care</code>: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014</li>
-<li><code>race</code>: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other</li>
+<li><code>race</code>: various race variables were re-categorized into a single variable with four categories: black, hispanic, white, and other</li>
 <li><code>poverty</code>: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses:
 <ul>
 <li><code>poverty_10</code>: less than 10% of population living below the federal poverty level</li>
@@ -433,6 +460,12 @@ $(document).ready(function () {
 <li><code>poverty_40+</code>: greater than 40% of population living below the federal poverty level</li>
 </ul></li>
 <li><code>education</code>: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED</li>
+<li><code>clinics</code>:</li>
+<li><code>community_health_centers</code>:</li>
+<li><code>non_pcmd</code>:</li>
+<li><code>clinics_and_chc_count</code>:</li>
+<li><code>clinics_and_chc_density</code>:</li>
+<li><code>non-pcmd_density</code>:</li>
 </ul>
 <p><br></p>
 </div>
@@ -488,9 +521,42 @@ $(document).ready(function () {
   filter(nta_code != &#39;NYC&#39;)
 
 write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code></pre>
+<p>Our final dataset contained data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from 2010 US Census data</p>
 </div>
-<div id="exploratory-analysis" class="section level2">
-<h2>Exploratory Analysis</h2>
+<div id="methods" class="section level2">
+<h2>Methods</h2>
+<p>In this section, we discuss the analyses we completed and our results</p>
+<div id="exploratory-analysis-1" class="section level3">
+<h3>Exploratory Analysis</h3>
+</div>
+<div id="neighborhood-level-maps-1" class="section level3">
+<h3>Neighborhood-Level Maps</h3>
+</div>
+<div id="regression-models-1" class="section level3">
+<h3>Regression Models</h3>
+<div id="outcome" class="section level4">
+<h4>Outcome</h4>
+</div>
+<div id="outcome-1" class="section level4">
+<h4>Outcome</h4>
+</div>
+<div id="outcome-2" class="section level4">
+<h4>Outcome</h4>
+</div>
+</div>
+</div>
+<div id="results-discussion" class="section level2">
+<h2>Results &amp; Discussion</h2>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
+<p>Special thanks to:</p>
+<ul>
+<li>Professor Qixuan Chen &amp; Dr. Dan Liao for their statistics expertise</li>
+<li>Dr. Jeremy Porter for his advice on geospatial information systems (GIS)</li>
+<li>Jeff and the P8105 course staff (with special thanks to our TA, Junxian Chen) for showing us the endless possibilities of R</li>
+<li>The extraordinary, powerful, nasty women who inspire us</li>
+</ul>
 </div>
 
 <hr>
