@@ -21,19 +21,17 @@ We seek to highlight the importance of such services by demonstrating how increa
 <br>
 
 ## Data
-The primary dataset we will use is the [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page). This dataset contains data on 100 health measures and social factors for 188 neighborhoods in New York City. 
+The primary dataset we will use is the [NYC Neighborhood Health Atlas](https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page). This dataset contains data on 100 health measures and social factors for 188 neighborhoods in New York City, generated from the 2010 US Census data. 
 We will also be using the [Neighborhood Tabulation Areas(NTAs) shapefile](https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page) to create NYC maps depicting our variables of interest.  
 
 <br>
 
 ## Findings 
-In the exploratory analysis section, you can see how access to reproductive services, health insurance coverage, and socioeconomic factors affect our outcomes of interest: 
+In the exploratory analysis section, you can see how access to reproductive services, health insurance coverage, and socioeconomic factors affect our outcomes of interest: severe maternal morbidity, preterm births, gonorrhea.
 
-- severe maternal morbidity
-- preterm births
-- gonorrhea
+In the NYC maps section, you will find an interactive, geospatial QGIS map demonstrating the distributions of our outcomes of interest across NYC. Additionally, we dived deeper into visualizing how clustering by poverty or race affects severe maternal morbidity. 
 
-In the regression analysis section, we built a biostatistical model analyzing the 
+In the regression analysis section, we built a biostatistical models analyzing the significance of the relationships between our outcomes of interest and potential predictors. These models include linear, Poisson regression, and negative binomial regression. 
 
 <br>
 

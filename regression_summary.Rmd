@@ -56,14 +56,16 @@ The NTA Neighborhood data contains data from 188 neighborhoods in New York City,
 
 15 potential predictor variables were identified after cleaning and transformation. Predictor selection was driven by subject matter knowledge, literature review, dataset constraints, and common sense.
 
+&nbsp;
+
 ## Analysis Plan
 
 We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships via transformation if a linear model is a poor fit. 
 
 Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm's pitfalls.
 
-Models will be judged on:
-  * Satisfaction of assumptions for their respective method
+Models will be judged on: 
+  * Satisfaction of assumptions for their respective method 
   * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.
   
 ### Outcome Variables
@@ -137,8 +139,10 @@ Most starkly, race remains highly correlated with health and SES-related outcome
 
 We'll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!
 
-### Appendix
-#### Stepwise Model Selection Criticism
+&nbsp;
+
+## Appendix
+### Stepwise Model Selection Criticism
 Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This [article](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6) details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of 'ransacking' of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature. 
 
 ### Future Directions

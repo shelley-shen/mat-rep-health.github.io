@@ -314,7 +314,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="initial_diag.html">Initial Diagnostics</a>
+      <a href="regression_summary.html">Summary</a>
     </li>
     <li>
       <a href="smm_reg.html">Severe Maternal Morbidity</a>
@@ -332,12 +332,6 @@ $(document).ready(function () {
         <li>
   <a href="project_report.html">Project Report</a>
 </li>
-<li>
-  <a>
-    <span class="fa fa-youtube fa-lg"></span>
-     
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     About
@@ -352,6 +346,12 @@ $(document).ready(function () {
       <a href="team.html">The Team</a>
     </li>
   </ul>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/shelley-shen/nycmaternalhealth">
@@ -387,18 +387,14 @@ h1.title {text-align: center;}
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>The primary dataset we will use is the <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a>. This dataset contains data on 100 health measures and social factors for 188 neighborhoods in New York City. We will also be using the <a href="https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page">Neighborhood Tabulation Areas(NTAs) shapefile</a> to create NYC maps depicting our variables of interest.</p>
+<p>The primary dataset we will use is the <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a>. This dataset contains data on 100 health measures and social factors for 188 neighborhoods in New York City, generated from the 2010 US Census data. We will also be using the <a href="https://www1.nyc.gov/site/planning/data-maps/open-data/dwn-nynta.page">Neighborhood Tabulation Areas(NTAs) shapefile</a> to create NYC maps depicting our variables of interest.</p>
 <p><br></p>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
-<p>In the exploratory analysis section, you can see how access to reproductive services, health insurance coverage, and socioeconomic factors affect our outcomes of interest:</p>
-<ul>
-<li>severe maternal morbidity</li>
-<li>preterm births</li>
-<li>gonorrhea</li>
-</ul>
-<p>In the regression analysis section, we built a biostatistical model analyzing the</p>
+<p>In the exploratory analysis section, you can see how access to reproductive services, health insurance coverage, and socioeconomic factors affect our outcomes of interest: severe maternal morbidity, preterm births, gonorrhea.</p>
+<p>In the NYC maps section, you will find an interactive, geospatial QGIS map demonstrating the distributions of our outcomes of interest across NYC. Additionally, we dived deeper into visualizing how clustering by poverty or race affects severe maternal morbidity.</p>
+<p>In the regression analysis section, we built a biostatistical models analyzing the significance of the relationships between our outcomes of interest and potential predictors. These models include linear, Poisson regression, and negative binomial regression.</p>
 <p><br></p>
 <p>You can find our final project report <a href="project_report.html">here</a> and watch a screencast of our project here.</p>
 <p><br></p>
@@ -415,7 +411,7 @@ h1.title {text-align: center;}
 Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
 
 <p align="center">
-Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1) and <a href ="https://qgis.org/en/site/">QGIS</a> (v3.16 1 'Hannover'). 
 
 <br>
 
