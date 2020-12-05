@@ -91,7 +91,14 @@ project_df = read_excel("./data/nta-metadata.xlsx", sheet = "NTA Data") %>%
     -contains("reliability")) %>%
   mutate(clinics_and_chc_count = clinics + community_health_centers,
          clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000) %>%
+         non_pcmd_density = (non_pcmd/total_pop)*10000,
+         other = (asian_pi + other_race)) %>%
+  rename(
+    white = white_non_hisp,
+    black = black_non_hisp,
+    education = edu_less_than_hs) %>% 
+  relocate(other, .after = black) %>% 
+  select(-asian_pi, -other_race) %>% 
   drop_na(total_pop) %>%
   filter(nta_code != 'NYC')
 

@@ -11,7 +11,12 @@ navbar:
           href: preterm_births.html
         - text: "Gonorrhea"
           href: gonorrhea.html
-    - text: "NYC Map"
+    - text: "NYC Maps"
+      menu:
+        - text: "Maps"
+          href: nyc_maternal_map/index.html
+        - text: "Discussion of Maps"
+          href: nyc_maternal_map/map_discussion.html
     - text: "Regression Analysis"
       menu:
         - text: "Initial Diagnostics"

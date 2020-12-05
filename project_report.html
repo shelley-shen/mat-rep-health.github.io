@@ -295,7 +295,21 @@ $(document).ready(function () {
     </li>
   </ul>
 </li>
-<li class="dropdown-header">NYC Map</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    NYC Maps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="nyc_maternal_map/index.html">Maps</a>
+    </li>
+    <li>
+      <a href="nyc_maternal_map/map_discussion.html">Discussion of Maps</a>
+    </li>
+  </ul>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Regression Analysis
@@ -460,7 +474,14 @@ $(document).ready(function () {
     -contains(&quot;reliability&quot;)) %&gt;%
   mutate(clinics_and_chc_count = clinics + community_health_centers,
          clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000) %&gt;%
+         non_pcmd_density = (non_pcmd/total_pop)*10000,
+         other = (asian_pi + other_race)) %&gt;%
+  rename(
+    white = white_non_hisp,
+    black = black_non_hisp,
+    education = edu_less_than_hs) %&gt;% 
+  relocate(other, .after = black) %&gt;% 
+  select(-asian_pi, -other_race) %&gt;% 
   drop_na(total_pop) %&gt;%
   filter(nta_code != &#39;NYC&#39;)
 
@@ -470,6 +491,13 @@ write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code
 <h2>Exploratory Analysis</h2>
 </div>
 
+<hr>
+
+<br>
+
+<p align="center">
+  <small>
+Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
 
 
 

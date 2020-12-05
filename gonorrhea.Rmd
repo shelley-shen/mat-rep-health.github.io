@@ -25,28 +25,16 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
   
 ```{r,  include = FALSE}
-plots_df = read_csv("./data/final_regression_variables_clean.csv") %>%
+plots_df = read_csv("./data/clean_dataset.csv") %>%
   mutate(
     poverty_level = cut(poverty, breaks = c(-Inf, 10, 20, 30, 40, Inf), 
     labels = c("poverty_10","poverty_20", "poverty_30", "poverty_40", "poverty_40+"))) %>% 
   pivot_longer(
-   cols = hispanic:other_race,
+   cols = hispanic:other,
    names_to = "race",
    values_to = "percent_pop",
    values_drop_na = TRUE
  ) 
-
-race_df = 
-  read_csv("./data/final_regression_variables_clean.csv") %>%
-  rename(
-    white = white_non_hisp,
-    black = black_non_hisp,
-    education = edu_less_than_hs
-  ) %>% 
-  transform(
-    other = paste(asian_pi + other_race)) %>% 
-  select(-female, -total_pop, -asian_pi, -other_race, -foreign_born, -limited_eng, -unemployment, -clinics, -community_health_centers, -clinics_and_chc_count, -non_pcmd, -non_pcmd_density) %>% 
-  reorder = c("nta_name", "nta_code", "black", "hispanic", "white", "other", "education", "poverty", "preterm_births", "smm", "gonorrhea", "health_ins", "medicaid_enroll", "late_no_prenatal_care", "clinics_and_chc_density")
   
 ```
 
@@ -95,7 +83,7 @@ There is no strong relationship between percentage of population enrolled in Med
 ```{r}
 gonorrhea3_ggplot = 
   plots_df %>% 
-  ggplot(aes(x = edu_less_than_hs, y = gonorrhea, group = nta_name)) +
+  ggplot(aes(x = education, y = gonorrhea, group = nta_name)) +
   geom_point(color = "green") + 
   labs(
     title = "Exploration of Education Level and Gonorrhea in NYC Neighborhoods (2014-2015)",
@@ -111,16 +99,16 @@ Similar to the association with Medicaid, the association between education leve
 
 Comparing by race:
 ```{r}
-gohorrea_black = 
+gonorrhea_black = 
   plots_df %>% 
-  filter(race == "black_non_hisp") %>% 
-  ggplot(aes(x = edu_less_than_hs, y = gonorrhea)) +
+  filter(race == "black") %>% 
+  ggplot(aes(x = education, y = gonorrhea)) +
   geom_point()
 
-gohorrea_hispanic = 
+gonorrhea_hispanic = 
   plots_df %>% 
   filter(race == "hispanic") %>% 
-  ggplot(aes(x = edu_less_than_hs, y = gonorrhea)) +
+  ggplot(aes(x = education, y = gonorrhea)) +
   geom_point()
 ```
 
