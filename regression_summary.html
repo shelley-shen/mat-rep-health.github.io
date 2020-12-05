@@ -11,7 +11,7 @@
 
 
 
-<title>Project Report</title>
+<title>Regression Overview</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -318,7 +318,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="initial_diag.html">Initial Diagnostics</a>
+      <a href="regression_summary.html">Summary</a>
     </li>
     <li>
       <a href="smm_reg.html">Severe Maternal Morbidity</a>
@@ -380,48 +380,20 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Project Report</h1>
+<h1 class="title toc-ignore">Regression Overview</h1>
 
 </div>
 
 
-<div id="motivation" class="section level2">
-<h2>Motivation</h2>
-<p>Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services &amp; resources for women across the country.</p>
-<p>We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race.</p>
-<p><br></p>
-</div>
-<div id="questions" class="section level2">
-<h2>Questions</h2>
-<p>Among neighborhoods in NYC…</p>
-<div id="exploratory-analysis" class="section level3">
-<h3>Exploratory Analysis</h3>
-<ul>
-<li>How does access to reproductive services impact maternal health and levels of STIs?</li>
-<li>How does insurance coverage affect maternal health and levels of STIs?</li>
-<li>How is the relationship between maternal &amp; reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?</li>
-</ul>
-</div>
-<div id="neighborhood-level-maps" class="section level3">
-<h3>Neighborhood-Level Maps</h3>
-<ul>
-<li>Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods</li>
-<li>Neighborhood clustering patterns to identify areas of particularly high or low risk</li>
-</ul>
-</div>
-<div id="regression-models" class="section level3">
-<h3>Regression Models</h3>
-<ul>
-<li>How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?</li>
-<li>Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective &amp; risk factors?</li>
-</ul>
-<p><br></p>
-</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>[summary of results goes here]</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
 <div id="source-nyc-neighborhood-health-atlas" class="section level4">
 <h4><strong>Source:</strong>  <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></h4>
+<p>The NTA Neighborhood data contains data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from whole census tracts from 2010 US Census data. Created by aggregating adjacent census tracts, the NTA neighborhood dataset is a happy medium between the high sampling error of NYC’s overly granular 2,168 census tracts and the broad strokes of the 59 community districts. However, because their primary boundary creation consideration is population, NTAs do not accurately represent the boundaries of NYC’s historic neighborhoods.</p>
 <p> </p>
 </div>
 <div id="variables-of-interest" class="section level3">
@@ -436,111 +408,101 @@ $(document).ready(function () {
 </div>
 <div id="predictors" class="section level4">
 <h4><strong>Predictors:</strong></h4>
-<ul>
-<li><code>health_ins</code>: percent of civilian noninstitutionalized population with health insurance in 2010-2014</li>
-<li><code>medicaid_enroll</code>: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015</li>
-<li><code>late_no_prenatal_care</code>: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014</li>
-<li><code>race</code>: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other</li>
-<li><code>poverty</code>: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses:
-<ul>
-<li><code>poverty_10</code>: less than 10% of population living below the federal poverty level</li>
-<li><code>poverty_20</code>: between 10-20% of population living below the federal poverty level</li>
-<li><code>poverty_30</code>: between 20-30% of population living below the federal poverty level</li>
-<li><code>poverty_40</code>: between 30-40% of population living below the federal poverty level</li>
-<li><code>poverty_40+</code>: greater than 40% of population living below the federal poverty level</li>
-</ul></li>
-<li><code>education</code>: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED</li>
-</ul>
-<p><br></p>
+<p>15 potential predictor variables were identified after cleaning and transformation. Predictor selection was driven by subject matter knowledge, literature review, dataset constraints, and common sense.</p>
 </div>
 </div>
 </div>
-<div id="data-tidying" class="section level2">
-<h2>Data Tidying</h2>
-<p>The following steps were taken to clean the NYC NTA data:</p>
-<ul>
-<li>Clean names to improve readability</li>
-<li>Select relevant predictors &amp; outcomes (demographics, SES, health outcomes, insurance status, number of providers)</li>
-<li>Drop neighborhoods that have no residential population (i.e. LaGuardia airport)</li>
-<li>Drop observation representing NYC aggregated</li>
-<li>Remove variables corresponding to 95% CI and reliability metrics of measurements</li>
-<li>Create new variable clinics_and_chc_count representing aggregated clinic and community health centers to reduce multicollinearity</li>
-<li>Create new variables adjusting number of healthcare providers by neighborhood population
-<ul>
-<li><code>clinics_and_chc_density</code>: clinic &amp; community health centers per 10,000 people</li>
-<li><code>non_pcmd_density</code>: on-primary care providers (specialists like ob-gyns) per 10,000 people</li>
-</ul></li>
-<li>Renamed variables for ease of reading</li>
-<li>Combined Asians into the ‘other’ race category</li>
-<li>Saved cleaned dataset to CSV to improve portability across users &amp; programs</li>
-</ul>
-<pre class="r"><code>project_df = read_excel(&quot;./data/nta-metadata.xlsx&quot;, sheet = &quot;NTA Data&quot;) %&gt;%
-  janitor::clean_names() %&gt;%
-  dplyr::select(
-    nta_name:female, 
-    hispanic:limited_eng,
-    edu_less_than_hs:poverty,
-    unemployment,
-    preterm_births:smm_reliability, 
-    gonorrhea, 
-    health_ins, 
-    medicaid_enroll, 
-    late_no_prenatal_care, 
-    clinics, 
-    community_health_centers, 
-    non_pcmd, 
-    -contains(&quot;95cl&quot;), 
-    -contains(&quot;reliability&quot;)) %&gt;%
-  mutate(clinics_and_chc_count = clinics + community_health_centers,
-         clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000,
-         other = (asian_pi + other_race)) %&gt;%
-  rename(
-    white = white_non_hisp,
-    black = black_non_hisp,
-    education = edu_less_than_hs) %&gt;% 
-  relocate(other, .after = black) %&gt;% 
-  select(-asian_pi, -other_race) %&gt;% 
-  drop_na(total_pop) %&gt;%
-  filter(nta_code != &#39;NYC&#39;)
+<div id="analysis-plan" class="section level2">
+<h2>Analysis Plan</h2>
+<p>We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships via transformation if a linear model is a poor fit.</p>
+<p>Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm’s pitfalls.</p>
+<p>Models will be judged on: * Satisfaction of assumptions for their respective method * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.</p>
+<div id="outcome-variables" class="section level3">
+<h3>Outcome Variables</h3>
+<p>We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea.</p>
+<p>We start with univariate analyses dependent variables using histograms, Q-Q plots and Shapiro tests for normality. Ultimately, it is the residual distribution that matters in multivariable regression, but it never hurts to visualize data.</p>
+<pre class="r"><code>#read in data
+project_df = read.csv(&quot;./data/clean_dataset.csv&quot;)
+#separate outcomes into separate dataframe
+outcome_df = project_df %&gt;%
+  dplyr::select(preterm_births, smm, gonorrhea)
 
-write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code></pre>
-<p>Our final dataset contained data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from 2010 US Census data</p>
+write.csv(outcome_df, &#39;data/outcomes.csv&#39;, row.names = FALSE)
+
+#histograms
+preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
+smm_hist = ggplot(outcome_df, aes(x = smm)) + geom_histogram()
+gonorrhea_hist = ggplot(outcome_df, aes(x = gonorrhea)) + geom_histogram()
+
+#q-q plots
+preterm_qq = ggqqplot(outcome_df$preterm_births)
+smm_qq = ggqqplot(outcome_df$smm)
+gonorrhea_qq = ggqqplot(project_df$gonorrhea)
+
+#create patchwork plots
+preterm_hist + preterm_qq</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-1-1.png" width="90%" /></p>
+<pre class="r"><code>smm_hist + smm_qq</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-1-2.png" width="90%" /></p>
+<pre class="r"><code>gonorrhea_hist + gonorrhea_qq</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-1-3.png" width="90%" /></p>
+<pre class="r"><code>#run shapiro-wilk tests
+outcome_df %&gt;% shapiro_test(preterm_births, smm, gonorrhea) %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="right">statistic</th>
+<th align="right">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gonorrhea</td>
+<td align="right">0.808</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">preterm_births</td>
+<td align="right">0.982</td>
+<td align="right">0.016</td>
+</tr>
+<tr class="odd">
+<td align="left">smm</td>
+<td align="right">0.933</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>Outcome variables are likely sampled from a non-normal distribution, as indicated by significant p-values for the Shapiro test and fat tails in the Q-Q plots: not a deal-breaker, since residuals are what are important, but certainly presents the possibility that linear regression may not be the best model for our data.</p>
 </div>
-<div id="methods" class="section level2">
-<h2>Methods</h2>
-<p>In this section, we discuss the analyses we completed and our results</p>
-<div id="exploratory-analysis-1" class="section level3">
-<h3>Exploratory Analysis</h3>
+<div id="multicollinearity-considerations" class="section level3">
+<h3>Multicollinearity Considerations</h3>
+<p>Before we start building models, let’s check for potential multicollinearity among predictors, since stepwise model selection will exacerbate any existing multicollinearity in our model.</p>
+<p>To summarize simple correlations between variables, we’ll construct Pearson correlation matrix of predictors, using pair-wise (instead of case) deletion of datapoints with missing values.</p>
+<pre class="r"><code>#create dataset of predictors ONLY
+predictors_df = project_df %&gt;% 
+  dplyr::select(-c(&quot;nta_name&quot;,&quot;nta_code&quot;, &quot;preterm_births&quot;, &quot;gonorrhea&quot;, &quot;smm&quot;, &quot;clinics&quot;, &quot;community_health_centers&quot;, &quot;non_pcmd&quot;, &quot;clinics_and_chc_count&quot;))
+
+write.csv(predictors_df, &#39;data/predictors.csv&#39;, row.names = FALSE)
+
+N &lt;- rcorr(as.matrix(predictors_df), type = c(&quot;pearson&quot;)) #pair-wise deletion
+
+corrplot::corrplot(N$r,
+                   type = &quot;upper&quot;,
+                   method = &quot;square&quot;, 
+                     addCoef.col = &quot;black&quot;, 
+                     diag = FALSE, 
+                     number.cex = .6,
+                     tl.col = &quot;black&quot;,
+                     tl.cex = .9,
+                     tl.srt = 45)</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<p>There appears to several highly correlated potential predictors in our dataset, with strong positive and negative relationships present. There is a strong possibility of multicollinearity in our final models.</p>
+<p>Most starkly, race remains highly correlated with health and SES-related outcomes at a neighborhood level. For example, there is a strong negative correlation between percent population that identifies as white and levels of poverty, unemployment, and late or no prenatal care. This relationship becomes positive when considering percent population that identifies as Hispanic. Surprisingly, proportion of population that identifies as black have weak to no relationship with SES-related outcomes like low educational attainment or poverty, but the strongest relationship with late or no prenatal care (R = 0.54).</p>
+<p>We’ll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!</p>
 </div>
-<div id="neighborhood-level-maps-1" class="section level3">
-<h3>Neighborhood-Level Maps</h3>
-</div>
-<div id="regression-models-1" class="section level3">
-<h3>Regression Models</h3>
-<div id="outcome" class="section level4">
-<h4>Outcome</h4>
-</div>
-<div id="outcome-1" class="section level4">
-<h4>Outcome</h4>
-</div>
-<div id="outcome-2" class="section level4">
-<h4>Outcome</h4>
-</div>
-</div>
-</div>
-<div id="results-discussion" class="section level2">
-<h2>Results &amp; Discussion</h2>
-</div>
-<div id="acknowledgements" class="section level2">
-<h2>Acknowledgements</h2>
-<p>Special thanks to:</p>
-<ul>
-<li>Professor Qixuan Chen &amp; Dr. Dan Liao for their statistics expertise</li>
-<li>Dr. Jeremy Porter for his advice on geospatial information systems (GIS)</li>
-<li>Jeff and the P8105 course staff (with special thanks to our TA, Junxian Chen) for showing us the endless possibilities of R</li>
-<li>The extraordinary, powerful, nasty women who inspire us</li>
-</ul>
 </div>
 
 <hr>

@@ -11,7 +11,7 @@
 
 
 
-<title>Project Report</title>
+<title>Maternal Morbidity Regression</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -318,7 +318,7 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="initial_diag.html">Initial Diagnostics</a>
+      <a href="regression_summary.html">Summary</a>
     </li>
     <li>
       <a href="smm_reg.html">Severe Maternal Morbidity</a>
@@ -380,167 +380,132 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Project Report</h1>
+<h1 class="title toc-ignore">Maternal Morbidity Regression</h1>
 
 </div>
 
 
-<div id="motivation" class="section level2">
-<h2>Motivation</h2>
-<p>Recent events in American politics - a surging pro-life movement, an increasingly conservative Supreme Court, and pending litigation against the Affordable Care Act (ACA) will potentially restrict access to reproductive services &amp; resources for women across the country.</p>
-<p>We seek to highlight the importance of such services by demonstrating how increased access to reproductive services lowers rates of STDs/STIs and maternal morbidity in New York City, and how these health outcomes vary by socioeconomic factors like income and race.</p>
-<p><br></p>
-</div>
-<div id="questions" class="section level2">
-<h2>Questions</h2>
-<p>Among neighborhoods in NYC…</p>
-<div id="exploratory-analysis" class="section level3">
-<h3>Exploratory Analysis</h3>
-<ul>
-<li>How does access to reproductive services impact maternal health and levels of STIs?</li>
-<li>How does insurance coverage affect maternal health and levels of STIs?</li>
-<li>How is the relationship between maternal &amp; reproductive outcomes and access to healthcare affected by factors like neighborhood racial composition, poverty and education?</li>
-</ul>
-</div>
-<div id="neighborhood-level-maps" class="section level3">
-<h3>Neighborhood-Level Maps</h3>
-<ul>
-<li>Spatial distributions of key demographic and socioeconomic predictors of maternal and reproductive among NYC neighborhoods</li>
-<li>Neighborhood clustering patterns to identify areas of particularly high or low risk</li>
-</ul>
-</div>
-<div id="regression-models" class="section level3">
-<h3>Regression Models</h3>
-<ul>
-<li>How do maternal and reproductive health outcomes correlate with demographic, socioeconomic, and healthcare access factors?</li>
-<li>Can we build accurate estimation models to quantify the relationship between health outcomes and their potential protective &amp; risk factors?</li>
-</ul>
-<p><br></p>
-</div>
-</div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<div id="source-nyc-neighborhood-health-atlas" class="section level4">
-<h4><strong>Source:</strong>  <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></h4>
-<p> </p>
-</div>
-<div id="variables-of-interest" class="section level3">
-<h3><em>Variables of interest</em></h3>
-<div id="outcomes" class="section level4">
-<h4><strong>Outcomes:</strong></h4>
-<ul>
-<li><code>preterm_births</code>: percent preterm births (&lt;37 weeks gestation) among all live births in 2010-2014</li>
-<li><code>smm</code>: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012</li>
-<li><code>gonorrhea</code>: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015</li>
-</ul>
-</div>
-<div id="predictors" class="section level4">
-<h4><strong>Predictors:</strong></h4>
-<ul>
-<li><code>health_ins</code>: percent of civilian noninstitutionalized population with health insurance in 2010-2014</li>
-<li><code>medicaid_enroll</code>: percent of population continuously enrolled (for 11 months or more) in Medicaid in 2015</li>
-<li><code>late_no_prenatal_care</code>: percent of live births receiving late prenatal care or no prenatal care at all in 2010-2014</li>
-<li><code>race</code>: various race variables were re-categorized into single variable with four categories: black, hispanic, white, and other</li>
-<li><code>poverty</code>: percent of population all ages living below the federal poverty level. This variable was re-categorized into five levels during our exploratory analyses:
-<ul>
-<li><code>poverty_10</code>: less than 10% of population living below the federal poverty level</li>
-<li><code>poverty_20</code>: between 10-20% of population living below the federal poverty level</li>
-<li><code>poverty_30</code>: between 20-30% of population living below the federal poverty level</li>
-<li><code>poverty_40</code>: between 30-40% of population living below the federal poverty level</li>
-<li><code>poverty_40+</code>: greater than 40% of population living below the federal poverty level</li>
-</ul></li>
-<li><code>education</code>: percent of population ages 25 and older whose highest level of education is less than a high school diploma or GED</li>
-</ul>
-<p><br></p>
-</div>
-</div>
-</div>
-<div id="data-tidying" class="section level2">
-<h2>Data Tidying</h2>
-<p>The following steps were taken to clean the NYC NTA data:</p>
-<ul>
-<li>Clean names to improve readability</li>
-<li>Select relevant predictors &amp; outcomes (demographics, SES, health outcomes, insurance status, number of providers)</li>
-<li>Drop neighborhoods that have no residential population (i.e. LaGuardia airport)</li>
-<li>Drop observation representing NYC aggregated</li>
-<li>Remove variables corresponding to 95% CI and reliability metrics of measurements</li>
-<li>Create new variable clinics_and_chc_count representing aggregated clinic and community health centers to reduce multicollinearity</li>
-<li>Create new variables adjusting number of healthcare providers by neighborhood population
-<ul>
-<li><code>clinics_and_chc_density</code>: clinic &amp; community health centers per 10,000 people</li>
-<li><code>non_pcmd_density</code>: on-primary care providers (specialists like ob-gyns) per 10,000 people</li>
-</ul></li>
-<li>Renamed variables for ease of reading</li>
-<li>Combined Asians into the ‘other’ race category</li>
-<li>Saved cleaned dataset to CSV to improve portability across users &amp; programs</li>
-</ul>
-<pre class="r"><code>project_df = read_excel(&quot;./data/nta-metadata.xlsx&quot;, sheet = &quot;NTA Data&quot;) %&gt;%
-  janitor::clean_names() %&gt;%
-  dplyr::select(
-    nta_name:female, 
-    hispanic:limited_eng,
-    edu_less_than_hs:poverty,
-    unemployment,
-    preterm_births:smm_reliability, 
-    gonorrhea, 
-    health_ins, 
-    medicaid_enroll, 
-    late_no_prenatal_care, 
-    clinics, 
-    community_health_centers, 
-    non_pcmd, 
-    -contains(&quot;95cl&quot;), 
-    -contains(&quot;reliability&quot;)) %&gt;%
-  mutate(clinics_and_chc_count = clinics + community_health_centers,
-         clinics_and_chc_density = ((clinics + community_health_centers)/total_pop)*10000,
-         non_pcmd_density = (non_pcmd/total_pop)*10000,
-         other = (asian_pi + other_race)) %&gt;%
-  rename(
-    white = white_non_hisp,
-    black = black_non_hisp,
-    education = edu_less_than_hs) %&gt;% 
-  relocate(other, .after = black) %&gt;% 
-  select(-asian_pi, -other_race) %&gt;% 
-  drop_na(total_pop) %&gt;%
-  filter(nta_code != &#39;NYC&#39;)
+<div id="linear-regression-model" class="section level4">
+<h4>Linear Regression Model</h4>
+<p>Let’s start by fitting a linear model to the severe maternal morbidity outcome using our stepwise AIC automatic feature selection algorithm. Next, we’ll take a look at the chosen predictors, effect measures, and run regression diagnostics.</p>
+<pre class="r"><code>#Combined predictors with SMM outcome
+predictor_df = read.csv(&quot;./data/predictors.csv&quot;)
+outcome_df = read.csv(&quot;./data/outcomes.csv&quot;)
+smm_linear_df = predictor_df %&gt;% 
+  mutate(smm = outcome_df$smm)
 
-write.csv(project_df, &#39;data/clean_dataset.csv&#39;, row.names = FALSE)</code></pre>
-<p>Our final dataset contained data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from 2010 US Census data</p>
+#Fit the full model 
+full_smm_linear.model &lt;- lm(smm~., data = smm_linear_df)
+#Stepwise regression model
+step_smm_linear.model &lt;- stepAIC(full_smm_linear.model, direction = &quot;both&quot;, 
+                      trace = FALSE)
+
+#Display converged model
+step_smm_linear.model %&gt;% 
+  broom::tidy() %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-163.999</td>
+<td align="right">113.111</td>
+<td align="right">-1.450</td>
+<td align="right">0.149</td>
+</tr>
+<tr class="even">
+<td align="left">female</td>
+<td align="right">2.938</td>
+<td align="right">1.956</td>
+<td align="right">1.502</td>
+<td align="right">0.135</td>
+</tr>
+<tr class="odd">
+<td align="left">hispanic</td>
+<td align="right">0.982</td>
+<td align="right">0.407</td>
+<td align="right">2.411</td>
+<td align="right">0.017</td>
+</tr>
+<tr class="even">
+<td align="left">white</td>
+<td align="right">0.872</td>
+<td align="right">0.430</td>
+<td align="right">2.027</td>
+<td align="right">0.044</td>
+</tr>
+<tr class="odd">
+<td align="left">black</td>
+<td align="right">2.426</td>
+<td align="right">0.420</td>
+<td align="right">5.773</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">foreign_born</td>
+<td align="right">1.729</td>
+<td align="right">0.655</td>
+<td align="right">2.639</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="odd">
+<td align="left">limited_eng</td>
+<td align="right">-1.723</td>
+<td align="right">0.794</td>
+<td align="right">-2.171</td>
+<td align="right">0.031</td>
+</tr>
+<tr class="even">
+<td align="left">education</td>
+<td align="right">1.853</td>
+<td align="right">0.922</td>
+<td align="right">2.009</td>
+<td align="right">0.046</td>
+</tr>
+<tr class="odd">
+<td align="left">unemployment</td>
+<td align="right">3.124</td>
+<td align="right">1.568</td>
+<td align="right">1.993</td>
+<td align="right">0.048</td>
+</tr>
+<tr class="even">
+<td align="left">late_no_prenatal_care</td>
+<td align="right">3.906</td>
+<td align="right">1.931</td>
+<td align="right">2.022</td>
+<td align="right">0.045</td>
+</tr>
+<tr class="odd">
+<td align="left">clinics_and_chc_density</td>
+<td align="right">12.622</td>
+<td align="right">7.477</td>
+<td align="right">1.688</td>
+<td align="right">0.093</td>
+</tr>
+</tbody>
+</table>
+<p>The variables female, hispanic, white, black, foreign_born, limited_eng, education, unemployment, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of <code>summary(step_smm_linear.model)$r.squared</code>, representing a reasonably good fit.</p>
+<p>However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results.</p>
+<pre class="r"><code>#Regression diagnostics
+plot(step_smm_linear.model)</code></pre>
+<p><img src="smm_reg_files/figure-html/unnamed-chunk-2-1.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-2.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-3.png" width="90%" /><img src="smm_reg_files/figure-html/unnamed-chunk-2-4.png" width="90%" /></p>
+<pre class="r"><code>#Shapiro test
+smm_linear_shapiro = shapiro.test(residuals(step_smm_linear.model))</code></pre>
+<p>The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of <code>smm_linear_shapiro$p.value</code>. The plot of residuals vs fitted values is non-random, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight.</p>
+<p>We’ll stop this analysis here since it’s clear the model doesn’t follow linear assumptions.</p>
 </div>
-<div id="methods" class="section level2">
-<h2>Methods</h2>
-<p>In this section, we discuss the analyses we completed and our results</p>
-<div id="exploratory-analysis-1" class="section level3">
-<h3>Exploratory Analysis</h3>
-</div>
-<div id="neighborhood-level-maps-1" class="section level3">
-<h3>Neighborhood-Level Maps</h3>
-</div>
-<div id="regression-models-1" class="section level3">
-<h3>Regression Models</h3>
-<div id="outcome" class="section level4">
-<h4>Outcome</h4>
-</div>
-<div id="outcome-1" class="section level4">
-<h4>Outcome</h4>
-</div>
-<div id="outcome-2" class="section level4">
-<h4>Outcome</h4>
-</div>
-</div>
-</div>
-<div id="results-discussion" class="section level2">
-<h2>Results &amp; Discussion</h2>
-</div>
-<div id="acknowledgements" class="section level2">
-<h2>Acknowledgements</h2>
-<p>Special thanks to:</p>
-<ul>
-<li>Professor Qixuan Chen &amp; Dr. Dan Liao for their statistics expertise</li>
-<li>Dr. Jeremy Porter for his advice on geospatial information systems (GIS)</li>
-<li>Jeff and the P8105 course staff (with special thanks to our TA, Junxian Chen) for showing us the endless possibilities of R</li>
-<li>The extraordinary, powerful, nasty women who inspire us</li>
-</ul>
+<div id="transformed-regression-model" class="section level4">
+<h4>Transformed Regression Model</h4>
 </div>
 
 <hr>

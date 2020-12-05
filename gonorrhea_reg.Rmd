@@ -1,0 +1,122 @@
+---
+title: "Gonorrhea Rate Regression"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(readr)
+library(ggpubr)
+library(corrplot)
+library(RColorBrewer)
+library(Hmisc)
+library(patchwork)
+library(rstatix)
+library(glmnet)
+library(MASS)
+
+knitr::opts_chunk$set(
+	fig.width = 9, 
+  fig.asp = .6,
+  out.width = "90%",
+	warning = FALSE,
+	message = FALSE
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+#### Linear Regression Model
+
+Let's start by fitting a linear model to the gonorrhea outcome variable using our stepwise selection process with AIC. The chosen predictors are indicated in the table below.
+```{r}
+predictors_df = read.csv("./data/predictors.csv")
+outcome_df = read.csv("./data/outcomes.csv")
+
+#Combined predictors with SMM outcome
+gonorrhea_linear_df = predictors_df %>% 
+  mutate(gonorrhea = outcome_df$gonorrhea) %>%
+  dplyr::select(-total_pop)
+
+#Fit the full model 
+full_gonorrhea_linear.model <- lm(gonorrhea~., data = gonorrhea_linear_df)
+#Stepwise regression model
+step_gonorrhea_linear.model <- stepAIC(full_gonorrhea_linear.model, direction = "both", 
+                      trace = FALSE)
+step_gonorrhea_linear.model
+#Display converged model
+step_gonorrhea_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+The variables female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, late_no_prenatal_care, and clinics_and_chc_density were chosen in the final model. The model has an R-squared value of `summary(step_smm_linear.model)$r.squared`, representing a reasonably good fit. 
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_gonorrhea_linear.model)
+
+#Shapiro test
+gonorrhea_linear_shapiro = shapiro.test(residuals(step_gonorrhea_linear.model))
+```
+The Normal Q-Q plot has fat tails, suggesting violation of the normality assumption. This is confirmed with the Shapiro-Wilk test for normality, which has a p-value of `gonorrhea_linear_shapiro$p.value`. The plot of residuals vs fitted values has non-random variance, suggesting a violation of the homoskedasticity assumption, also indicated by the scale-location plot, where the line is not straight. 
+
+We'll stop this analysis here since it's clear the model doesn't follow linear assumptions, but it's important to note that further analysis would also have to investigate the potential outliers & high leverage points found in the residuals vs. leverage plot. 
+
+A quick look at the dataset shows that both these data points, corresponding to the neighborhoods of Clinton (Hell's Kitchen) and Hudson Yards-Chelsea-Flat Iron-Union Square possess the highest and second highest rates of gonorrhea, respectively. These numbers are at odds with their majority white, affluent, and well-educated residents. We posit it may be because they have high LGBTQ+ populations - prior research suggests that MSM (men who have sex with men) are at much higher risk of STDs than women or heterosexual men. 
+
+
+#### Poisson Regression Model
+
+Because our outcome variable, gonorrhea rate is really a count variable (number of cases) made into a rate by dividing by total population (another variable in our dataset), we could transform our data back into a count, then use the log(total population) as an offset to model the case rate in a Poisson regression using glm. **note: we received mixed feedback as to the validity of this model, so our approach should be considered with a grain of salt**
+
+```{r}
+#create offset as 
+offset_total_pop = log(predictors_df$total_pop)
+
+#create count variable from rate
+gonorrhea_poisson_df = predictors_df %>%
+  mutate(gonorrhea_count = round(outcome_df$gonorrhea*(total_pop/100000))) %>%
+  dplyr::select(-total_pop)
+
+full_gonorrhea_poisson.model <- glm(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df, family=poisson(link = "log"))
+
+step_gonorrhea_poisson.model <- stepAIC(full_gonorrhea_poisson.model, direction = "both", 
+                      trace = FALSE)
+```
+
+```{r}
+#Display converged model
+step_gonorrhea_poisson.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+Our Poisson model selected 13 predictors in the converged model, suggesting that model is not as well-specified as we would like. This is further indicated by the high dispersion of the model (calculated as deviance/df). A key assumption of Poisson model is that the conditional mean must equal the conditional variance. A dispersion value close to 1 shows the assumption is met, but the dispersion in our model is `step_gonorrhea_poisson.model$deviance/step_gonorrhea_poisson.model$df.residual`, which indicates that our model is overdispersed. 
+
+#### Negative Binomial Regression Model
+
+There are several ways to address overdispersion in Poisson models, but for our purposes we will use a negative binomial model, an expansion on the Poisson model that adds a dispersion parameter alpha to account for either over or underdispersion.
+
+```{r}
+full_gonorrhea_neg_bin.model <- glm.nb(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df)
+
+step_gonorrhea_neg_bin.model <- stepAIC(full_gonorrhea_neg_bin.model, direction = "both", 
+                      trace = FALSE)
+step_gonorrhea_neg_bin.model
+#Display converged model
+step_gonorrhea_neg_bin.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+```
+The negative binomial model selection process has yielded a more parsimonious set of predictors, including 8 predictors: female, hispanic, black, other, limited_eng, education, poverty, medicaid_enroll, and clinics_and_chc_density.
+
+This is much better! We will keep this model.
