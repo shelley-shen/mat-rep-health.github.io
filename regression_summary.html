@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression Overview</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/sandstone.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploratory Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="SMM.html">Severe Maternal Morbidity</a>
+    </li>
+    <li>
+      <a href="preterm_births.html">Preterm Births</a>
+    </li>
+    <li>
+      <a href="gonorrhea.html">Gonorrhea</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    NYC Maps
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="nyc_maternal_mapfinal/index.html">Maps</a>
+    </li>
+    <li>
+      <a href="nyc_maternal_map/map_discussion.html">Discussion of Maps</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="regression_summary.html">Summary</a>
+    </li>
+    <li>
+      <a href="smm_reg.html">Severe Maternal Morbidity</a>
+    </li>
+    <li>
+      <a href="preterm_reg.html">Preterm Births</a>
+    </li>
+    <li>
+      <a href="gonorrhea_reg.html">Gonorrhea</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="project_report.html">Project Report</a>
+</li>
+<li>
+  <a>
+    <span class="fa fa-youtube fa-lg"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    About
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="about_project.html">The Project</a>
+    </li>
+    <li>
+      <a href="team.html">The Team</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/shelley-shen/nycmaternalhealth">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Regression Overview</h1>
+
+</div>
+
+
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>[summary of results goes here]</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<div id="source-nyc-neighborhood-health-atlas" class="section level4">
+<h4><strong>Source:</strong>  <a href="https://www1.nyc.gov/site/doh/health/neighborhood-health/nyc-neighborhood-health-atlas.page">NYC Neighborhood Health Atlas</a></h4>
+<p>The NTA Neighborhood data contains data from 188 neighborhoods in New York City, defined by Neighborhood Tabulation Areas (NTAs), which were generated from whole census tracts from 2010 US Census data. Created by aggregating adjacent census tracts, the NTA neighborhood dataset is a happy medium between the high sampling error of NYC’s overly granular 2,168 census tracts and the broad strokes of the 59 community districts. However, because their primary boundary creation consideration is population, NTAs do not accurately represent the boundaries of NYC’s historic neighborhoods.</p>
+<p> </p>
+</div>
+<div id="variables-of-interest" class="section level3">
+<h3><em>Variables of interest</em></h3>
+<div id="outcomes" class="section level4">
+<h4><strong>Outcomes:</strong></h4>
+<ul>
+<li><code>preterm_births</code>: percent preterm births (&lt;37 weeks gestation) among all live births in 2010-2014</li>
+<li><code>smm</code>: crude rate of severe maternal morbidity (SMM) per 10,000 deliveries in 2008-2012</li>
+<li><code>gonorrhea</code>: crude rate of gonorrhea cases diagnosed per 100,000 people of all ages in 2014-2015</li>
+</ul>
+</div>
+<div id="predictors" class="section level4">
+<h4><strong>Predictors:</strong></h4>
+<p>15 potential predictor variables were identified after cleaning and transformation. Predictor selection was driven by subject matter knowledge, literature review, dataset constraints, and common sense.</p>
+</div>
+</div>
+</div>
+<div id="analysis-plan" class="section level2">
+<h2>Analysis Plan</h2>
+<p>We will begin with assuming a linear relationship between predictors and outcome and move to more complex relationships via transformation if a linear model is a poor fit.</p>
+<p>Models will be selected with a stepwise automatic model selection process, which iteratively adds and removes predictors to the model until it converges, using AIC as a metric. Please note that there is some debate regarding the statistical validity of stepwise model selection, further discussed in the appendix. For our purposes, we will use it for exploratory analysis due to ease of implementation and its intuitive approach and approach our results critically with respect to the algorithm’s pitfalls.</p>
+<p>Models will be judged on: * Satisfaction of assumptions for their respective method * Best fit as judged by Akaike information criterion (AIC), which considers both goodness-of-fit (rewarding models that explain higher variation in the outcome) and model parsimony (penalizing for too many predictors). AIC is applicable to many distributions, including linear, Poisson, and negative binomial.</p>
+<div id="outcome-variables" class="section level3">
+<h3>Outcome Variables</h3>
+<p>We have three outcome variables of interest: preterm births, severe maternal morbidity (SMM), and gonorrhea.</p>
+<p>We start with univariate analyses dependent variables using histograms, Q-Q plots and Shapiro tests for normality. Ultimately, it is the residual distribution that matters in multivariable regression, but it never hurts to visualize data.</p>
+<pre class="r"><code>#read in data
+project_df = read.csv(&quot;./data/clean_dataset.csv&quot;)
+#separate outcomes into separate dataframe
+outcome_df = project_df %&gt;%
+  dplyr::select(preterm_births, smm, gonorrhea)
+
+write.csv(outcome_df, &#39;data/outcomes.csv&#39;, row.names = FALSE)
+
+#histograms
+preterm_hist = ggplot(outcome_df, aes(x = preterm_births)) + geom_histogram()
+smm_hist = ggplot(outcome_df, aes(x = smm)) + geom_histogram()
+gonorrhea_hist = ggplot(outcome_df, aes(x = gonorrhea)) + geom_histogram()
+
+#q-q plots
+preterm_qq = ggqqplot(outcome_df$preterm_births)
+smm_qq = ggqqplot(outcome_df$smm)
+gonorrhea_qq = ggqqplot(project_df$gonorrhea)
+
+#create patchwork plots
+preterm_hist + preterm_qq</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-1-1.png" width="90%" /></p>
+<pre class="r"><code>smm_hist + smm_qq</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-1-2.png" width="90%" /></p>
+<pre class="r"><code>gonorrhea_hist + gonorrhea_qq</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-1-3.png" width="90%" /></p>
+<pre class="r"><code>#run shapiro-wilk tests
+outcome_df %&gt;% shapiro_test(preterm_births, smm, gonorrhea) %&gt;%
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="right">statistic</th>
+<th align="right">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gonorrhea</td>
+<td align="right">0.808</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">preterm_births</td>
+<td align="right">0.982</td>
+<td align="right">0.016</td>
+</tr>
+<tr class="odd">
+<td align="left">smm</td>
+<td align="right">0.933</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>Outcome variables are likely sampled from a non-normal distribution, as indicated by significant p-values for the Shapiro test and fat tails in the Q-Q plots: not a deal-breaker, since residuals are what are important, but certainly presents the possibility that linear regression may not be the best model for our data.</p>
+</div>
+<div id="multicollinearity-considerations" class="section level3">
+<h3>Multicollinearity Considerations</h3>
+<p>Before we start building models, let’s check for potential multicollinearity among predictors, since stepwise model selection will exacerbate any existing multicollinearity in our model.</p>
+<p>To summarize simple correlations between variables, we’ll construct Pearson correlation matrix of predictors, using pair-wise (instead of case) deletion of datapoints with missing values.</p>
+<pre class="r"><code>#create dataset of predictors ONLY
+predictors_df = project_df %&gt;% 
+  dplyr::select(-c(&quot;nta_name&quot;,&quot;nta_code&quot;, &quot;preterm_births&quot;, &quot;gonorrhea&quot;, &quot;smm&quot;, &quot;clinics&quot;, &quot;community_health_centers&quot;, &quot;non_pcmd&quot;, &quot;clinics_and_chc_count&quot;))
+
+write.csv(predictors_df, &#39;data/predictors.csv&#39;, row.names = FALSE)
+
+N &lt;- rcorr(as.matrix(predictors_df), type = c(&quot;pearson&quot;)) #pair-wise deletion
+
+corrplot::corrplot(N$r,
+                   type = &quot;upper&quot;,
+                   method = &quot;square&quot;, 
+                     addCoef.col = &quot;black&quot;, 
+                     diag = FALSE, 
+                     number.cex = .6,
+                     tl.col = &quot;black&quot;,
+                     tl.cex = .9,
+                     tl.srt = 45)</code></pre>
+<p><img src="regression_summary_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<p>There appears to several highly correlated potential predictors in our dataset, with strong positive and negative relationships present. There is a strong possibility of multicollinearity in our final models.</p>
+<p>Most starkly, race remains highly correlated with health and SES-related outcomes at a neighborhood level. For example, there is a strong negative correlation between percent population that identifies as white and levels of poverty, unemployment, and late or no prenatal care. This relationship becomes positive when considering percent population that identifies as Hispanic. Surprisingly, proportion of population that identifies as black have weak to no relationship with SES-related outcomes like low educational attainment or poverty, but the strongest relationship with late or no prenatal care (R = 0.54).</p>
+<p>We’ll keep these relationships in mind as we interpret our results. Select an outcome from the dropdown and read on!</p>
+</div>
+<div id="appendix" class="section level3">
+<h3>Appendix</h3>
+<div id="stepwise-model-selection-criticism" class="section level4">
+<h4>Stepwise Model Selection Criticism</h4>
+<p>Stepwise model selection, the method we used to select our model, is a naive, greedy algorithm. This means that it uses a simple, shortcut rules that select the optimal step at each stage, and had a tendency to converge to local instead of global optima. This <a href="https://journalofbigdata.springeropen.com/articles/10.1186/s40537-018-0143-6">article</a> details some of its critiques. The most important for our purposes is that stepwise model selection encourages users to blindly input large numbers of predictors without consideration of motivations or prior knowledge. This sort of ‘ransacking’ of data for hidden associations is counter to the guiding principles of epidemiology. We attempted to address this criticism by selecting a set of potential predictors logically associated with the outcomes, and viewed our results in the context of existing literature.</p>
+</div>
+</div>
+<div id="future-directions" class="section level3">
+<h3>Future Directions</h3>
+<p>Some potential other directions to build off our work:</p>
+<ul>
+<li>Model selection using Lasso &amp; LAR, which overcome many of the limitations of stepwise model selection and generally have better results</li>
+<li>Spatial regression to account for correlation between</li>
+</ul>
+</div>
+</div>
+
+<hr>
+
+<br>
+
+<p align="center">
+
+Ayeshra Acharya, Zaynub Ibrahim, Cynthia Liu, Shelley Shen
+
+<p align="center">
+Data visualizations and analyses performed using <a href="https://rstudio.com">RStudio</a> (v1.3.1093-1). 
+
+<br>
+
+Interaction added to visualizations with <a href="https://plot.ly/">plotly</a> (v1.55.2).
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

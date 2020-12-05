@@ -165,7 +165,7 @@ Special thanks to:
 * Professor Qixuan Chen & Dr. Dan Liao for their statistics expertise
 * Dr. Jeremy Porter for his advice on geospatial information systems (GIS)
 * Jeff and the P8105 course staff (with special thanks to our TA, Junxian Chen) for showing us the endless possibilities of R
-* The extraordinary, powerful, nasty women who inspire us
+* The extraordinary, powerful, nasty women who inspire us every day
 
 
 

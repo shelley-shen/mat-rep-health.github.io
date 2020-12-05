@@ -19,8 +19,8 @@ navbar:
           href: nyc_maternal_map/map_discussion.html
     - text: "Regression Analysis"
       menu:
-        - text: "Initial Diagnostics"
-          href: initial_diag.html
+        - text: "Summary"
+          href: regression_summary.html
         - text: "Severe Maternal Morbidity"
           href: smm_reg.html
         - text: "Preterm Births"

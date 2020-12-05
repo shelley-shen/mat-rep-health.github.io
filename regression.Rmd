@@ -244,7 +244,7 @@ plot(step_preterm_linear.model)
 #Shapiro test
 preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))
 ```
-The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with no outliers outside 3 standard deviations or influential points. Though one point has high leverage, it is not higher than our rule-of-thumb threshold of 0.085. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
+The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with 1 potential outlier outside 3 standard deviations or influential points. Though one point has high leverage, it is not higher than our rule-of-thumb threshold of 0.085. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
 
 #### Outcome: Gonorrhea
 
@@ -311,7 +311,6 @@ step_gonorrhea_poisson.model %>%
 ```
 
 Severe overdispersion (deviance/df >> 1): try negative binomial
-
 ```{r}
 
 full_gonorrhea_neg_bin.model <- glm.nb(gonorrhea_count~.+offset(offset_total_pop), data=gonorrhea_poisson_df)

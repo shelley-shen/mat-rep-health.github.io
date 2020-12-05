@@ -1,0 +1,76 @@
+---
+title: "Preterm Births Regression"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(readr)
+library(ggpubr)
+library(corrplot)
+library(RColorBrewer)
+library(Hmisc)
+library(patchwork)
+library(rstatix)
+library(glmnet)
+library(MASS)
+
+knitr::opts_chunk$set(
+	fig.width = 9, 
+  fig.asp = .6,
+  out.width = "90%",
+	warning = FALSE,
+	message = FALSE
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+Let's start by fitting a linear model to the preterm births outcome using a stepwise selection process (with AIC as metric). Next, we'll take a look at the chosen predictors, effect measures, and run regression diagnostics of our converged model.
+
+```{r}
+#read in cleaned csv files
+predictors_df = read.csv("./data/predictors.csv")
+outcome_df = read.csv("./data/outcomes.csv")
+
+#Combined predictors with preterm births outcome
+preterm_linear_df = predictors_df %>% 
+  mutate(preterm_births = outcome_df$preterm_births)
+
+#Fit the full model 
+full_preterm_linear.model <- lm(preterm_births~., data = preterm_linear_df)
+#Stepwise regression model
+step_preterm_linear.model <- stepAIC(full_preterm_linear.model, direction = "both", 
+                      trace = FALSE)
+
+
+#Display converged model
+step_preterm_linear.model %>% 
+  broom::tidy() %>%
+  knitr::kable(digits = 3)
+
+```
+The 6 variables hispanic, black, limited_eng, health_ins, late_no_prenatal_care, and non_pcmd_density were chosen in the final model. The model has an R-squared value of `summary(step_preterm_linear.model)$r.squared`, representing a decent, but nowhere near ideal fit with our predictor set
+
+However, we were concerned about our assumptions for linear regression, so they need to be checked before we can interpret any results. 
+```{r}
+#Regression diagnostics
+plot(step_preterm_linear.model)
+
+#Shapiro test
+preterm_linear_shapiro = shapiro.test(residuals(step_preterm_linear.model))
+```
+The linear regression assumptions are satisfied, so this is a valid model. The Normal Q-Q plot is reasonably well fit, and Shapiro-Wilk test for normality, which has a p-value of `preterm_linear_shapiro$p.value`, confirms the normality assumption. The data also roughly follows the homoskedasticity assumption, with a few potential outliers right at 3 standard deviations and potential influential points. Though several point has high leverage, it is not higher than our rule-of-thumb threshold of 0.074. This is calculated using the rule of thumb equation 2(p + 1)/n, where p is the number of predictors and n the number of observations.
+
+These results are valid, so we can interpret them!
+
+
